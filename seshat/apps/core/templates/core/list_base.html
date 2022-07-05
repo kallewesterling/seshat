@@ -76,6 +76,11 @@
                     {% else  %}
                         <td style="text-align: center;"><span class="badge rounded-pill bg-success">{{ obj.get_tag_display }}</span>
                     {% endif %}
+                    {% if obj.display_citations %}
+                    <sup>
+                        <span type="button" data-bs-toggle="popover" title="Refs:" data-bs-html="true" data-bs-content=" {{ obj.display_citations }}">&nbsp;<i class="far fa-bookmark text-info"></i></span>
+                    </sup>
+                    {% endif %}
                     </td>
 
                     <!-- Verified Tag -->

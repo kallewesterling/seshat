@@ -1,3 +1,4 @@
+########## Beginning of Model Imports
 from django.db import models
 from django.db.models.fields.related import ManyToManyField
 from django.contrib.auth.models import User
@@ -14,8 +15,8 @@ from django.utils import translation
 
 from ..core.models import SeshatCommon, Certainty, Tags, Section
 
-
-# choices
+########## End of Model Imports
+############ Beginning of choices
 
 job_category_rate_of_return_choices = (("jobs requiring jinshi or juren examinations", "jobs requiring jinshi or juren examinations"),
                                        ("jobs requiring shengyuan examination",
@@ -39,8 +40,9 @@ magnitude_disease_event_choices = (('Uncertain', 'Uncertain'), ('Heavy', 'Heavy'
                                                                                                         'Heavy- Multiple Times'), ('No Happening', 'No Happening'), ('No description', 'No description'), ('Nonspecified', 'Nonspecified'))
 duration_disease_event_choices = (('1 to 10 Days', '1 to 10 Days'), ('20 to 30 Days', '20 to 30 Days'), ('30 to 60 Days', '30 to 60 Days'), (
     '60 to 90 Days', '60 to 90 Days'), ('Over 90 Days', 'Over 90 Days'), ('No description', 'No description'), ('Uncertain', 'Uncertain'))
-# end of choices
 
+############ end of choices
+########## Beginning of Function Definitions for CrisisDB Models
 
 def call_my_name(self):
     if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
@@ -79,41 +81,15 @@ def clean_times(self):
             'year_from': 'You need to enter at least one year (From or To)',
         })
 
+########## End of Function Definitions for CrisisDB Models
 
-# class Population(SeshatCommon):
-#     """Model Representing Population Variable"""
-#     name = models.CharField(max_length=100, default="Population")
-#     total_population = models.PositiveBigIntegerField(blank=True, null=True)
-
-#     class Meta:
-#         verbose_name = 'Population'
-#         verbose_name_plural = 'Populations'
-
-#     @property
-#     def display_citations(self):
-#         return return_citations(self)
-#     # I think it is for Admin site as well.
-#     #display_citations.short_description = 'Citations'
-
-#     def clean(self):
-#         clean_times(self)
-
-#     def get_absolute_url(self):
-#         """Returns the url to access a particular var instance"""
-#         return reverse('population-detail', args=[str(self.id)])
-#         # the above aczually uses self.id to create a customized url
-
-#     def __str__(self) -> str:
-#         """string for epresenting the model obj in Admin Site"""
-#         return call_my_name(self)
-
-
-# GENERATORS
+########## Beginning of class Definitions for CrisisDB Models
 
 class Population(SeshatCommon):
     name = models.CharField(max_length=100, default="Population")
     total_population = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Population'
         verbose_name_plural = 'Populations'
@@ -129,13 +105,14 @@ class Population(SeshatCommon):
         return reverse('population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
-       return call_my_name(self)
-
-
+        return call_my_name(self)
+        
+        
 class Land_taxes_collected(SeshatCommon):
     name = models.CharField(max_length=100, default="Land_taxes_collected")
     land_taxes_collected = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Land_taxes_collected'
         verbose_name_plural = 'Land_taxes_collecteds'
@@ -152,12 +129,13 @@ class Land_taxes_collected(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Land_yield(SeshatCommon):
     name = models.CharField(max_length=100, default="Land_yield")
     land_yield = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Land_yield'
         verbose_name_plural = 'Land_yields'
@@ -174,13 +152,13 @@ class Land_yield(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Total_tax(SeshatCommon):
     name = models.CharField(max_length=100, default="Total_tax")
-    total_amount_of_taxes_collected = models.IntegerField(
-        blank=True, null=True)
+    total_amount_of_taxes_collected = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Total_tax'
         verbose_name_plural = 'Total_taxes'
@@ -197,12 +175,13 @@ class Total_tax(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Total_economic_output(SeshatCommon):
     name = models.CharField(max_length=100, default="Total_economic_output")
     total_economic_output = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Total_economic_output'
         verbose_name_plural = 'Total_economic_outputs'
@@ -219,15 +198,13 @@ class Total_economic_output(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Total_revenue(SeshatCommon):
     name = models.CharField(max_length=100, default="Total_revenue")
     total_revenue = models.IntegerField(blank=True, null=True)
-    # section = models.ForeignKey(
-    #     Section, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
-    #     related_query_name="%(app_label)s_%(class)ss", blank=True, null=True, default=2)
 
+    
     class Meta:
         verbose_name = 'Total_revenue'
         verbose_name_plural = 'Total_revenues'
@@ -244,12 +221,13 @@ class Total_revenue(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Diding_taxes(SeshatCommon):
     name = models.CharField(max_length=100, default="Diding_taxes")
-    total_revenue = models.IntegerField(blank=True, null=True)
+    diding_taxes = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Diding_taxes'
         verbose_name_plural = 'Diding_taxes'
@@ -266,12 +244,13 @@ class Diding_taxes(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Salt_tax(SeshatCommon):
     name = models.CharField(max_length=100, default="Salt_tax")
     salt_tax = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Salt_tax'
         verbose_name_plural = 'Salt_taxes'
@@ -288,12 +267,13 @@ class Salt_tax(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Tariff_and_transit(SeshatCommon):
     name = models.CharField(max_length=100, default="Tariff_and_transit")
     tariff_and_transit = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Tariff_and_transit'
         verbose_name_plural = 'Tariff_and_transits'
@@ -310,12 +290,13 @@ class Tariff_and_transit(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Misc_incomes(SeshatCommon):
     name = models.CharField(max_length=100, default="Misc_incomes")
     misc_incomes = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Misc_incomes'
         verbose_name_plural = 'Misc_incomes'
@@ -332,12 +313,13 @@ class Misc_incomes(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Total_expenditure(SeshatCommon):
     name = models.CharField(max_length=100, default="Total_expenditure")
     total_expenditure = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Total_expenditure'
         verbose_name_plural = 'Total_expenditures'
@@ -354,12 +336,13 @@ class Total_expenditure(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Balance(SeshatCommon):
     name = models.CharField(max_length=100, default="Balance")
     balance = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Balance'
         verbose_name_plural = 'Balances'
@@ -376,12 +359,13 @@ class Balance(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Lijin(SeshatCommon):
     name = models.CharField(max_length=100, default="Lijin")
     lijin = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Lijin'
         verbose_name_plural = 'Lijins'
@@ -398,12 +382,13 @@ class Lijin(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Maritime_custom(SeshatCommon):
     name = models.CharField(max_length=100, default="Maritime_custom")
     maritime_custom = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Maritime_custom'
         verbose_name_plural = 'Maritime_customs'
@@ -420,12 +405,13 @@ class Maritime_custom(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Other_incomes(SeshatCommon):
     name = models.CharField(max_length=100, default="Other_incomes")
     other_incomes = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Other_incomes'
         verbose_name_plural = 'Other_incomes'
@@ -442,12 +428,13 @@ class Other_incomes(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Revenue_official(SeshatCommon):
     name = models.CharField(max_length=100, default="Revenue_official")
     revenue_official = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Revenue_official'
         verbose_name_plural = 'Revenue_officials'
@@ -464,12 +451,13 @@ class Revenue_official(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Revenue_real(SeshatCommon):
     name = models.CharField(max_length=100, default="Revenue_real")
     revenue_real = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Revenue_real'
         verbose_name_plural = 'Revenue_reals'
@@ -486,12 +474,13 @@ class Revenue_real(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Gdp_total(SeshatCommon):
     name = models.CharField(max_length=100, default="Gdp_total")
-    GDP_total = models.IntegerField(blank=True, null=True)
+    gdp_total = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Gdp_total'
         verbose_name_plural = 'Gdp_totals'
@@ -504,17 +493,17 @@ class Gdp_total(SeshatCommon):
         clean_times(self)
 
     def get_absolute_url(self):
-        return reverse('GDP_total-detail', args=[str(self.id)])
+        return reverse('gdp_total-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Gdp_growth_rate(SeshatCommon):
     name = models.CharField(max_length=100, default="Gdp_growth_rate")
-    GDP_growth_rate = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    gdp_growth_rate = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Gdp_growth_rate'
         verbose_name_plural = 'Gdp_growth_rates'
@@ -527,17 +516,17 @@ class Gdp_growth_rate(SeshatCommon):
         clean_times(self)
 
     def get_absolute_url(self):
-        return reverse('GDP_growth_rate-detail', args=[str(self.id)])
+        return reverse('gdp_growth_rate-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Shares_of_world_gdp(SeshatCommon):
     name = models.CharField(max_length=100, default="Shares_of_world_gdp")
-    shares_of_world_GDP = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    shares_of_world_gdp = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Shares_of_world_gdp'
         verbose_name_plural = 'Shares_of_world_gdps'
@@ -550,16 +539,17 @@ class Shares_of_world_gdp(SeshatCommon):
         clean_times(self)
 
     def get_absolute_url(self):
-        return reverse('shares_of_world_GDP-detail', args=[str(self.id)])
+        return reverse('shares_of_world_gdp-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Gdp_per_capita(SeshatCommon):
     name = models.CharField(max_length=100, default="Gdp_per_capita")
-    GDP_per_capita = models.IntegerField(blank=True, null=True)
+    gdp_per_capita = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Gdp_per_capita'
         verbose_name_plural = 'Gdp_per_capitas'
@@ -572,18 +562,17 @@ class Gdp_per_capita(SeshatCommon):
         clean_times(self)
 
     def get_absolute_url(self):
-        return reverse('GDP_per_capita-detail', args=[str(self.id)])
+        return reverse('gdp_per_capita-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Rate_of_gdp_per_capita_growth(SeshatCommon):
-    name = models.CharField(
-        max_length=100, default="Rate_of_gdp_per_capita_growth")
-    rate_of_GDP_per_capita_growth = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    name = models.CharField(max_length=100, default="Rate_of_gdp_per_capita_growth")
+    rate_of_gdp_per_capita_growth = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Rate_of_gdp_per_capita_growth'
         verbose_name_plural = 'Rate_of_gdp_per_capita_growths'
@@ -596,17 +585,17 @@ class Rate_of_gdp_per_capita_growth(SeshatCommon):
         clean_times(self)
 
     def get_absolute_url(self):
-        return reverse('rate_of_GDP_per_capita_growth-detail', args=[str(self.id)])
+        return reverse('rate_of_gdp_per_capita_growth-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Wages(SeshatCommon):
     name = models.CharField(max_length=100, default="Wages")
-    wages = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    wages = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Wages'
         verbose_name_plural = 'Wages'
@@ -623,16 +612,15 @@ class Wages(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Annual_wages(SeshatCommon):
     name = models.CharField(max_length=100, default="Annual_wages")
     annual_wages = models.IntegerField(blank=True, null=True)
-    job_category = models.CharField(
-        max_length=500, choices=job_category_annual_wages_choices)
-    job_description = models.CharField(
-        max_length=500, choices=job_description_annual_wages_choices)
+    job_category = models.CharField(max_length=500, choices=job_category_annual_wages_choices)
+    job_description = models.CharField(max_length=500, choices=job_description_annual_wages_choices)
 
+    
     class Meta:
         verbose_name = 'Annual_wages'
         verbose_name_plural = 'Annual_wages'
@@ -649,17 +637,15 @@ class Annual_wages(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Rate_of_return(SeshatCommon):
     name = models.CharField(max_length=100, default="Rate_of_return")
-    rate_of_return = models.DecimalField(
-        max_digits=25, decimal_places=2, blank=True, null=True)
-    job_category = models.CharField(
-        max_length=500, choices=job_category_rate_of_return_choices)
-    job_description = models.CharField(
-        max_length=500, choices=job_description_rate_of_return_choices)
+    rate_of_return = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    job_category = models.CharField(max_length=500, choices=job_category_rate_of_return_choices)
+    job_description = models.CharField(max_length=500, choices=job_description_rate_of_return_choices)
 
+    
     class Meta:
         verbose_name = 'Rate_of_return'
         verbose_name_plural = 'Rate_of_returns'
@@ -676,24 +662,19 @@ class Rate_of_return(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Famine_event(SeshatCommon):
     name = models.CharField(max_length=100, default="Famine_event")
-    longitude = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    latitude = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    famine_event = models.IntegerField(blank=True, null=True)
-    elevation = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    sub_category = models.CharField(
-        max_length=500, choices=sub_category_famine_event_choices)
-    magnitude = models.CharField(
-        max_length=500, choices=magnitude_famine_event_choices)
-    duration = models.CharField(
-        max_length=500, choices=duration_famine_event_choices)
+    famine_event = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    latitude = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    longitude = models.IntegerField(blank=True, null=True)
+    elevation = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    sub_category = models.CharField(max_length=500, choices=sub_category_famine_event_choices)
+    magnitude = models.CharField(max_length=500, choices=magnitude_famine_event_choices)
+    duration = models.CharField(max_length=500, choices=duration_famine_event_choices)
 
+    
     class Meta:
         verbose_name = 'Famine_event'
         verbose_name_plural = 'Famine_events'
@@ -710,24 +691,19 @@ class Famine_event(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Disease_event(SeshatCommon):
     name = models.CharField(max_length=100, default="Disease_event")
-    longitude = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    latitude = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    disease_event = models.IntegerField(blank=True, null=True)
-    elevation = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    sub_category = models.CharField(
-        max_length=500, choices=sub_category_disease_event_choices)
-    magnitude = models.CharField(
-        max_length=500, choices=magnitude_disease_event_choices)
-    duration = models.CharField(
-        max_length=500, choices=duration_disease_event_choices)
+    disease_event = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    latitude = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    longitude = models.IntegerField(blank=True, null=True)
+    elevation = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    sub_category = models.CharField(max_length=500, choices=sub_category_disease_event_choices)
+    magnitude = models.CharField(max_length=500, choices=magnitude_disease_event_choices)
+    duration = models.CharField(max_length=500, choices=duration_disease_event_choices)
 
+    
     class Meta:
         verbose_name = 'Disease_event'
         verbose_name_plural = 'Disease_events'
@@ -744,14 +720,15 @@ class Disease_event(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Jinshi_degrees_awarded(SeshatCommon):
     name = models.CharField(max_length=100, default="Jinshi_degrees_awarded")
-    emperor = models.CharField(max_length=500, blank=True, null=True)
-    jinshi_degrees_awarded = models.IntegerField(blank=True, null=True)
+    jinshi_degrees_awarded = models.CharField(max_length=500, blank=True, null=True)
+    emperor = models.IntegerField(blank=True, null=True)
     population_in_year_x = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Jinshi_degrees_awarded'
         verbose_name_plural = 'Jinshi_degrees_awardeds'
@@ -768,20 +745,19 @@ class Jinshi_degrees_awarded(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Examination(SeshatCommon):
     name = models.CharField(max_length=100, default="Examination")
     examination = models.CharField(max_length=500, blank=True, null=True)
     no_of_participants = models.IntegerField(blank=True, null=True)
     degrees_awarded = models.IntegerField(blank=True, null=True)
-    passing_ratio = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    passing_ratio = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
     place = models.CharField(max_length=500, blank=True, null=True)
-    ratio_examiner_per_candidate = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    ratio_examiner_per_candidate = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
     no_of_examiners = models.IntegerField(blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Examination'
         verbose_name_plural = 'Examinations'
@@ -798,20 +774,20 @@ class Examination(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Taiping_rebellion(SeshatCommon):
     name = models.CharField(max_length=100, default="Taiping_rebellion")
     taiping_rebellion = models.CharField(max_length=500, blank=True, null=True)
     rebel = models.CharField(max_length=500, blank=True, null=True)
     place = models.CharField(max_length=500, blank=True, null=True)
-    ethnic_composition = models.CharField(
-        max_length=500, blank=True, null=True)
+    ethnic_composition = models.CharField(max_length=500, blank=True, null=True)
     family_background = models.CharField(max_length=500, blank=True, null=True)
     role = models.CharField(max_length=500, blank=True, null=True)
     rank = models.CharField(max_length=500, blank=True, null=True)
     civil_examination = models.CharField(max_length=500, blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Taiping_rebellion'
         verbose_name_plural = 'Taiping_rebellions'
@@ -828,23 +804,19 @@ class Taiping_rebellion(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
+        
+        
 class Worker_wage(SeshatCommon):
     name = models.CharField(max_length=100, default="Worker_wage")
     worker_wage = models.CharField(max_length=500, blank=True, null=True)
     area = models.CharField(max_length=500, blank=True, null=True)
-    unskilled_construction = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    skilled_construction = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    number_of_districts_with_available_data = models.IntegerField(
-        blank=True, null=True)
-    unskilled_arms_manufacturer = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
-    population_in_millions_in_1787 = models.DecimalField(
-        max_digits=25, decimal_places=3, blank=True, null=True)
+    unskilled_construction = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    skilled_construction = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    number_of_districts_with_available_data = models.IntegerField(blank=True, null=True)
+    unskilled_arms_manufacturer = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    population_in_millions_in_1787 = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
 
+    
     class Meta:
         verbose_name = 'Worker_wage'
         verbose_name_plural = 'Worker_wages'
@@ -861,6 +833,6 @@ class Worker_wage(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-# END OF GENERATORS
+        
+        
+########## END of class Definitions for CrisisDB Models

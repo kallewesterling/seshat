@@ -1,6 +1,15 @@
 
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
+# all the old files
+views_20*.py
+admin_20*.py
+serializers_20*.py
+models_20*.py
+forms_20*.pyurls_20*.py
+
+crisisdb_20*/
+
 
 ### Django ###
 *.log
