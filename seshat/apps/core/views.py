@@ -1535,6 +1535,27 @@ def map_view(request):
     all_years = set()
     all_polities = set()
 
+    def get_polity_start_end(seshat_id):
+        query = """
+            SELECT
+                start_year,
+                end_year                
+            FROM
+                core_polity
+            WHERE
+                new_name=%s
+
+        """
+        print(query)
+        with connection.cursor() as cursor:
+            cursor.execute(query, [seshat_id])
+            rows = cursor.fetchall()
+        print(rows)
+        # Should be just one polity that matches
+        start_year = rows[0][0]
+        end_year = rows[0][1]
+        return start_year, end_year
+
     for shape in shapes:
 
         # Temporary macrostate => video shape adjustments
@@ -1549,8 +1570,13 @@ def map_view(request):
             else:
                 shape.date_to = shape.start_year
 
-        if shape.polity is not None:
-            all_polities.add(shape.polity)
+            # Polity start and end years
+            shape.polity_start_year, shape.polity_end_year = get_polity_start_end(shape.polity)
+
+        else:
+            if shape.polity is not None:
+                all_polities.add(shape.polity)
+
         if shape.date_from is not None and shape.date_to is not None:
 
             if video_dataset:
