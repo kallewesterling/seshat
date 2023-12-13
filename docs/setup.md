@@ -40,13 +40,19 @@ This page instructs software engineers how to get started working with the Djang
             CREATE USER postgres SUPERUSER;
         ```
 
-6. After PostgreSQL is installed, install the Python packages in your environment (some packages have psql as a dependency). From the top level of the `seshat` repo:
+6. Install memcached
+    - <details><summary>Install instructions for macOS</summary>
+
+        `brew install memcached`
+        </details>
+
+7. After PostgreSQL is installed, install the Python packages in your environment (some packages have psql as a dependency). From the top level of the `seshat` repo:
     ```
         pip install -r requirements.txt
         pip install "django-geojson [field]"
     ```
 
-7. Restore Seshat database from dump and add PostGIS extension:
+8. Restore Seshat database from dump and add PostGIS extension:
     - Note: you'll need a dump file of the Seshat database, which can be provided by one of the current developers
         ```
         createdb -U postgres <seshat_db_name>
@@ -60,7 +66,7 @@ This page instructs software engineers how to get started working with the Djang
             CREATE EXTENSION postgis;
         ```
 
-8. Create a config with your database info for Django
+9. Create a config with your database info for Django
     - Within the repo, create a file called `seshat/settings/.env` with the db connection vars
     - For example:
         ```
@@ -71,7 +77,7 @@ This page instructs software engineers how to get started working with the Djang
         ```
     - The presence of this file will ensure Django connects to your local database
 
-9. Set the path to your local installation of GDAL and GEOS
+10. Set the path to your local installation of GDAL and GEOS
     - Open `seshat/settings/local.py` and edit the following variables:
         - `GDAL_LIBRARY_PATH`
         - `GEOS_LIBRARY_PATH`
@@ -82,19 +88,19 @@ This page instructs software engineers how to get started working with the Djang
         - `brew install geos`
         </details>
 
-10. Ensure that database migrations have run for the "core" Django app:
+11. Ensure that database migrations have run for the "core" Django app:
     ```
         python manage.py migrate core
     ```
 
-11. If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions in [spatialdb.md](spatialdb.md).
+12. If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions in [spatialdb.md](spatialdb.md).
 
-12. Run Django
+13. Run Django
     ```
         python manage.py runserver
     ```
 
-13. The webapp should be visible in a browser at http://127.0.0.1:8000/
+14. The webapp should be visible in a browser at http://127.0.0.1:8000/
 
 
 
