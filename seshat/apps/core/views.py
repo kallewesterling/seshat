@@ -1519,10 +1519,9 @@ def download_oldcsv(request, file_name):
     return response
 
 # Shapefile views and functions
-def get_provinces(selected_base_map_gadm='province'):
-    # Get all the province or country shapes for the map base layer
-    # Define a simplification tolerance for faster loading of shapes at lower res
-    simplification_tolerance = 0.01
+def get_provinces(selected_base_map_gadm='province', simplification_tolerance=0.01):
+    """Get GADM modern province or country shapes for polity map base layer"""
+
     provinces = []
 
     # Use the appropriate SQL query based on the selected baseMapGADM value
@@ -1574,6 +1573,8 @@ def map_view(request):
     earliest_year = -3400
     display_year = 0
     latest_year = 2014
+    # Define a simplification tolerance for faster loading of shapes at lower res
+    basemap_simplification = 0.01
 
     # Check if polity shapes are already in the cache
     shapes = cache.get('shapes')
@@ -1613,10 +1614,10 @@ def map_view(request):
 
     # If not in cache, fetch GADM modern province and country shapes from the database
     if not provinces:
-        provinces = get_provinces()
+        provinces = get_provinces(simplification_tolerance=basemap_simplification)
         cache.set('provinces', provinces, 3600)
     if not countries:
-        countries = get_provinces(selected_base_map_gadm='country')
+        countries = get_provinces(selected_base_map_gadm='country', simplification_tolerance=basemap_simplification)
         cache.set('countries', countries, 3600)
 
     content = {'shapes': shapes,
