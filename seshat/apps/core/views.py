@@ -1518,14 +1518,56 @@ def download_oldcsv(request, file_name):
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
 
-# Shapefile views
+# Shapefile views and functions
+def get_provinces(selected_base_map_gadm='province'):
+    # Get all the province or country shapes for the map base layer
+    # Define a simplification tolerance for faster loading of shapes at lower res
+    simplification_tolerance = 0.01
+    provinces = []
+
+    # Use the appropriate SQL query based on the selected baseMapGADM value
+    if selected_base_map_gadm == 'country':
+        query = """
+            SELECT
+                ST_Simplify(geom, %s) AS simplified_geometry,
+                "COUNTRY"                
+            FROM
+                core_gadmcountries;
+        """
+    elif selected_base_map_gadm == 'province':
+        query = """
+            SELECT
+                ST_Simplify(geom, %s) AS simplified_geometry,
+                "NAME_1",
+                "ENGTYPE_1"                
+            FROM
+                core_gadmprovinces;
+        """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [simplification_tolerance])
+        rows = cursor.fetchall()
+
+    for row in rows:
+        if row[0] != None:
+            if selected_base_map_gadm == 'country':
+                provinces.append({
+                    'aggregated_geometry': GEOSGeometry(row[0]).geojson,
+                    'country': row[1]
+                })
+            elif selected_base_map_gadm == 'province':
+                provinces.append({
+                    'aggregated_geometry': GEOSGeometry(row[0]).geojson,
+                    'province': row[1],
+                    'province_type': row[2]
+                })
+
+    return provinces
 
 def map_view(request):
     """
         This view is used to display a map with polities plotted on it.
     """
-
-    shapes = VideoShapefile.objects.all()
 
     # Set some vars for the range of years to display
     # TODO: ensure these reflect the true extent of polity shape data
@@ -1533,79 +1575,57 @@ def map_view(request):
     display_year = 0
     latest_year = 2014
 
-    def get_provinces(selected_base_map_gadm='province'):
+    # Check if polity shapes are already in the cache
+    shapes = cache.get('shapes')
+    seshat_id_page_id = cache.get('seshat_id_page_id')
 
-        # Get all the province or country shapes for the map base layer
-        # Define a simplification tolerance for faster loading of shapes at lower res
-        simplification_tolerance = 0.01
-        provinces = []
+    # If not in cache, fetch polity shapes from the database
+    if not shapes:
+        shapes = VideoShapefile.objects.all()
 
-        # Use the appropriate SQL query based on the selected baseMapGADM value
-        if selected_base_map_gadm == 'country':
-            query = """
-                SELECT
-                    ST_Simplify(geom, %s) AS simplified_geometry,
-                    "COUNTRY"                
-                FROM
-                    core_gadmcountries;
-            """
-        elif selected_base_map_gadm == 'province':
-            query = """
-                SELECT
-                    ST_Simplify(geom, %s) AS simplified_geometry,
-                    "NAME_1",
-                    "ENGTYPE_1"                
-                FROM
-                    core_gadmprovinces;
-            """
+        # Create dict used when loading Seshat pages
+        seshat_id_page_id = {}
+        for shape in shapes:
+            if shape.seshat_id:
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            "SELECT id, long_name FROM core_polity WHERE new_name = %s",
+                            [shape.seshat_id]
+                        )
+                        row = cursor.fetchone()
+                        if row:
+                            seshat_id_page_id[shape.seshat_id] = {}
+                            seshat_id_page_id[shape.seshat_id]['id'] = row[0]
+                            seshat_id_page_id[shape.seshat_id]['long_name'] = ""
+                            if row[1]:
+                                seshat_id_page_id[shape.seshat_id]['long_name'] = row[1]
+                except Exception as e:
+                    print(f"Error fetching ID for shape {shape.name}: {shape.seshat_id}: {e}")
 
-        with connection.cursor() as cursor:
-            cursor.execute(query, [simplification_tolerance])
-            rows = cursor.fetchall()
+        # Store shapes in the cache with a timeout (e.g., 1 hour)
+        cache.set('shapes', shapes, 3600)
+        cache.set('seshat_id_page_id', seshat_id_page_id, 3600)
 
-        for row in rows:
-            if row[0] != None:
-                if selected_base_map_gadm == 'country':
-                    provinces.append({
-                        'aggregated_geometry': GEOSGeometry(row[0]).geojson,
-                        'country': row[1]
-                    })
-                elif selected_base_map_gadm == 'province':
-                    provinces.append({
-                        'aggregated_geometry': GEOSGeometry(row[0]).geojson,
-                        'province': row[1],
-                        'province_type': row[2]
-                    })
+    # Check if GADM modern province and country shapes are already in the cache
+    provinces = cache.get('provinces')
+    countries = cache.get('countries')
 
-        return provinces
-
-    # Update shapes with polity_id for loading Seshat pages
-    seshat_id_page_id = {}
-    for shape in shapes:
-        if shape.seshat_id:
-            try:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT id, long_name FROM core_polity WHERE new_name = %s",
-                        [shape.seshat_id]
-                    )
-                    row = cursor.fetchone()
-                    if row:
-                        seshat_id_page_id[shape.seshat_id] = {}
-                        seshat_id_page_id[shape.seshat_id]['id'] = row[0]
-                        seshat_id_page_id[shape.seshat_id]['long_name'] = ""
-                        if row[1]:
-                            seshat_id_page_id[shape.seshat_id]['long_name'] = row[1]
-            except Exception as e:
-                print(f"Error fetching ID for shape {shape.name}: {shape.seshat_id}: {e}")
+    # If not in cache, fetch GADM modern province and country shapes from the database
+    if not provinces:
+        provinces = get_provinces()
+        cache.set('provinces', provinces, 3600)
+    if not countries:
+        countries = get_provinces(selected_base_map_gadm='country')
+        cache.set('countries', countries, 3600)
 
     content = {'shapes': shapes,
-               'provinces': get_provinces(),
-               'countries': get_provinces(selected_base_map_gadm='country'),
+               'seshat_id_page_id': seshat_id_page_id,
+               'provinces': provinces,
+               'countries': countries,
                'earliest_year': earliest_year,
                'display_year': display_year,
-               'latest_year': latest_year,
-               'seshat_id_page_id': seshat_id_page_id
+               'latest_year': latest_year
                }
     
     return render(request,
