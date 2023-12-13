@@ -370,3 +370,10 @@ CORS_ALLOWED_ORIGINS = [
 
 # I believe this says: Hey Heroku, do your local settings, don't care about my static_root, static_url etc.
 django_heroku.settings(locals())
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
