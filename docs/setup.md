@@ -41,9 +41,10 @@ This page instructs software engineers how to get started working with the Djang
         ```
 
 6. Install memcached
-    - <details><summary>Install instructions for macOS</summary>
+    - <details><summary>Install and run instructions for macOS</summary>
 
         `brew install memcached`
+        `brew services start memcached`
         </details>
 
 7. After PostgreSQL is installed, install the Python packages in your environment (some packages have psql as a dependency). From the top level of the `seshat` repo:
