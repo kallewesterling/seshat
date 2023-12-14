@@ -1577,8 +1577,8 @@ def map_view(request):
     basemap_simplification = 0.01
 
     # Check if polity shapes are already in the cache
-    shapes = cache.get('shapes')
-    seshat_id_page_id = cache.get('seshat_id_page_id')
+    # shapes = cache.get('shapes')
+    # seshat_id_page_id = cache.get('seshat_id_page_id')
 
     # If not in cache, fetch polity shapes from the database
     if not shapes:
@@ -1605,8 +1605,8 @@ def map_view(request):
         #             print(f"Error fetching ID for shape {shape.name}: {shape.seshat_id}: {e}")
 
         # Store shapes in the cache with a timeout (e.g., 1 hour)
-        cache.set('shapes', shapes, 3600)
-        cache.set('seshat_id_page_id', seshat_id_page_id, 3600)
+        # cache.set('shapes', shapes, 3600)
+        # cache.set('seshat_id_page_id', seshat_id_page_id, 3600)
 
     # Check if GADM modern province and country shapes are already in the cache
     # provinces = cache.get('provinces')
