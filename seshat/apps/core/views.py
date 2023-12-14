@@ -1609,21 +1609,21 @@ def map_view(request):
         cache.set('seshat_id_page_id', seshat_id_page_id, 3600)
 
     # Check if GADM modern province and country shapes are already in the cache
-    provinces = cache.get('provinces')
-    countries = cache.get('countries')
+    # provinces = cache.get('provinces')
+    # countries = cache.get('countries')
 
     # If not in cache, fetch GADM modern province and country shapes from the database
-    if not provinces:
-        provinces = get_provinces(simplification_tolerance=basemap_simplification)
-        cache.set('provinces', provinces, 3600)
-    if not countries:
-        countries = get_provinces(selected_base_map_gadm='country', simplification_tolerance=basemap_simplification)
-        cache.set('countries', countries, 3600)
+    # if not provinces:
+    #     provinces = get_provinces(simplification_tolerance=basemap_simplification)
+    #     cache.set('provinces', provinces, 3600)
+    # if not countries:
+    #     countries = get_provinces(selected_base_map_gadm='country', simplification_tolerance=basemap_simplification)
+    #     cache.set('countries', countries, 3600)
 
     content = {'shapes': shapes,
                'seshat_id_page_id': seshat_id_page_id,
-               'provinces': provinces,
-               'countries': countries,
+            #    'provinces': provinces,
+            #    'countries': countries,
                'earliest_year': earliest_year,
                'display_year': display_year,
                'latest_year': latest_year
