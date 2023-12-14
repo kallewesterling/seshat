@@ -1586,23 +1586,23 @@ def map_view(request):
 
         # Create dict used when loading Seshat pages
         seshat_id_page_id = {}
-        for shape in shapes:
-            if shape.seshat_id:
-                try:
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            "SELECT id, long_name FROM core_polity WHERE new_name = %s",
-                            [shape.seshat_id]
-                        )
-                        row = cursor.fetchone()
-                        if row:
-                            seshat_id_page_id[shape.seshat_id] = {}
-                            seshat_id_page_id[shape.seshat_id]['id'] = row[0]
-                            seshat_id_page_id[shape.seshat_id]['long_name'] = ""
-                            if row[1]:
-                                seshat_id_page_id[shape.seshat_id]['long_name'] = row[1]
-                except Exception as e:
-                    print(f"Error fetching ID for shape {shape.name}: {shape.seshat_id}: {e}")
+        # for shape in shapes:
+        #     if shape.seshat_id:
+        #         try:
+        #             with connection.cursor() as cursor:
+        #                 cursor.execute(
+        #                     "SELECT id, long_name FROM core_polity WHERE new_name = %s",
+        #                     [shape.seshat_id]
+        #                 )
+        #                 row = cursor.fetchone()
+        #                 if row:
+        #                     seshat_id_page_id[shape.seshat_id] = {}
+        #                     seshat_id_page_id[shape.seshat_id]['id'] = row[0]
+        #                     seshat_id_page_id[shape.seshat_id]['long_name'] = ""
+        #                     if row[1]:
+        #                         seshat_id_page_id[shape.seshat_id]['long_name'] = row[1]
+        #         except Exception as e:
+        #             print(f"Error fetching ID for shape {shape.name}: {shape.seshat_id}: {e}")
 
         # Store shapes in the cache with a timeout (e.g., 1 hour)
         cache.set('shapes', shapes, 3600)
