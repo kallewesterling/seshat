@@ -1581,11 +1581,11 @@ def map_view(request):
     # seshat_id_page_id = cache.get('seshat_id_page_id')
 
     # If not in cache, fetch polity shapes from the database
-    if not shapes:
-        shapes = VideoShapefile.objects.all()
+    # if not shapes:
+    shapes = VideoShapefile.objects.all()
 
-        # Create dict used when loading Seshat pages
-        seshat_id_page_id = {}
+    # Create dict used when loading Seshat pages
+    seshat_id_page_id = {}
         # for shape in shapes:
         #     if shape.seshat_id:
         #         try:
