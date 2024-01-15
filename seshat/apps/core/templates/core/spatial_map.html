@@ -96,11 +96,11 @@
 
         function loadData() {
             checkDataInIndexedDB("shapesData", getShapesData, (data) => { shapesData = data; });
-            var shapesData = db.transaction("shapesData").objectStore("shapesData").get("data").onsuccess = function (event) { shapesData = event.target.result; };
+            shapesData = db.transaction("shapesData").objectStore("shapesData").get("data").onsuccess = function (event) { shapesData = event.target.result; };
             checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => { provinceShapeData = data; });
-            var shapesData = db.transaction("provinceShapeData").objectStore("provinceShapeData").get("data").onsuccess = function (event) { provinceShapeData = event.target.result; };
+            provinceShapeData = db.transaction("provinceShapeData").objectStore("provinceShapeData").get("data").onsuccess = function (event) { provinceShapeData = event.target.result; };
             checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => { countryShapeData = data; });
-            var shapesData = db.transaction("countryShapeData").objectStore("countryShapeData").get("data").onsuccess = function (event) { countryShapeData = event.target.result; };
+            countryShapeData = db.transaction("countryShapeData").objectStore("countryShapeData").get("data").onsuccess = function (event) { countryShapeData = event.target.result; };
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
