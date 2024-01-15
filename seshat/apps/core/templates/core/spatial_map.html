@@ -73,6 +73,9 @@
         var displayedShapes = [];
 
         var db;
+        var shapesData;
+        var provinceShapeData;
+        var countryShapeData;
 
         // Open (or create) the database
         var openRequest = indexedDB.open("MyDatabase", 1);
@@ -92,22 +95,16 @@
 
         function loadData() {
             // Load or fetch shapesData
-            var shapesData;
-
             loadOrFetchData("shapesData", getShapesData, function (data) {
                 shapesData = data;
             });
 
             // Load or fetch provinceShapeData
-            var provinceShapeData;
-
             loadOrFetchData("provinceShapeData", getProvinceShapeData, function (data) {
                 provinceShapeData = data;
             });
 
             // Load or fetch countryShapeData
-            var countryShapeData;
-
             loadOrFetchData("countryShapeData", getCountryShapeData, function (data) {
                 countryShapeData = data;
             });
