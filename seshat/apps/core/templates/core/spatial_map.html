@@ -102,17 +102,20 @@
 
         openRequest.onsuccess = function (e) {
             db = e.target.result;
-            console.log("indexedDB database initialised");
+            if (db) {
+                console.log("indexedDB database initialised");
 
-            loadData().then(() => {
-                console.log("All data loaded");
-                console.log(countryShapeData);
-                switchBaseMap();
-                plotPolities();
-            }).catch((error) => {
-                console.error("Error loading data: ", error);
-            });
-
+                loadData().then(() => {
+                    console.log("All data loaded");
+                    console.log(countryShapeData);
+                    switchBaseMap();
+                    plotPolities();
+                }).catch((error) => {
+                    console.error("Error loading data: ", error);
+                });
+            } else {
+                console.error("Error initializing database");
+            }
         };
 
         function loadData() {
