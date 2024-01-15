@@ -95,12 +95,16 @@
         };
 
         function loadData() {
-            checkDataInIndexedDB("shapesData", getShapesData, (data) => { shapesData = data; });
-            shapesData = db.transaction("shapesData").objectStore("shapesData").get("data").onsuccess = function (event) { shapesData = event.target.result; };
-            checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => { provinceShapeData = data; });
-            provinceShapeData = db.transaction("provinceShapeData").objectStore("provinceShapeData").get("data").onsuccess = function (event) { provinceShapeData = event.target.result; };
-            checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => { countryShapeData = data; });
-            countryShapeData = db.transaction("countryShapeData").objectStore("countryShapeData").get("data").onsuccess = function (event) { countryShapeData = event.target.result; };
+            // checkDataInIndexedDB("shapesData", getShapesData, (data) => { shapesData = data; });
+            // shapesData = db.transaction("shapesData").objectStore("shapesData").get("data").onsuccess = function (event) { shapesData = event.target.result; };
+            // checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => { provinceShapeData = data; });
+            // provinceShapeData = db.transaction("provinceShapeData").objectStore("provinceShapeData").get("data").onsuccess = function (event) { provinceShapeData = event.target.result; };
+            // checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => { countryShapeData = data; });
+            // countryShapeData = db.transaction("countryShapeData").objectStore("countryShapeData").get("data").onsuccess = function (event) { countryShapeData = event.target.result; };
+
+            shapesData = getShapesData();
+            provinceShapeData = getProvinceShapeData();
+            countryShapeData = getCountryShapeData();
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
@@ -180,6 +184,7 @@
         // Select carto as the default base layer
         var currentLayer = baseLayers.carto.addTo(map);
         var provinceLayers = []; // Keep track of province layers to remove them later
+        loadData();
         switchBaseMap();
 
         function switchBaseMap() {
@@ -192,8 +197,6 @@
             } else if (base == 'country'){
                 var baseShapeData = countryShapeData;
             }
-
-            console.log(countryShapeData);
 
             // Only show "Current borders" select for GADM
             var baseMapGADMFieldset = document.getElementById("baseMapGADMFieldset");
