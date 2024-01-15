@@ -104,48 +104,41 @@
             db = e.target.result;
             console.log("indexedDB database initialised");
 
-            // loadData(function () {
-            //     console.log("All data loaded");
-            //     // Initial plot on page load
-            //     plotPolities();
-            // });
-
-            loadData();
-            switchBaseMap();
-            plotPolities();
+            loadData(function () {
+                console.log("All data loaded");
+                console.log(countryShapeData);
+                switchBaseMap();
+                plotPolities();
+            });
 
         };
 
 
-        // function loadData(completionCallback) {
-        function loadData() {
-            // var dataLoadedCount = 0;
+        function loadData(completionCallback) {
+            var dataLoadedCount = 0;
 
-            // function checkAllDataLoaded() {
-            //     dataLoadedCount++;
-            //     if (dataLoadedCount === 3) {
-            //         completionCallback();
-            //     }
-            // }
+            function checkAllDataLoaded() {
+                dataLoadedCount++;
+                if (dataLoadedCount === 3) {
+                    completionCallback();
+                }
+            }
 
-            // checkDataInIndexedDB("shapesData", getShapesData, (data) => {
-            //     shapesData = data;
-            //     checkAllDataLoaded();
-            // });
+            checkDataInIndexedDB("shapesData", getShapesData, (data) => {
+                shapesData = data;
+                checkAllDataLoaded();
+            });
 
-            // checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
-            //     provinceShapeData = data;
-            //     checkAllDataLoaded();
-            // });
+            checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
+                provinceShapeData = data;
+                checkAllDataLoaded();
+            });
 
-            // checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
-            //     countryShapeData = data;
-            //     checkAllDataLoaded();
-            // });
+            checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
+                countryShapeData = data;
+                checkAllDataLoaded();
+            });
 
-            shapesData = getShapesData();
-            provinceShapeData = getProvinceShapeData();
-            countryShapeData = getCountryShapeData();
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
