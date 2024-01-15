@@ -148,7 +148,7 @@
                 // JavaScript object representing modern day province shape data
                 {% for shape in provinces %}
                     {
-                        geometry: { { shape.aggregated_geometry | safe } },
+                        geometry: {{ shape.aggregated_geometry | safe }},
                         province: '{{ shape.province }}',
                         provinceType: '{{ shape.province_type }}'
                     },
@@ -161,7 +161,7 @@
                 // JavaScript object representing modern day province shape data
                 {% for shape in countries %}
                     {
-                        geometry: { { shape.aggregated_geometry | safe } },
+                        geometry: {{ shape.aggregated_geometry | safe }},
                         country: '{{ shape.country }}'
                     },
                 {% endfor %}
