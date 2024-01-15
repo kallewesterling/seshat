@@ -150,26 +150,35 @@
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
-            var transaction = db.transaction([storeName], "readonly");
-            var store = transaction.objectStore(storeName);
-            var getRequest = store.getAll();
+            return new Promise((resolve, reject) => {
+                var transaction = db.transaction([storeName], "readonly");
+                var store = transaction.objectStore(storeName);
+                var getRequest = store.getAll();
 
-            getRequest.onsuccess = function (e) {
-                var data = e.target.result;
-                if (data.length > 0) {
-                    // Data exists in IndexedDB, use it
-                    callback(data);
-                } else {
-                    // No data in IndexedDB, fetch it
-                    data = getDataFunction();
-                    // Save the fetched data in IndexedDB for future use
-                    var addTransaction = db.transaction([storeName], "readwrite");
-                    var addStore = addTransaction.objectStore(storeName);
-                    addStore.add({ id: "data", value: data });
-                    // Use the data
-                    callback(data);
-                }
-            };
+                getRequest.onsuccess = function (e) {
+                    var data = e.target.result;
+                    if (data.length > 0) {
+                        // Data exists in IndexedDB, use it
+                        callback(data);
+                        resolve();
+                    } else {
+                        // No data in IndexedDB, fetch it
+                        data = getDataFunction();
+                        // Save the fetched data in IndexedDB for future use
+                        var addTransaction = db.transaction([storeName], "readwrite");
+                        var addStore = addTransaction.objectStore(storeName);
+                        addStore.add({ id: "data", value: data });
+                        // Use the data
+                        callback(data);
+                        resolve();
+                    }
+                };
+
+                getRequest.onerror = function (e) {
+                    // Handle errors
+                    reject(e.target.error);
+                };
+            });
         }
 
         function getShapesData() {
