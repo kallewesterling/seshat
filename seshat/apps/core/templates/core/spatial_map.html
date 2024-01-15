@@ -94,8 +94,8 @@
 
             loadData(function () {
                 console.log("All data loaded");
-                // Code that depends on shapesData, provinceShapeData, and countryShapeData
-                // For example, update your UI or call functions that use these variables
+                // Initial plot on page load
+                plotPolities();
             });
         };
 
@@ -407,9 +407,6 @@
                 window.location.href = '{% url "spatial_map" %}?data=' + selectedData;
             }
         }
-
-        // Initial plot on page load
-        plotPolities()
 
         // Display slider value
         var slider = document.getElementById("dateSlide");
