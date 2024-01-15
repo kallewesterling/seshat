@@ -91,20 +91,39 @@
         openRequest.onsuccess = function (e) {
             db = e.target.result;
             console.log("indexedDB database initialised");
-            loadData();
+
+            loadData(function () {
+                console.log("All data loaded");
+                // Code that depends on shapesData, provinceShapeData, and countryShapeData
+                // For example, update your UI or call functions that use these variables
+            });
         };
 
-        function loadData() {
-            // checkDataInIndexedDB("shapesData", getShapesData, (data) => { shapesData = data; });
-            // shapesData = db.transaction("shapesData").objectStore("shapesData").get("data").onsuccess = function (event) { shapesData = event.target.result; };
-            // checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => { provinceShapeData = data; });
-            // provinceShapeData = db.transaction("provinceShapeData").objectStore("provinceShapeData").get("data").onsuccess = function (event) { provinceShapeData = event.target.result; };
-            // checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => { countryShapeData = data; });
-            // countryShapeData = db.transaction("countryShapeData").objectStore("countryShapeData").get("data").onsuccess = function (event) { countryShapeData = event.target.result; };
 
-            shapesData = getShapesData();
-            provinceShapeData = getProvinceShapeData();
-            countryShapeData = getCountryShapeData();
+        function loadData(completionCallback) {
+            var dataLoadedCount = 0;
+
+            function checkAllDataLoaded() {
+                dataLoadedCount++;
+                if (dataLoadedCount === 3) {
+                    completionCallback();
+                }
+            }
+
+            checkDataInIndexedDB("shapesData", getShapesData, (data) => {
+                shapesData = data;
+                checkAllDataLoaded();
+            });
+
+            checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
+                provinceShapeData = data;
+                checkAllDataLoaded();
+            });
+
+            checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
+                countryShapeData = data;
+                checkAllDataLoaded();
+            });
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
@@ -184,7 +203,6 @@
         // Select carto as the default base layer
         var currentLayer = baseLayers.carto.addTo(map);
         var provinceLayers = []; // Keep track of province layers to remove them later
-        loadData();
         switchBaseMap();
 
         function switchBaseMap() {
