@@ -76,6 +76,18 @@
         var shapesData;
         var provinceShapeData;
         var countryShapeData;
+        var map = L.map('map').setView([0, 0], 2);
+
+        var baseLayers = {
+            "carto": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'),
+            "osm": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+        };
+
+        // Select carto as the default base layer
+        var currentLayer = baseLayers.carto.addTo(map);
+        var provinceLayers = []; // Keep track of province layers to remove them later
+
+        var seshatIdPageId = {{ seshat_id_page_id | safe }};
 
         // Open (or create) the database
         var openRequest = indexedDB.open("MyDatabase", 1);
@@ -92,38 +104,48 @@
             db = e.target.result;
             console.log("indexedDB database initialised");
 
-            loadData(function () {
-                console.log("All data loaded");
-                // Initial plot on page load
-                plotPolities();
-            });
+            // loadData(function () {
+            //     console.log("All data loaded");
+            //     // Initial plot on page load
+            //     plotPolities();
+            // });
+
+            loadData();
+            switchBaseMap();
+            plotPolities();
+
         };
 
 
-        function loadData(completionCallback) {
-            var dataLoadedCount = 0;
+        // function loadData(completionCallback) {
+        function loadData() {
+            // var dataLoadedCount = 0;
 
-            function checkAllDataLoaded() {
-                dataLoadedCount++;
-                if (dataLoadedCount === 3) {
-                    completionCallback();
-                }
-            }
+            // function checkAllDataLoaded() {
+            //     dataLoadedCount++;
+            //     if (dataLoadedCount === 3) {
+            //         completionCallback();
+            //     }
+            // }
 
-            checkDataInIndexedDB("shapesData", getShapesData, (data) => {
-                shapesData = data;
-                checkAllDataLoaded();
-            });
+            // checkDataInIndexedDB("shapesData", getShapesData, (data) => {
+            //     shapesData = data;
+            //     checkAllDataLoaded();
+            // });
 
-            checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
-                provinceShapeData = data;
-                checkAllDataLoaded();
-            });
+            // checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
+            //     provinceShapeData = data;
+            //     checkAllDataLoaded();
+            // });
 
-            checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
-                countryShapeData = data;
-                checkAllDataLoaded();
-            });
+            // checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
+            //     countryShapeData = data;
+            //     checkAllDataLoaded();
+            // });
+
+            shapesData = getShapesData();
+            provinceShapeData = getProvinceShapeData();
+            countryShapeData = getCountryShapeData();
         }
 
         function checkDataInIndexedDB(storeName, getDataFunction, callback) {
@@ -193,18 +215,6 @@
             ];
         }
 
-        var map = L.map('map').setView([0, 0], 2);
-
-        var baseLayers = {
-            "carto": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'),
-            "osm": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-        };
-
-        // Select carto as the default base layer
-        var currentLayer = baseLayers.carto.addTo(map);
-        var provinceLayers = []; // Keep track of province layers to remove them later
-        switchBaseMap();
-
         function switchBaseMap() {
 
             var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
@@ -272,8 +282,6 @@
                 });
             }
         }
-
-        var seshatIdPageId = {{ seshat_id_page_id | safe }};
 
         function plotPolities() {
 
