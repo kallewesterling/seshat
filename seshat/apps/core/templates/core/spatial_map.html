@@ -83,9 +83,9 @@
         // Create the schema
         openRequest.onupgradeneeded = function (e) {
             db = e.target.result;
-            db.createObjectStore("shapesData", { autoIncrement: true });
-            db.createObjectStore("provinceShapeData", { autoIncrement: true });
-            db.createObjectStore("countryShapeData", { autoIncrement: true });
+            db.createObjectStore("shapesData", { keyPath: "id" });
+            db.createObjectStore("provinceShapeData", { keyPath: "id" });
+            db.createObjectStore("countryShapeData", { keyPath: "id" });
         };
 
         openRequest.onsuccess = function (e) {
@@ -94,42 +94,29 @@
         };
 
         function loadData() {
-            // Load or fetch shapesData
-            loadOrFetchData("shapesData", getShapesData, function (data) {
-                shapesData = data;
-            });
-
-            // Load or fetch provinceShapeData
-            loadOrFetchData("provinceShapeData", getProvinceShapeData, function (data) {
-                provinceShapeData = data;
-            });
-
-            // Load or fetch countryShapeData
-            loadOrFetchData("countryShapeData", getCountryShapeData, function (data) {
-                countryShapeData = data;
-            });
+            checkDataInIndexedDB("shapesData", getShapesData, (data) => { shapesData = data; });
+            checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => { provinceShapeData = data; });
+            checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => { countryShapeData = data; });
         }
 
-        function loadOrFetchData(storeName, getDataFunction, callback) {
-            var transaction = db.transaction([storeName], "readwrite");
+        function checkDataInIndexedDB(storeName, getDataFunction, callback) {
+            var transaction = db.transaction([storeName], "readonly");
             var store = transaction.objectStore(storeName);
+            var getRequest = store.getAll();
 
-            store.openCursor().onsuccess = function (e) {
-                var cursor = e.target.result;
-
-                if (cursor) {
+            getRequest.onsuccess = function (e) {
+                var data = e.target.result;
+                if (data.length > 0) {
                     // Data exists in IndexedDB, use it
-                    var data = cursor.value;
-                    // Use the data
-                    console.log(data);
                     callback(data);
                 } else {
                     // No data in IndexedDB, fetch it
-                    var data = getDataFunction();
+                    data = getDataFunction();
                     // Save the fetched data in IndexedDB for future use
-                    store.add(data);
+                    var addTransaction = db.transaction([storeName], "readwrite");
+                    var addStore = addTransaction.objectStore(storeName);
+                    addStore.add({ id: "data", value: data });
                     // Use the data
-                    console.log(data);
                     callback(data);
                 }
             };
