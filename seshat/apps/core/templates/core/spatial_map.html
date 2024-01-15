@@ -130,13 +130,22 @@
                 }
 
                 // Load shapesData
-                getShapesData().then(checkAllDataLoaded).catch(reject);
+                checkDataInIndexedDB("shapesData", getShapesData, (data) => {
+                    shapesData = data;
+                    checkAllDataLoaded();
+                }).catch(reject);
 
                 // Load provinceShapeData
-                getProvinceShapeData().then(checkAllDataLoaded).catch(reject);
+                checkDataInIndexedDB("provinceShapeData", getProvinceShapeData, (data) => {
+                    provinceShapeData = data;
+                    checkAllDataLoaded();
+                }).catch(reject);
 
                 // Load countryShapeData
-                getCountryShapeData().then(checkAllDataLoaded).catch(reject);
+                checkDataInIndexedDB("countryShapeData", getCountryShapeData, (data) => {
+                    countryShapeData = data;
+                    checkAllDataLoaded();
+                }).catch(reject);
             });
         }
 
