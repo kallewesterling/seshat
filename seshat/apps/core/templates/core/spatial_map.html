@@ -128,11 +128,11 @@
             return [
                 // JavaScript object representing modern day province shape data
                 {% for shape in shapes %}
-                {
-                    geometry: { { shape.aggregated_geometry | safe } },
-                    province: '{{ shape.province }}',
+                    {
+                        geometry: { { shape.aggregated_geometry | safe } },
+                        province: '{{ shape.province }}',
                         provinceType: '{{ shape.province_type }}'
-                },
+                    },
                 {% endfor %}
             ];
         }
@@ -141,11 +141,11 @@
             return [
                 // JavaScript object representing modern day province shape data
                 {% for shape in provinces %}
-                {
-                    geometry: { { shape.aggregated_geometry | safe } },
-                    province: '{{ shape.province }}',
+                    {
+                        geometry: { { shape.aggregated_geometry | safe } },
+                        province: '{{ shape.province }}',
                         provinceType: '{{ shape.province_type }}'
-                },
+                    },
                 {% endfor %}
             ];
         }
@@ -154,10 +154,10 @@
             return [
                 // JavaScript object representing modern day province shape data
                 {% for shape in countries %}
-                {
-                    geometry: { { shape.aggregated_geometry | safe } },
-                    country: '{{ shape.country }}'
-                },
+                    {
+                        geometry: { { shape.aggregated_geometry | safe } },
+                        country: '{{ shape.country }}'
+                    },
                 {% endfor %}
             ];
         }
