@@ -4,18 +4,23 @@ import multiprocessing
 bind = '0.0.0.0:8000'
 
 # The number of worker processes for handling requests
-workers = multiprocessing.cpu_count() * 2 + 1
+# Since you have 2 CPUs, you might want to start with 2 workers (1 per CPU)
+workers = 2
 
 # The number of worker threads for handling requests
+# This depends on your application's I/O behavior and your specific use case.
+# If your application is I/O-bound, you can increase this number.
 threads = 2
 
 # Max number of requests per worker before restarting the worker
-max_requests = 1200
+# This can help prevent memory leaks from affecting the system over time.
+max_requests = 1000
 
 # The type of workers to use
 worker_class = 'sync'  # or 'gevent' for async workers
 
 # The maximum number of simultaneous clients
+# This setting is only used when worker_class is set to gevent
 worker_connections = 1000
 
 # How long to keep an idle worker running
