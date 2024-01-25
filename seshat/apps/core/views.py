@@ -2248,22 +2248,22 @@ def seshatcommentpart_create_view(request):
 # Shapefile views
 
 # Set some vars for the range of years to display
-def get_polity_year_range():
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT MIN(polity_start_year), MAX(polity_end_year) FROM core_videoshapefile"
-        )
-        row = cursor.fetchone()
-        return row[0], row[1]
+# def get_polity_year_range():
+#     with connection.cursor() as cursor:
+#         cursor.execute(
+#             "SELECT MIN(polity_start_year), MAX(polity_end_year) FROM core_videoshapefile"
+#         )
+#         row = cursor.fetchone()
+#         return row[0], row[1]
 
-# Calling this function will return the earliest and latest years in the polity
-# The function cannot be called before the database is migrated
-if 'migrate' not in sys.argv:
-    earliest_year, latest_year = get_polity_year_range()
-    initial_displayed_year = earliest_year
-else:
-    earliest_year, latest_year = 2014, 2014
-    initial_displayed_year = -3400
+# # Calling this function will return the earliest and latest years in the polity
+# # The function cannot be called before the database is migrated
+# if 'migrate' not in sys.argv:
+#     earliest_year, latest_year = get_polity_year_range()
+#     initial_displayed_year = earliest_year
+# else:
+earliest_year, latest_year = 2014, 2014
+initial_displayed_year = -3400
 
 # Define a simplification tolerance for faster loading of shapes at lower res
 country_tolerance = 0.01
