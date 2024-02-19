@@ -44,7 +44,7 @@ jobs:
         PGPASSWORD=postgres psql -h localhost -U postgres -c 'SELECT 1'
     - name: Set max_locks_per_transaction and restart postgres
       run: |
-        echo "max_locks_per_transaction = 256" >> /var/lib/postgresql/data/postgresql.conf
+        echo "max_locks_per_transaction = 256" >> /var/lib/postgresql/data/db-files/postgresql.conf
         sudo service postgresql restart
     - name: Run tests
       run: |
