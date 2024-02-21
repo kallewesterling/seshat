@@ -2324,6 +2324,8 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", polity_toler
     if displayed_year != "all" and seshat_id != "all":
         raise ValueError("Only one of displayed_year or seshat_id should be set not both.")
 
+    # TODO: we currently use the low resolution shapefile table
+    # This will break tests as the table does not exist in the test database
     query = """
             SELECT
                 seshat_id,
@@ -2334,9 +2336,9 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", polity_toler
                 polity_end_year,
                 colour,
                 area,
-                ST_Simplify(geom, %s) AS simplified_geometry
+                geom
             FROM
-                core_videoshapefile
+                core_videoshapefilelowres
             """
     if displayed_year != "all":
         query += """
@@ -2344,7 +2346,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", polity_toler
                 polity_start_year <= %s AND polity_end_year >= %s;
             """
         with connection.cursor() as cursor:
-            cursor.execute(query, [polity_tolerance, displayed_year, displayed_year])
+            cursor.execute(query, [displayed_year, displayed_year])
             rows = cursor.fetchall()
     elif seshat_id != "all":
         query += """
@@ -2352,14 +2354,14 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", polity_toler
                 seshat_id = %s;
             """
         with connection.cursor() as cursor:
-            cursor.execute(query, [polity_tolerance, seshat_id])
+            cursor.execute(query, [seshat_id])
             rows = cursor.fetchall()
     else:
         query += """
             ;
             """
         with connection.cursor() as cursor:
-            cursor.execute(query, [polity_tolerance])
+            cursor.execute(query)
             rows = cursor.fetchall()
 
     shapes = []
