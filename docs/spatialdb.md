@@ -28,6 +28,30 @@ To create a new shape dataset for use in the Seshat map explorer, you can do the
 
 This will create a row for each shape. The `end_year` of a shape is calculated to be the `start_year` of the next shape for that polity minus one, for the last shape it is the same as the `start_year`. The final shape will last just one year, but this is fine, often there will be no actual difference in the shape from previous years, this is just how the dataset represents the last year of a polity. Instead of having a shape for every single year, they have a new one each time it changes in size and for the last year.
 
+### Lower resolution dataset
+
+The code is currently set up to load from the `VideoShapefileLowRes` model rather than the `VideoShapefile` where the data is initially loaded to. Simplify the shape data by setting the simplification tolerance (0.07 below). Using a lower value will increase the resolution of the shapes used, but result in slower loading in the django app.
+
+Go into the database (`psql -U postgres -d <seshat_db_name>`) and run the following query:
+
+```{SQL}
+    INSERT INTO core_videoshapefilelowres (geom, name, polity, wikipedia_name, seshat_id, area, start_year, end_year,polity_start_year, polity_end_year, colour)
+    SELECT
+        ST_Simplify(geom, 0.07) AS geom,
+        name,
+        polity,
+        wikipedia_name,
+        seshat_id,
+        area,
+        start_year,
+        end_year,
+        polity_start_year,
+        polity_end_year,
+        colour
+    FROM
+        core_videoshapefile;
+```
+
 
 ## GADM
 

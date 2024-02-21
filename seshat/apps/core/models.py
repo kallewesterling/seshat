@@ -698,6 +698,7 @@ class VideoShapefile(models.Model):
     def __str__(self):
         return "Name: %s" % self.name
 
+# Used to store the lower resolution copies of the geometries in the VideoShapefile model
 class VideoShapefileLowRes(models.Model):
     geom = models.MultiPolygonField()
     name=models.CharField(max_length=100)
