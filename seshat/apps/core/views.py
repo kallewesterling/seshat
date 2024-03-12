@@ -2297,7 +2297,7 @@ def get_polity_info(seshat_ids):
     polities = Polity.objects.filter(new_name__in=seshat_ids).values('new_name', 'id', 'long_name')
     return [(polity['new_name'], polity['id'], polity['long_name']) for polity in polities]
 
-def get_polity_shape_content(displayed_year="all", seshat_id="all"):
+def get_polity_shape_content(displayed_year="all", seshat_id="all", dataset="video"):
     """
         This function returns the polity shapes and other content for the map.
         Only one of displayed_year or seshat_id should be set not both.
@@ -2369,10 +2369,13 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
         if displayed_year == "all":  # When displaying all years, set start at earliest year
             displayed_year = earliest_year
 
-        # Also modify the start and end years of first and last shape to be the same as the polity, for each Seshat-linked polity
-        # for seshat_id, polity_info in seshat_id_page_id.items():
-        #     polity = Polity.objects.filter(new_name=seshat_id).first()  # for some reason there are multiple polities with the same new_name
-        #     shapes = update_polity_shape_content(shapes, polity)
+        if dataset == "seshat":
+            # Also modify the start and end years of first and last shape to be the same as the polity, for each Seshat-linked polity
+            for seshat_id, polity_info in seshat_id_page_id.items():
+                polity = Polity.objects.filter(new_name=seshat_id).first()  # TODO: for some reason there are multiple polities with the same new_name, we should look into why
+                shapes = update_polity_shape_content(shapes, polity)
+            # Drop shapes that have 'none' as the seshat_id
+            shapes = [shape for shape in shapes if shape['seshat_id'] != 'none']
 
     else:  # If only one polity is being displayed use the year range for that polity
         # earliest_year = min([shape['start_year'] for shape in shapes])
