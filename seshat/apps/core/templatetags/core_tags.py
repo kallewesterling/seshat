@@ -19,27 +19,6 @@ def polity_map(pk):
     try:
         content = get_polity_shape_content(seshat_id=polity.new_name)
 
-        # get_polity_shape_content will load the shape data start and end years, but here on the polity map we want to display the polity start and end years
-        content['earliest_year'] = polity.start_year
-        content['latest_year'] = polity.end_year
-
-        # Also modify the start and end years of first and last shape to be the same as the polity
-        min_start_year_index = None
-        min_start_year = float('inf')
-        max_end_year_index = None
-        max_end_year = float('-inf')
-        for i, shape in enumerate(content['shapes']):
-            if shape['start_year'] < min_start_year:
-                min_start_year = shape['start_year']
-                min_start_year_index = i
-            if shape['end_year'] > max_end_year:
-                max_end_year = shape['end_year']
-                max_end_year_index = i
-        if min_start_year_index is not None:
-            content['shapes'][min_start_year_index]['start_year'] = polity.start_year
-        if max_end_year_index is not None:
-            content['shapes'][max_end_year_index]['end_year'] = polity.end_year
-
         capitals_info = get_polity_capitals(pk)
         # Set the start and end years to be the same as the polity where missing
         modified_caps = capitals_info

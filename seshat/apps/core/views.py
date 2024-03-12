@@ -2345,9 +2345,29 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
         if displayed_year == "all":  # When displaying all years, set start at earliest year
             displayed_year = earliest_year
     else:  # If only one polity is being displayed use the year range for that polity
-        earliest_year = min([shape['start_year'] for shape in shapes])
+        # earliest_year = min([shape['start_year'] for shape in shapes])
+        # latest_year = max([shape['end_year'] for shape in shapes])
+        polity = Polity.objects.get(new_name=seshat_id)
+        earliest_year = polity.start_year
+        latest_year = polity.end_year
         displayed_year = earliest_year
-        latest_year = max([shape['end_year'] for shape in shapes])
+
+        # Also modify the start and end years of first and last shape to be the same as the polity
+        min_start_year_index = None
+        min_start_year = float('inf')
+        max_end_year_index = None
+        max_end_year = float('-inf')
+        for i, shape in enumerate(shapes):
+            if shape['start_year'] < min_start_year:
+                min_start_year = shape['start_year']
+                min_start_year_index = i
+            if shape['end_year'] > max_end_year:
+                max_end_year = shape['end_year']
+                max_end_year_index = i
+        if min_start_year_index is not None:
+            shapes[min_start_year_index]['start_year'] = polity.start_year
+        if max_end_year_index is not None:
+            shapes[max_end_year_index]['end_year'] = polity.end_year
 
     content = {
         'shapes': shapes,
