@@ -2340,22 +2340,15 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
             'long_name': long_name or "",
         }
 
-    if 'migrate' not in sys.argv:
-        earliest_year, latest_year = get_polity_year_range()
-        initial_displayed_year = earliest_year
-    else:
-        earliest_year, latest_year = 2014, 2014
-        initial_displayed_year = -3400
-
     if displayed_year == "all":
-        displayed_year = initial_displayed_year 
+        displayed_year, _ = get_polity_year_range() 
 
-    if seshat_id != "all":
+    if seshat_id == "all":
+        earliest_year, latest_year = get_polity_year_range()
+    else:    
         earliest_year = min([shape['start_year'] for shape in shapes])
         displayed_year = earliest_year
         latest_year = max([shape['end_year'] for shape in shapes])
-    else:
-        earliest_year, latest_year = get_polity_year_range()
 
     content = {
         'shapes': shapes,
