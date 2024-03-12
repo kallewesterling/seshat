@@ -2454,7 +2454,8 @@ def map_view_all(request):
         This view is used to display a map with polities plotted on it.
         The view loads all polities for the range of years.
     """
-    content = get_polity_shape_content()
+    dataset = request.GET.get('dataset', 'video')
+    content = get_polity_shape_content(dataset=dataset)
 
     # Load the capital cities for polities that have them
     caps = get_all_polity_capitals()
