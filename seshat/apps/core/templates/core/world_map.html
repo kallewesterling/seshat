@@ -94,7 +94,7 @@
 
                 <div class="slidecontainer">
                     <label for="polityData">Data source:</label>
-                    <select name="polityData" id="polityData" onchange="switchDataset()">
+                    <select name="polityData" id="polityData" onchange="switchDataset()" disabled>
                         <option value="seshat">Seshat</option>
                         <option value="bennet">Bennet et al</option>
                     </select><br><br>
@@ -214,6 +214,7 @@
                     document.getElementById('playButton').disabled = false;
                     document.getElementById('stopButton').disabled = false;
                     document.getElementById('playRate').disabled = false;
+                    document.getElementById('polityData').disabled = false;
 
                     // Start the second fetch after the first one is complete
                     return fetch('/core/provinces_and_countries');
