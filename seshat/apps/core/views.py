@@ -2368,6 +2368,12 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
         earliest_year, latest_year = get_polity_year_range()
         if displayed_year == "all":  # When displaying all years, set start at earliest year
             displayed_year = earliest_year
+
+        # Also modify the start and end years of first and last shape to be the same as the polity, for each Seshat-linked polity
+        # for seshat_id, polity_info in seshat_id_page_id.items():
+        #     polity = Polity.objects.filter(new_name=seshat_id).first()  # for some reason there are multiple polities with the same new_name
+        #     shapes = update_polity_shape_content(shapes, polity)
+
     else:  # If only one polity is being displayed use the year range for that polity
         # earliest_year = min([shape['start_year'] for shape in shapes])
         # latest_year = max([shape['end_year'] for shape in shapes])
