@@ -93,6 +93,11 @@
                 </legend>
 
                 <div class="slidecontainer">
+                    <label for="polityData">Data source:</label>
+                    <select name="polityData" id="polityData" onchange="switchDataset()">
+                        <option value="seshat">Seshat</option>
+                        <option value="bennet">Bennet et al</option>
+                    </select><br><br>
                     <label for="enterYear">Enter year:</label>
                     <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" disabled onchange="storeYear()">
                     <button id="minusButton" type="button" onclick="adjustSliderDown()" disabled>-</button>
