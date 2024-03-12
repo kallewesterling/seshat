@@ -2340,19 +2340,13 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
             'long_name': long_name or "",
         }
 
-    if seshat_id == "all":  # If all polities are being displayed use the full year range
-        earliest_year, latest_year = get_polity_year_range()
-        if displayed_year == "all":  # When displaying all years, set start at earliest year
-            displayed_year = earliest_year
-    else:  # If only one polity is being displayed use the year range for that polity
-        # earliest_year = min([shape['start_year'] for shape in shapes])
-        # latest_year = max([shape['end_year'] for shape in shapes])
-        polity = Polity.objects.get(new_name=seshat_id)
-        earliest_year = polity.start_year
-        latest_year = polity.end_year
-        displayed_year = earliest_year
-
-        # Also modify the start and end years of first and last shape to be the same as the polity
+    def update_polity_shape_content(shapes, polity):
+        """
+            Update the years for the first and last shapes for polities in the video dataset linked to a Seshat polity.
+            This ensures that when we display a Seshat-linked polity, the correct years are shown.
+            Note, this does effectively change the VideoShapefile shown.
+            We can toggle this setting on and off depending on whether we want to show Seshat or VideoShapefile years.
+        """
         min_start_year_index = None
         min_start_year = float('inf')
         max_end_year_index = None
@@ -2368,6 +2362,22 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
             shapes[min_start_year_index]['start_year'] = polity.start_year
         if max_end_year_index is not None:
             shapes[max_end_year_index]['end_year'] = polity.end_year
+        return shapes
+
+    if seshat_id == "all":  # If all polities are being displayed use the full year range
+        earliest_year, latest_year = get_polity_year_range()
+        if displayed_year == "all":  # When displaying all years, set start at earliest year
+            displayed_year = earliest_year
+    else:  # If only one polity is being displayed use the year range for that polity
+        # earliest_year = min([shape['start_year'] for shape in shapes])
+        # latest_year = max([shape['end_year'] for shape in shapes])
+        polity = Polity.objects.get(new_name=seshat_id)
+        earliest_year = polity.start_year
+        latest_year = polity.end_year
+        displayed_year = earliest_year
+
+        # Also modify the start and end years of first and last shape to be the same as the polity
+        shapes = update_polity_shape_content(shapes, polity)
 
     content = {
         'shapes': shapes,
