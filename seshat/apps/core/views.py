@@ -2340,12 +2340,11 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
             'long_name': long_name or "",
         }
 
-    if displayed_year == "all":
-        displayed_year, _ = get_polity_year_range() 
-
-    if seshat_id == "all":
+    if seshat_id == "all":  # If all polities are being displayed use the full year range
         earliest_year, latest_year = get_polity_year_range()
-    else:    
+        if displayed_year == "all":  # When displaying all years, set start at earliest year
+            displayed_year = earliest_year
+    else:  # If only one polity is being displayed use the year range for that polity
         earliest_year = min([shape['start_year'] for shape in shapes])
         displayed_year = earliest_year
         latest_year = max([shape['end_year'] for shape in shapes])
