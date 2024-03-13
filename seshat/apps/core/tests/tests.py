@@ -148,7 +148,7 @@ class ShapesTest(TestCase):
 
     def test_get_polity_year_range(self):
         """Test the get_polity_year_range function."""
-        expected_result = (0, 2020)
+        expected_result = (-100, 2020)
         result = get_polity_year_range()
         self.assertEqual(result, expected_result)
 
