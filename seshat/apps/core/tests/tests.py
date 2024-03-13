@@ -193,15 +193,15 @@ class ShapesTest(TestCase):
                     'name': 'Test shape 2',
                     'start_year': 0,
                     'end_year': 1000,
-                    'polity_start_year': 0,
-                    'polity_end_year': 1000,
+                    'polity_start_year': -100,  # These get overwritten by the polity start and end years
+                    'polity_end_year': 1100,    # because there the one linked shape is both the first and last shape
                     'colour': "#FFFFFF",
                     'area': 100.0,
                     'geom': self.geo_square
                 }
             ],
-            'earliest_year': 0,
-            'display_year': 0,
+            'earliest_year': -100,  # This is the earliest year in the database, not the earliest year of the polity
+            'display_year': -100,  # Default to the earliest year of the polity
             'latest_year': 2020,
             'seshat_id_page_id': {
                 'Test seshat_id': {'id': 1, 'long_name': 'TestPolity'},
@@ -335,7 +335,7 @@ class ShapesTest(TestCase):
                         'seshat_id': 'Test seshat_id 2',
                         'name': 'Test shape 2',
                         'start_year': -100,  # These get overwritten by the polity start and end years
-                        'end_year': 1100,     # because there the one linked shape is both the first and last shape
+                        'end_year': 1100,    # because there the one linked shape is both the first and last shape
                         'polity_start_year': -100,
                         'polity_end_year': 1100,
                         'colour': "#FFFFFF",
