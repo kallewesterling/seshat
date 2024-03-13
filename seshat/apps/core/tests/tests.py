@@ -22,7 +22,9 @@ class ShapesTest(TestCase):
             name='TestPolity',
             id=self.pk,
             long_name='TestPolity',
-            new_name='Test seshat_id'
+            new_name='Test seshat_id',
+            start_year=2000,
+            end_year=2020
         )
         Polity.objects.create(
             name='TestPolity2',
