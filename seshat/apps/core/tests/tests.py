@@ -230,7 +230,7 @@ class ShapesTest(TestCase):
                     'geom': self.geo_square
                 }
             ],
-            'earliest_year': 0,  # This is the earliest year in the database, not the earliest year of the polity
+            'earliest_year': -100,  # This is the earliest year in the database, not the earliest year of the polity
             'display_year': 2000,
             'latest_year': 2020,
             'seshat_id_page_id': {
