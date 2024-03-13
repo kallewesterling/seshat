@@ -2569,7 +2569,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", dataset="vid
             Update the years for the first and last shapes for polities in the video dataset linked to a Seshat polity.
             This ensures that when we display a Seshat-linked polity, the correct years are shown.
             Note, this does effectively change the VideoShapefile shown.
-            We can toggle this setting on and off depending on whether we want to show Seshat or VideoShapefile years.
+            Note, This function should only be used when "shapes" are from a single polity.
         """
         min_start_year_index = None
         min_start_year = float('inf')
@@ -2594,12 +2594,15 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", dataset="vid
             displayed_year = earliest_year
 
         if dataset == "seshat":
-            # Also modify the start and end years of first and last shape to be the same as the polity, for each Seshat-linked polity
-            for seshat_id, polity_info in seshat_id_page_id.items():
-                polity = Polity.objects.filter(new_name=seshat_id).first()  # TODO: for some reason there are multiple polities with the same new_name, we should look into why
-                shapes = update_polity_shape_content(shapes, polity)
             # Drop shapes that have 'none' as the seshat_id
             shapes = [shape for shape in shapes if shape['seshat_id'] != 'none']
+
+            # TODO: create a way of updating the Seshat-linked shapes to have the same start and end years as the polity on the world map
+            # TODO: the update_polity_shape_content is set up to handle `shapes` all being the same polity and the commented code below will not work as intended
+            # Also modify the start and end years of first and last shape to be the same as the polity, for each Seshat-linked polity
+            # for seshat_id, polity_info in seshat_id_page_id.items():
+            #     polity = Polity.objects.filter(new_name=seshat_id).first()  # TODO: for some reason there are multiple polities with the same new_name, we should look into why
+            #     shapes = update_polity_shape_content(shapes, polity)
 
     else:  # If only one polity is being displayed use the year range for that polity
         polity = Polity.objects.get(new_name=seshat_id)

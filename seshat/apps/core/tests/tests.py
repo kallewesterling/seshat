@@ -273,6 +273,16 @@ class ShapesTest(TestCase):
         """Test that a ValueError is raised if both displayed_year and seshat_id are set."""
         self.assertRaises(ValueError, get_polity_shape_content, displayed_year=2000, seshat_id='Test seshat_id')
 
+    # TODO: see todo in get_polity_shape_content
+    # def test_get_polity_shape_content_dataset_options(self):
+    #     """Test the get_polity_shape_content function with different dataset options."""
+    #     seshat_dataset_result = get_polity_shape_content(dataset='seshat')
+    #     for shape in seshat_dataset_result['shapes']:
+    #         if shape['seshat_id'] == 'Test seshat_id 2':
+    #             print(shape)
+    #             self.assertEqual(shape['start_year'], -100)
+    #             self.assertEqual(shape['end_year'], -1100)
+
     def test_get_polity_capitals(self):
         """Test the get_polity_capitals function."""
         result = get_polity_capitals(self.pk)
