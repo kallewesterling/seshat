@@ -16,9 +16,16 @@ def polity_map(pk):
     """
     page_id = str(pk)
     polity = Polity.objects.get(id=page_id)
-    try:
-        content = get_polity_shape_content(seshat_id=polity.new_name)
 
+    # Get the shape data for the polity
+    content = get_polity_shape_content(seshat_id=polity.new_name)
+
+    # If there is no shape data, set include_polity_map to False
+    if len(content['shapes']) == 0:
+        content = {}
+        content['include_polity_map'] = False
+    # If there is shape data, set include_polity_map to True and get the capital information
+    else:
         capitals_info = get_polity_capitals(pk)
         # Set the start and end years to be the same as the polity where missing
         modified_caps = capitals_info
@@ -31,11 +38,7 @@ def polity_map(pk):
             i+=1
         content['capitals_info'] = modified_caps
         content['include_polity_map'] = True
-    except:
-        content = {}
-        content['include_polity_map'] = False
 
-    if content['include_polity_map']:
         # Update the default display year to be the peak year (if it exists)
         try:
             peak_years = Polity_peak_years.objects.get(polity_id=page_id)
