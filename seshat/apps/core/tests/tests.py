@@ -64,8 +64,8 @@ class ShapesTest(TestCase):
             area=100.0,
             start_year=0,
             end_year=1000,
-            polity_start_year=0,
-            polity_end_year=1000,
+            polity_start_year=-100,
+            polity_end_year=1100,
             colour="#FFFFFF"
         )
         self.gadm_shapefile = GADMShapefile.objects.create(
@@ -334,18 +334,18 @@ class ShapesTest(TestCase):
                     {
                         'seshat_id': 'Test seshat_id 2',
                         'name': 'Test shape 2',
-                        'start_year': 0,
-                        'end_year': 1000,
-                        'polity_start_year': 0,  # Note: this is taken from the shape objectm, not the polity object (they don't match in this test case)
-                        'polity_end_year': 1000,
+                        'start_year': -100,  # These get overwritten by the polity start and end years
+                        'end_year': 1100,     # because there the one linked shape is both the first and last shape
+                        'polity_start_year': -100,
+                        'polity_end_year': 1100,
                         'colour': "#FFFFFF",
                         'area': 100.0,
                         'geom': self.geo_square
                     }
                 ],
-                'earliest_year': 0,
-                'display_year': 0,
-                'latest_year': 1000,
+                'earliest_year': -100,
+                'display_year': -100,
+                'latest_year': 1100,
                 'seshat_id_page_id': {
                     'Test seshat_id 2': {'id': 2, 'long_name': 'TestPolity2'}
                 },
