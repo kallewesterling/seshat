@@ -186,9 +186,12 @@ Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on t
     - <details><summary>macOS</summary>
 
         - Installation: follow the instructions to install https://postgresapp.com/ which **gives you PostgreSQL version 16 with PostGIS installed**
-        - Create db: open psql with `psql postgres` and run:
+        - Create db: open psql with `psql -U postgres` and run:
             ```
                 CREATE DATABASE <seshat_db_name>;
+            ```
+        - Add PostGIS to db: open psql with `psql -U postgres -d <seshat_db_name>` and run:
+            ```
                 CREATE EXTENSION postgis;
             ```
         </details>
