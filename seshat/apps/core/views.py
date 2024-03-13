@@ -2602,8 +2602,6 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", dataset="vid
             shapes = [shape for shape in shapes if shape['seshat_id'] != 'none']
 
     else:  # If only one polity is being displayed use the year range for that polity
-        # earliest_year = min([shape['start_year'] for shape in shapes])
-        # latest_year = max([shape['end_year'] for shape in shapes])
         polity = Polity.objects.get(new_name=seshat_id)
         earliest_year = polity.start_year
         latest_year = polity.end_year
