@@ -175,6 +175,18 @@ function updateLegend() {
                     // Add the polity to the list of added polities
                     addedPolities.push(shape);
                     addedPolityNames.push(shape.name);
+
+                    // Also add any shapes that are multi-polities e.g. Personal unions
+                    var i = 0;
+                    shapesData.forEach(function (shape2) {
+                        if (shape2.name.includes(shape.name) && shape2.seshat_id.includes(';')) {
+                            if (!addedPolityNames.includes(shape2.name)) {
+                                addedPolities.push(shape2);
+                                addedPolityNames.push(shape2.name);
+                            }
+                        }
+                        i++;
+                    });
                 };
             };
         });
@@ -187,7 +199,7 @@ function updateLegend() {
         // Add a legend for highlighted polities
         if (addedPolities.length > 0) {
             var legendTitle = document.createElement('h3');
-            legendTitle.textContent = 'Highlighted Polities';
+            legendTitle.textContent = 'Selected Polities';
             legendDiv.appendChild(legendTitle);
             for (var i = 0; i < addedPolities.length; i++) {
                 var legendItem = document.createElement('p');
@@ -204,48 +216,112 @@ function updateLegend() {
             }
         };
 
-    } else {
+    } else if (variable in categorical_variables) {
+        
+        var legendTitle = document.createElement('h3');
+        legendTitle.textContent = document.getElementById('chooseCategoricalVariableSelection').value;
+        legendDiv.appendChild(legendTitle);
+
+        for (var key in oneLanguageColourMapping) {
+            var legendItem = document.createElement('p');
+
+            var colorBox = document.createElement('span');
+            colorBox.style.display = 'inline-block';
+            colorBox.style.width = '20px';
+            colorBox.style.height = '20px';
+            colorBox.style.backgroundColor = oneLanguageColourMapping[key];
+            colorBox.style.marginRight = '10px';
+            legendItem.appendChild(colorBox);
+
+            if (key === 'Unknown') {
+                colorBox.style.border = '1px solid black';
+            }
+            if (key === 'Unknown') {
+                legendItem.appendChild(document.createTextNode('Coded unknown'));
+            } else {
+                legendItem.appendChild(document.createTextNode(`${key}`));
+            }
+
+            legendDiv.appendChild(legendItem);
+        };
+
+    } else {  // Absent-present variables
         var legendTitle = document.createElement('h3');
         legendTitle.textContent = variable;
         legendDiv.appendChild(legendTitle);
 
         for (var key in variableColourMapping) {
             var legendItem = document.createElement('p');
-            var colorBox = document.createElement('span');
 
+            var colorBox = document.createElement('span');
             colorBox.style.display = 'inline-block';
             colorBox.style.width = '20px';
             colorBox.style.height = '20px';
             colorBox.style.backgroundColor = variableColourMapping[key];
             colorBox.style.marginRight = '10px';
-
             legendItem.appendChild(colorBox);
+
+            if (key === 'unknown') {
+                colorBox.style.border = '1px solid black';
+            }
+
             if (key === 'A~P') {
                 legendItem.appendChild(document.createTextNode('Absent then present'));
             } else if (key === 'P~A') {
                 legendItem.appendChild(document.createTextNode('Present then absent'));
+            } else if (key === 'unknown') {
+                legendItem.appendChild(document.createTextNode('Coded unknown'));
             } else {
                 legendItem.appendChild(document.createTextNode(`${key[0].toUpperCase()}${key.slice(1)}`));
             }
 
             legendDiv.appendChild(legendItem);
         }
-
-        if (document.querySelector('input[name="baseMap"]:checked').value == 'gadm') {
-            var legendItem = document.createElement('p');
-            var colorBox = document.createElement('span');
-
-            colorBox.style.display = 'inline-block';
-            colorBox.style.width = '20px';
-            colorBox.style.height = '20px';
-            colorBox.style.backgroundColor = 'white';
-            colorBox.style.border = '1px solid black';
-            colorBox.style.marginRight = '10px';
-
-            legendItem.appendChild(colorBox);
-            legendItem.appendChild(document.createTextNode('Base map'));
-
-            legendDiv.appendChild(legendItem);
-        }
     }
+
+    if (document.querySelector('input[name="baseMap"]:checked').value == 'gadm') {
+        var legendItem = document.createElement('p');
+
+        var colorBox = document.createElement('span');
+        colorBox.style.display = 'inline-block';
+        colorBox.style.width = '20px';
+        colorBox.style.height = '20px';
+        colorBox.style.backgroundColor = 'white';
+        colorBox.style.border = '1px solid black';
+        colorBox.style.marginRight = '10px';
+
+        legendItem.appendChild(colorBox);
+        legendItem.appendChild(document.createTextNode('Base map'));
+
+        legendDiv.appendChild(legendItem);
+    }
+}
+
+function updateCategoricalVariableSelection(variable){
+    var dropdown = document.getElementById('chooseCategoricalVariableSelection');
+    dropdown.innerHTML = '';
+    if (localStorage.getItem(variable)) {
+        document.getElementById('chooseCategoricalVariableSelection').value = localStorage.getItem(variable);
+    }
+    categorical_variables[variable].forEach(function (choice) {
+        var option = document.createElement('option');
+        option.value = choice;
+        option.text = choice;
+
+        // Set some default selections if no selection has been made
+        if (localStorage.getItem(variable)) {
+            if (localStorage.getItem(variable) === choice) {
+                option.selected = true;
+            }
+        } else {
+            if (choice === 'Greek' || choice === 'Indo-European') {
+                option.selected = true;
+            }
+        }
+
+        dropdown.appendChild(option);
+    });
+    var varSelectElement = document.getElementById('chooseVariable');
+    var varText = varSelectElement.options[varSelectElement.selectedIndex].text;
+    document.querySelector('label[for="chooseCategoricalVariableSelection"]').textContent = varText + ': ';
 }

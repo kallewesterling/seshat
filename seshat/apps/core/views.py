@@ -57,7 +57,7 @@ from django.urls import reverse, reverse_lazy
 
 from django.contrib.messages.views import SuccessMessageMixin
 
-from ..general.models import Polity_research_assistant, Polity_duration
+from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES
 
 from ..crisisdb.models import Power_transition
 
@@ -2526,10 +2526,11 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
 
     rows = rows.values('seshat_id', 'name', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'simplified_geom')
 
-    shapes = list(rows)
-    for shape in shapes:
-        shape['geom'] = shape['simplified_geom'].geojson
-        del shape['simplified_geom']  # Remove the original object
+    shapes = []
+    for shape in rows:
+        simplified_geom = shape.pop('simplified_geom').geojson
+        shape['geom'] = simplified_geom
+        shapes.append(shape)
 
     seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id']]
     polities = Polity.objects.filter(new_name__in=seshat_ids).values('new_name', 'id', 'long_name')
@@ -2664,6 +2665,74 @@ def assign_variables_to_shapes(shapes, app_map):
                             shape[variable_formatted] = getattr(variable_obj, variable)  # absent/present choice
                         except AttributeError:  # For rt models where coded_value is used
                             shape[variable_formatted] = getattr(variable_obj, 'coded_value')
+                else:
+                    shape[variable_formatted] = 'seshat page missing'
+
+    return shapes, variables
+
+def assign_categorical_variables_to_shapes(shapes, variables):
+    """
+        Assign the categorical variables to the shapes.
+        Currently only language is implemented.
+    """
+    # Add language variables to the variables
+    variables['General Variables'] = {
+        'polity_linguistic_family': {'formatted': 'linguistic_family', 'full_name': 'Linguistic Family'},
+        'polity_language_genus': {'formatted': 'language_genus', 'full_name': 'Language Genus'},
+        'polity_language': {'formatted': 'language', 'full_name': 'Language'}
+    }
+
+    # Fetch all polities and store them in a dictionary for quick access
+    polities = {polity.new_name: polity for polity in Polity.objects.all()}
+
+    # Fetch all linguistic families, language genuses, and languages and store them in dictionaries for quick access
+    linguistic_families = {}
+    for lf in Polity_linguistic_family.objects.all():
+        if lf.polity_id not in linguistic_families:
+            linguistic_families[lf.polity_id] = []
+        linguistic_families[lf.polity_id].append(lf)
+
+    language_genuses = {}
+    for lg in Polity_language_genus.objects.all():
+        if lg.polity_id not in language_genuses:
+            language_genuses[lg.polity_id] = []
+        language_genuses[lg.polity_id].append(lg)
+
+    languages = {}
+    for l in Polity_language.objects.all():
+        if l.polity_id not in languages:
+            languages[l.polity_id] = []
+        languages[l.polity_id].append(l)
+
+    # Add language variable info to polity shapes
+    for shape in shapes:
+        shape['linguistic_family'] = []
+        shape['language_genus'] = []
+        shape['language'] = []
+        if shape['seshat_id'] != 'none':  # Skip shapes with no seshat_id
+            polity = polities.get(shape['seshat_id'])
+            if polity:
+                # Get the linguistic family, language genus, and language for the polity
+                shape['linguistic_family'].extend([lf.linguistic_family for lf in linguistic_families.get(polity.id, [])])
+                shape['language_genus'].extend([lg.language_genus for lg in language_genuses.get(polity.id, [])])
+                shape['language'].extend([l.language for l in languages.get(polity.id, [])])
+
+        # If no linguistic family, language genus, or language was found, append 'Uncoded'
+        polity = polities.get(shape['seshat_id'])
+        if polity:
+            if not shape['linguistic_family']:
+                shape['linguistic_family'].append('Uncoded')
+            if not shape['language_genus']:
+                shape['language_genus'].append('Uncoded')
+            if not shape['language']:
+                shape['language'].append('Uncoded')
+        else:
+            if not shape['linguistic_family']:
+                shape['linguistic_family'].append('Seshat page missing')
+            if not shape['language_genus']:
+                shape['language_genus'].append('Seshat page missing')
+            if not shape['language']:
+                shape['language'].append('Seshat page missing')  
 
     return shapes, variables
 
@@ -2672,6 +2741,14 @@ app_map = {
     'sc': 'Social Complexity Variables',
     'wf': 'Warfare Variables (Military Technologies)',
     'rt': 'Religion Tolerance',
+    # 'general': 'General Variables',
+}
+
+# Get sorted lists of choices for each categorical variable
+categorical_variables = {
+    'linguistic_family': sorted([x[0] for x in POLITY_LINGUISTIC_FAMILY_CHOICES]),
+    'language_genus': sorted([x[0] for x in POLITY_LANGUAGE_GENUS_CHOICES]),
+    'language': sorted([x[0] for x in POLITY_LANGUAGE_CHOICES])
 }
 
 def map_view_initial(request):
@@ -2693,12 +2770,18 @@ def map_view_initial(request):
 
     content = get_polity_shape_content(displayed_year=displayed_year)
 
-    # Add in the variables to view for the shapes
+    # Add in the present/absent variables to view for the shapes
     content['shapes'], content['variables'] = assign_variables_to_shapes(content['shapes'], app_map)
+
+    # Add in the categorical variables to view for the shapes
+    content['shapes'], content['variables'] = assign_categorical_variables_to_shapes(content['shapes'], content['variables'])
 
     # Load the capital cities for polities that have them
     caps = get_all_polity_capitals()
     content['all_capitals_info'] = caps
+
+    # Add categorical variable choices to content for dropdown selection
+    content['categorical_variables'] = categorical_variables
     
     return render(request,
                   'core/world_map.html',
@@ -2712,12 +2795,18 @@ def map_view_all(request):
     """
     content = get_polity_shape_content()
 
-    # Add in the variables to view for the shapes
+    # Add in the present/absent variables to view for the shapes
     content['shapes'], content['variables'] = assign_variables_to_shapes(content['shapes'], app_map)
+
+    # Add in the categorical variables to view for the shapes
+    content['shapes'], content['variables'] = assign_categorical_variables_to_shapes(content['shapes'], content['variables'])
 
     # Load the capital cities for polities that have them
     caps = get_all_polity_capitals()
     content['all_capitals_info'] = caps
+
+    # Add categorical variable choices to content for dropdown selection
+    content['categorical_variables'] = categorical_variables
     
     return JsonResponse(content)
 
