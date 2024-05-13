@@ -17,45 +17,19 @@ To create a new shape dataset for use in the Seshat map explorer, you can do the
     - views at `seshat/apps/core/views.py`
     - template e.g. `seshat/apps/core/templates/core/world_map.html`
 
-## RA curated dataset
+## Cliopatria shape dataset
 
-1. Download and unzip the [dataset](https://drive.google.com/file/d/1qrBnwSdIM2LLBsgVWtn0k1C_cO8l2FQR/view?usp=drive_link) dataset
-    - Note: this is a private drive link
+1. Download and unzip the Cliopatria dataset. *TODO: add a link to the published data*
 2. Populate `core_videoshapefile` table
     ```
         python manage.py populate_videodata /path/to/data
     ```
+    - Note: if you wish to further simplify the Cliopatria shape resolution used by the world map after loading it into the database, open `seshat/apps/core/management/commands/populate_videodata.py` and modify the SQL query under the comment: "Adjust the tolerance param of ST_Simplify as needed"
 
 ## GADM
 
 1. [Download](https://geodata.ucdavis.edu/gadm/gadm4.1/gadm_410-gpkg.zip) the whole world GeoPackage file from the [GADM website](https://gadm.org/download_world.html).
-2. Populate the `core_gadmshapefile` table
+2. Populate the `core_gadmshapefile`, `core_gadmcountries` and `core_gadmprovinces` tables
     ```
         python manage.py populate_gadm /path/to/gpkg_file
     ```
-3. To populate the `core_gadmcountries`, go into the database (`psql -U postgres -d <seshat_db_name>`) and run the following query:
-    ```{SQL}
-        INSERT INTO core_gadmcountries (geom, "COUNTRY")
-        SELECT 
-            COALESCE(ST_Simplify(ST_Union(geom), 0.01), ST_Simplify(ST_Union(geom), 0.001)) AS geom,
-            "COUNTRY"
-        FROM 
-            core_gadmshapefile
-        GROUP BY 
-            "COUNTRY";
-    ```
-4. To populate the `core_gadmprovinces`, go into the database (`psql -U postgres -d <seshat_db_name>`) and run the following query:
-    ```{SQL}
-        INSERT INTO core_gadmprovinces (geom, "COUNTRY", "NAME_1", "ENGTYPE_1")
-        SELECT 
-            COALESCE(ST_Simplify(ST_Union(geom), 0.01), ST_Simplify(ST_Union(geom), 0.001)) AS geom,
-            "COUNTRY",
-            "NAME_1",
-            "ENGTYPE_1"
-        FROM 
-            core_gadmshapefile
-        GROUP BY 
-            "COUNTRY", "NAME_1", "ENGTYPE_1";
-    ```
-
-The 0.01 value is the simplification tolerance. Using a lower value will increase the resolution of the shapes used, but result in slower loading in the django app. Some smaller countries/provinces cannot be simplified with 0.01, so try 0.001.
