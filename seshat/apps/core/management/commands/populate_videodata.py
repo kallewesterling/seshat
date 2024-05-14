@@ -59,7 +59,7 @@ class Command(BaseCommand):
                     properties = feature['properties']
                     if properties['Type'] == 'POLITY':
                         polity_name = properties['Name'].replace('(', '').replace(')', '')  # Remove spaces and brackets from name
-                        polity_colour_key = polity_name
+                        polity_polity = polity_name
                         try:
                             # If a shape has components we'll load the components instead
                             # ... unless the components have their own components, then load the top level shape
@@ -74,21 +74,15 @@ class Command(BaseCommand):
                             if properties['Member_of']:
                                 # If a shape is a component, get the parent polity to use as the polity_colour_key
                                 if len(properties['Member_of']) > 0:
-                                    polity_colour_key = properties['Member_of'].replace('(', '').replace(')', '')
+                                    polity_polity = properties['Member_of'].replace('(', '').replace(')', '')
                         except KeyError:
                             pass
 
                         if polity_name:
-                            
-                            # Use seshat_id as the colour key, if it exists
-                            # But use what we previously set as the polity_colour_key for the top level name
-                            polity_polity = polity_colour_key
-                            if properties['SeshatID']:
-                                polity_colour_key = properties['SeshatID']
-
                             if polity_name not in polity_years:
                                 polity_years[polity_name] = []
                             polity_years[polity_name].append(properties['Year'])
+                            polity_colour_key = properties['Color']
                             if polity_colour_key not in polity_shapes:
                                 polity_shapes[polity_colour_key] = []
                             feature['properties']['PolityName'] = polity_name  # Update the name
