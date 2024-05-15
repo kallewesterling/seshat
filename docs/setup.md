@@ -251,10 +251,10 @@ Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on t
         ```
         - Note: you could first check the available libgeos version with: `sudo apt search libgeos`
         </details>
-    - Open `seshat/settings/local.py` and check (or update) the paths in the following variables, which should be to your local `gdal` and `geos` installations
+    - Open `seshat/settings/base.py` and check (or update) the paths in the following variables, which should be to your local `gdal` and `geos` installations
         - `GDAL_LIBRARY_PATH`
         - `GEOS_LIBRARY_PATH`
-    - Note: there are hardcoded paths in local.py for the Mac and Ubuntu instructions above included
+    - Note: there are hardcoded paths in base.py for the Mac and Ubuntu instructions above included
 
 6. After PostgreSQL, GDAL and GEOS are installed, install the Python packages in your environment (some packages have these as dependencies). From the top level of the `seshat` repo:
     ```
@@ -322,9 +322,9 @@ Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on t
         ```
     - The presence of this file will ensure Django connects to your local database
 
-9. Ensure that database migrations have run for the "core" Django app:
+9. Ensure that all Django database migrations have run:
     ```
-        python manage.py migrate core
+        python manage.py migrate
     ```
 
 10. If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions in [spatialdb.md](spatialdb.md).
