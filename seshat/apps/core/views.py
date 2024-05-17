@@ -194,6 +194,13 @@ def seshatolddownloads(request):
     }
     return render(request, 'core/old_downloads.html', context=context)
 
+def seshatcodebookold(request):
+    context = {
+        'insta': "Instabilities All Over the Place..",
+    }
+    return render(request, 'core/old_codebook.html', context=context)
+
+
 def seshatacknowledgements(request):
     context = {
         'insta': "Instabilities All Over the Place..",
@@ -2912,8 +2919,8 @@ def assign_categorical_variables_to_shapes(shapes, variables):
 app_map = {
     'sc': 'Social Complexity Variables',
     'wf': 'Warfare Variables (Military Technologies)',
-    'rt': 'Religion Tolerance',
-    # 'general': 'General Variables',
+    # 'rt': 'Religion Tolerance',     TODO: Temporarily restricted. Uncomment when ready.
+    # 'general': 'General Variables', TODO: Not implemented yet
 }
 
 # Get sorted lists of choices for each categorical variable
@@ -2954,6 +2961,9 @@ def map_view_initial(request):
 
     # Add categorical variable choices to content for dropdown selection
     content['categorical_variables'] = categorical_variables
+
+    # TODO: Temporary restriction on the latest year for the map view
+    content['latest_year'] = 2014
     
     return render(request,
                   'core/world_map.html',
@@ -2979,6 +2989,9 @@ def map_view_all(request):
 
     # Add categorical variable choices to content for dropdown selection
     content['categorical_variables'] = categorical_variables
+
+    # TODO: Temporary restriction on the latest year for the map view
+    content['latest_year'] = 2014
     
     return JsonResponse(content)
 
