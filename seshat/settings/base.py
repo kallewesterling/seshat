@@ -166,8 +166,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "seshat.apps.core.middleware.AutoLoginMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware"
-    "django.middleware.gzip.GZipMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.gzip.GZipMiddleware"
 
 ]
 
