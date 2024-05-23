@@ -3017,6 +3017,11 @@ def map_view_all(request):
     # Add in the categorical variables to view for the shapes
     content['shapes'], content['variables'] = assign_categorical_variables_to_shapes(content['shapes'], content['variables'])
 
+    # Paginate the shapes to enable sequential loading
+    paginator = Paginator(content['shapes'], 100)
+    page = request.GET.get('page')
+    content['shapes'] = list(paginator.get_page(page))
+
     # Load the capital cities for polities that have them
     caps = get_all_polity_capitals()
     content['all_capitals_info'] = caps
@@ -3030,7 +3035,7 @@ def map_view_all(request):
     # Set the polity to highlight
     content['world_map_initial_polity'] = world_map_initial_polity
     
-    return JsonResponse(content)
+    return JsonResponse(content, safe=False)
 
 def provinces_and_countries_view(request):
     provinces = get_provinces()
