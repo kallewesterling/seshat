@@ -299,7 +299,14 @@
                             return fetch('/core/world_map_all/');
                         }
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            // If the response is not ok, fetch data from the new URL
+                            return fetch(newUrl)
+                                .then(newResponse => newResponse.json());
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         data.shapes
                             .filter(shape => !shapesData.some(existingShape => existingShape.id === shape.id))
