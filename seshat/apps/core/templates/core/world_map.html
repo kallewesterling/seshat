@@ -276,6 +276,13 @@
         window.addEventListener('load', function () {
             function fetchData(url, displayYear) {
                 return fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            // If the response is not ok, fetch data from the new URL
+                            return fetch('/core/world_map_one_year/' + displayYear);
+                        }
+                        return response;
+                    })
                     .then(response => response.json())
                     .then(data => {
                         data.shapes
@@ -289,24 +296,14 @@
                         allCapitalsInfo = data.all_capitals_info;
                         plotPolities();
                         document.getElementById('loadingIndicator').style.display = 'none';
-                        console.log('1')
                         let enteredYear = document.getElementById('enterYear').value;
                         if (displayYear != enteredYear) {
-                            console.log('2')
                             return fetchData('/core/world_map_one_year/', enteredYear);
                         } else {
-                            console.log('3')
                             return fetch('/core/world_map_all/');
                         }
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            // If the response is not ok, fetch data from the new URL
-                            return fetch(newUrl)
-                                .then(newResponse => newResponse.json());
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         data.shapes
                             .filter(shape => !shapesData.some(existingShape => existingShape.id === shape.id))
