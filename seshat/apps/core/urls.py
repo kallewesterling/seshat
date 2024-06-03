@@ -124,6 +124,8 @@ urlpatterns += [
     #     name="seshatcommentpart-create2"),
     path('core/seshatcommentparts/create2/<int:com_id>/<int:subcom_order>/', views.seshat_comment_part_create_from_null_view,
          name="seshatcommentpart-create2"),
+    path('core/seshatcommentparts/create2_inline/<slug:app_name>/<slug:model_name>/<int:instance_id>/', views.seshat_comment_part_create_from_null_view_inline,
+         name="seshatcommentpart-create2-inline"),
      path('core/seshatcommentparts/', views.SeshatCommentPartListView.as_view(), name='seshatcommentparts'),
      path('core/seshatcommentparts3/', views.SeshatCommentPartListView3.as_view(), name='seshatcommentparts3'),
     path('core/seshatcommentparts/<slug:id>', views.SeshatCommentPartDetailView.as_view(),
@@ -139,6 +141,7 @@ urlpatterns += [
 
     # NEW
      path('create_subcomment_new/<slug:app_name>/<slug:model_name>/<int:instance_id>/', views.create_a_comment_with_a_subcomment_new, name='create_subcomment_new'),
+     path('create_subcomment_newer/<slug:app_name>/<slug:model_name>/<int:instance_id>/', views.create_a_comment_with_a_subcomment_newer, name='create_subcomment_newer'),
      path('create_private_subcomment_new/<slug:app_name>/<slug:model_name>/<int:instance_id>/', views.create_a_private_comment_with_a_private_subcomment_new, name='create_private_subcomment_new'),
      path('core/seshatprivatecomments/<int:pk>/update/',
          views.SeshatPrivateCommentUpdate.as_view(), name="seshatprivatecomment-update"),
