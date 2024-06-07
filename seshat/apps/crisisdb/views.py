@@ -3532,8 +3532,8 @@ def playgrounddownload(request):
 
     return final_response
 
-def fpl_all(request):
-    return render(request, 'crisisdb/fpl_all.html')
+#def fpl_all(request):
+#    return render(request, 'crisisdb/fpl_all.html')
 
 
 # ... Your existing imports ...

@@ -194,6 +194,17 @@ def seshatcodebookold(request):
     }
     return render(request, 'core/old_codebook.html', context=context)
 
+def seshatcodebooknew1(request):
+    context = {
+        'insta': "Instabilities All Over the Place..",
+    }
+    return render(request, 'core/code_book_1.html', context=context)
+
+# def seshatcodebooknew2(request):
+#     context = {
+#         'insta': "Instabilities All Over the Place..",
+#     }
+#     return render(request, 'core/new_codebook_2.html', context=context)
 
 def seshatacknowledgements(request):
     context = {
