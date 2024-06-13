@@ -6,7 +6,7 @@ This repo contains the necessary Django Python code to host the [Seshat](http://
 
 ## Developers
 
-Follow the steps on [docs/setup](docs/setup.md).
+Follow the instructions available in [docs/source/getting-started/setup/index.rst](docs/source/getting-started/setup/index.rst).
 
 ## GitHub process
 
@@ -22,4 +22,4 @@ Follow the steps on [docs/setup](docs/setup.md).
 On this fork, currently GH actions is set up to run django tests for the following apps when pushing or PR-ing to the `dev` branch:
 - Core
 
-See [docs/testing](docs/testing.md) on how to run locally.
+See [docs/source/contribute/testing.rst](docs/source/contribute/testing.rst) on how to run locally.
