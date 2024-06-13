@@ -36,7 +36,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
-    "sphinx_rtd_theme",
+    # "sphinx_rtd_theme",
     "myst_parser",
     "autoapi.extension",
     "sphinx_copybutton",
