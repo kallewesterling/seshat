@@ -8,6 +8,14 @@ This repo contains the necessary Django Python code to host the [Seshat](http://
 
 Follow the instructions available in [docs/source/getting-started/setup/index.rst](docs/source/getting-started/setup/index.rst).
 
+In order to generate the documentation, in the correct environment run the following command:
+
+```bash
+pip install -r docs/requirements.txt
+cd docs
+make html
+```
+
 ## GitHub process
 
 1. Create a new branch from `dev`
