@@ -1,3 +1,7 @@
+"""
+Settings for local development of the Seshat project.
+"""
+
 # flake8: noqa
 
 from .base import *

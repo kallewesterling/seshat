@@ -1,3 +1,11 @@
+"""
+The base settings for the Seshat project.
+
+They are used by the development and production environment settings,
+available in :doc:`/api/seshat/settings/local/index` and
+:doc:`/api/seshat/settings/production/index`.
+"""
+
 from pathlib import Path
 ######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 

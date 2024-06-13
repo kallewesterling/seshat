@@ -1,3 +1,7 @@
+"""
+Settings for production development of the Seshat project.
+"""
+
 # flake8: noqa
 
 # import sentry_sdk
