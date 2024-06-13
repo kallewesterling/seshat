@@ -15,7 +15,6 @@ from django.utils import translation
 
 from ..core.models import SeshatCommon, Certainty, Tags, Section, Subsection, Religion
 from seshat.apps.accounts.models import Seshat_Expert
-# Create your models here.
 
 
 
