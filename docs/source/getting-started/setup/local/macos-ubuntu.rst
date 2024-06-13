@@ -17,7 +17,7 @@ Steps
 
    .. code-block:: bash
 
-       brew install multipass
+       $ brew install multipass
 
    - Note: the images used by Multipass don’t have a pre-installed graphical desktop
 
@@ -25,7 +25,7 @@ Steps
 
    .. code-block:: bash
         
-       multipass launch 22.04
+       $ multipass launch 22.04
 
    - This should create a VM called `primary` by default
 
@@ -33,25 +33,25 @@ Steps
 
    .. code-block:: bash
 
-       multipass stop primary
-       multipass set local.primary.cpus=4
-       multipass set local.primary.disk=60G
-       multipass set local.primary.memory=8G
-       multipass start primary
+       $ multipass stop primary
+       $ multipass set local.primary.cpus=4
+       $ multipass set local.primary.disk=60G
+       $ multipass set local.primary.memory=8G
+       $ multipass start primary
 
 4. Mount the dir containing the database dump to the VM:
 
    .. code-block:: bash
 
-       multipass mount /path/to/database_dumps/ primary:database_dumps
+       $ multipass mount /path/to/database_dumps/ primary:database_dumps
 
 5. Then log in to the VM with `multipass shell` and install pre-requisites:
 
    .. code-block:: bash
 
-       sudo apt update
-       sudo add-apt-repository ppa:deadsnakes/ppa
-       sudo apt install python3.8 -y
-       sudo apt install python3.8-venv -y
-       sudo apt-get install python3.8-dev -y
-       sudo apt-get install g++ -y
+       $ sudo apt update
+       $ sudo add-apt-repository ppa:deadsnakes/ppa
+       $ sudo apt install python3.8 -y
+       $ sudo apt install python3.8-venv -y
+       $ sudo apt-get install python3.8-dev -y
+       $ sudo apt-get install g++ -y
