@@ -149,7 +149,7 @@ Step 5: Configure GDAL and GEOS
 
     The paths should look something like ``/opt/homebrew/Cellar/gdal/3.9.0_1`` and ``/opt/homebrew/Cellar/geos/3.9.1``.
 
-Open ``seshat/settings/base.py`` and check (or update) the paths in the following variables, which should be to the paths to your local ``gdal`` and ``geos`` installations:
+Open :doc:`seshat/settings/base.py </api/seshat/settings/base/index>` and check (or update) the paths in the following variables, which should be to the paths to your local ``gdal`` and ``geos`` installations:
 
 - ``GDAL_LIBRARY_PATH``
 - ``GEOS_LIBRARY_PATH``
