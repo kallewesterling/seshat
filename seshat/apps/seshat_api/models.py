@@ -14,6 +14,9 @@ class Track(models.Model):
     duration = models.IntegerField()
 
     class Meta:
+        """
+        :noindex:
+        """
         unique_together = ['album', 'order']
         ordering = ['order']
 

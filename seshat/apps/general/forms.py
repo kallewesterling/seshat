@@ -42,7 +42,13 @@ commonwidgets = {
 }
 
 class Polity_research_assistantForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_research_assistant model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_research_assistant
         fields = commonfields.copy()
         fields.append('polity_ra')
@@ -53,7 +59,13 @@ class Polity_research_assistantForm(forms.ModelForm):
         
 
 class Polity_utm_zoneForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_utm_zone model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_utm_zone
         fields = commonfields.copy()
         fields.append('utm_zone')
@@ -64,7 +76,13 @@ class Polity_utm_zoneForm(forms.ModelForm):
         
 
 class Polity_original_nameForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_original_name model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_original_name
         fields = commonfields.copy()
         fields.append('original_name')
@@ -75,7 +93,13 @@ class Polity_original_nameForm(forms.ModelForm):
         
 
 class Polity_alternative_nameForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_alternative_name model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_alternative_name
         fields = commonfields.copy()
         fields.append('alternative_name')
@@ -86,7 +110,13 @@ class Polity_alternative_nameForm(forms.ModelForm):
         
 
 class Polity_peak_yearsForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_peak_years model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_peak_years
         fields = commonfields.copy()
         fields.append('peak_year_from')
@@ -106,7 +136,13 @@ class Polity_peak_yearsForm(forms.ModelForm):
         
 
 class Polity_durationForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_duration model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_duration
         fields = commonfields.copy()
         fields.append('polity_year_from')
@@ -123,7 +159,13 @@ class Polity_durationForm(forms.ModelForm):
         
 
 class Polity_degree_of_centralizationForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_degree_of_centralization model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_degree_of_centralization
         fields = commonfields.copy()
         fields.append('degree_of_centralization')
@@ -134,7 +176,13 @@ class Polity_degree_of_centralizationForm(forms.ModelForm):
         
 
 class Polity_suprapolity_relationsForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_suprapolity_relations model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_suprapolity_relations
         fields = commonfields.copy()
         fields.append('supra_polity_relations')
@@ -148,7 +196,13 @@ class Polity_suprapolity_relationsForm(forms.ModelForm):
         
 
 class Polity_capitalForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_capital model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_capital
         fields = commonfields.copy()
         fields.append('capital')
@@ -166,7 +220,13 @@ class Polity_capitalForm(forms.ModelForm):
         
 
 class Polity_languageForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_language model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_language
         fields = commonfields.copy()
         fields.append('language')
@@ -177,7 +237,13 @@ class Polity_languageForm(forms.ModelForm):
         
 
 class Polity_linguistic_familyForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_linguistic_family model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_linguistic_family
         fields = commonfields.copy()
         fields.append('linguistic_family')
@@ -188,7 +254,13 @@ class Polity_linguistic_familyForm(forms.ModelForm):
         
 
 class Polity_language_genusForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_language_genus model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_language_genus
         fields = commonfields.copy()
         fields.append('language_genus')
@@ -199,7 +271,13 @@ class Polity_language_genusForm(forms.ModelForm):
         
 
 class Polity_religion_genusForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_religion_genus model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_religion_genus
         fields = commonfields.copy()
         fields.append('religion_genus')
@@ -210,7 +288,13 @@ class Polity_religion_genusForm(forms.ModelForm):
         
 
 class Polity_religion_familyForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_religion_family model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_religion_family
         fields = commonfields.copy()
         fields.append('religion_family')
@@ -221,7 +305,13 @@ class Polity_religion_familyForm(forms.ModelForm):
         
 
 class Polity_religionForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_religion model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_religion
         fields = commonfields.copy()
         fields.append('religion')
@@ -232,7 +322,13 @@ class Polity_religionForm(forms.ModelForm):
         
 
 class Polity_relationship_to_preceding_entityForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_relationship_to_preceding_entity model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_relationship_to_preceding_entity
         fields = commonfields.copy()
         fields.append('relationship_to_preceding_entity')
@@ -243,7 +339,13 @@ class Polity_relationship_to_preceding_entityForm(forms.ModelForm):
         
 
 class Polity_preceding_entityForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_preceding_entity model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_preceding_entity
         fields = commonfields.copy()
         #fields.append('preceding_entity')
@@ -264,7 +366,13 @@ class Polity_preceding_entityForm(forms.ModelForm):
         
 
 class Polity_succeeding_entityForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_succeeding_entity model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_succeeding_entity
         fields = commonfields.copy()
         fields.append('succeeding_entity')
@@ -275,7 +383,13 @@ class Polity_succeeding_entityForm(forms.ModelForm):
         
 
 class Polity_supracultural_entityForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_supracultural_entity model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_supracultural_entity
         fields = commonfields.copy()
         fields.append('supracultural_entity')
@@ -286,7 +400,13 @@ class Polity_supracultural_entityForm(forms.ModelForm):
         
 
 class Polity_scale_of_supracultural_interactionForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_scale_of_supracultural_interaction model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_scale_of_supracultural_interaction
         fields = commonfields.copy()
         fields.append('scale_from')
@@ -299,7 +419,13 @@ class Polity_scale_of_supracultural_interactionForm(forms.ModelForm):
         
 
 class Polity_alternate_religion_genusForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_alternate_religion_genus model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_alternate_religion_genus
         fields = commonfields.copy()
         fields.append('alternate_religion_genus')
@@ -310,7 +436,13 @@ class Polity_alternate_religion_genusForm(forms.ModelForm):
         
 
 class Polity_alternate_religion_familyForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_alternate_religion_family model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_alternate_religion_family
         fields = commonfields.copy()
         fields.append('alternate_religion_family')
@@ -321,7 +453,13 @@ class Polity_alternate_religion_familyForm(forms.ModelForm):
         
 
 class Polity_alternate_religionForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_alternate_religion model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_alternate_religion
         fields = commonfields.copy()
         fields.append('alternate_religion')
@@ -332,7 +470,13 @@ class Polity_alternate_religionForm(forms.ModelForm):
         
 
 class Polity_expertForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_expert model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_expert
         fields = commonfields.copy()
         fields.append('expert')
@@ -343,7 +487,13 @@ class Polity_expertForm(forms.ModelForm):
         
 
 class Polity_editorForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_editor model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_editor
         fields = commonfields.copy()
         fields.append('editor')
@@ -354,7 +504,13 @@ class Polity_editorForm(forms.ModelForm):
         
 
 class Polity_religious_traditionForm(forms.ModelForm):
+    """
+    Form for creating and updating Polity_religious_tradition model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_religious_tradition
         fields = commonfields.copy()
         fields.append('religious_tradition')

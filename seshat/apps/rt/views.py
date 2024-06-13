@@ -45,7 +45,15 @@ from .var_defs import swapped_dict
 
 
 def rtvars(request):
+    """
+    View function for the RT variables page.
 
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered RT variables page.
+    """
     app_name = 'rt'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
 
@@ -125,6 +133,18 @@ def rtvars(request):
 
 # Define a custom test function to check for the 'core.add_capital' permission
 def has_add_capital_permission(user):
+    """
+    Check if the user has the 'core.add_capital' permission.
+
+    Note:
+        TODO This is built-in functionality in Django. You can use the built-in permission_required decorator instead.
+
+    Args:
+        user (User): The user object.
+
+    Returns:
+        bool: True if the user has the 'core.add_capital' permission, False otherwise.
+    """
     return user.has_perm('core.add_capital')
 
 
@@ -133,6 +153,23 @@ def has_add_capital_permission(user):
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
+    """
+    View function for the detail page of a model.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        pk (int): The primary key of the object.
+        model_class (Model): The model class of the object.
+        myvar (str): The variable name.
+        var_name_display (str): The variable name to display.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered detail page.
+    """
     # Retrieve the object for the given model class
     obj = get_object_or_404(model_class, pk=pk)
 
@@ -152,8 +189,25 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section, var_subsection):
+    """
+    View function for the create page of a model.
 
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
 
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        form_class (Form): The form class used to create the object.
+        x_name (str): The variable name.
+        myvar (str): The variable name.
+        my_exp (str): The variable explanation.
+        var_section (str): The section name.
+        var_subsection (str): The subsection name.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered create page.
+    """
     if x_name in ["widespread_religion",]:
         x_name_1 = "order"
         x_name_2 = "widespread_religion"
@@ -221,6 +275,28 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def dynamic_update_view(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
+    """
+    View function for the update page of a model.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        object_id (int): The primary key of the object.
+        form_class (Form): The form class used to update the object.
+        model_class (Model): The model class of the object.
+        x_name (str): The variable name.
+        myvar (str): The variable name.
+        my_exp (str): The variable explanation.
+        var_section (str): The section name.
+        var_subsection (str): The subsection name.
+        delete_url_name (str): The URL name for deleting the object.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered update page.
+    """
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
 
@@ -297,6 +373,25 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
+    """
+    View function for the list page of a model.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        model_class (Model): The model class of the object.
+        var_name (str): The variable name.
+        var_name_display (str): The variable name to display.
+        var_section (str): The section name.
+        var_subsection (str): The subsection name.
+        var_main_desc (str): The main description.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered list page.
+    """
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     else:
@@ -366,6 +461,21 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_download(request, model_class, var_name):
+    """
+    Download all data for a given model.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        model_class (Model): The model class of the object.
+        var_name (str): The variable name.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     items = model_class.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -394,6 +504,24 @@ def generic_download(request, model_class, var_name):
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_metadata_download(request, var_name, var_name_display, var_section, var_subsection, var_main_desc):
+    """
+    Download metadata for a given model.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        This view is only accessible to users with the 'add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        var_name (str): The variable name.
+        var_name_display (str): The variable name to display.
+        var_section (str): The section name.
+        var_subsection (str): The subsection name.
+        var_main_desc (str): The main description.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="metadata_{var_name}s.csv"'
     
@@ -418,6 +546,22 @@ def generic_metadata_download(request, var_name, var_name_display, var_section, 
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def confirm_delete_view(request, model_class, pk, var_name):
+    """
+    View function to confirm the deletion of an object.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        model_class (Model): The model class of the object.
+        pk (int): The primary key of the object.
+        var_name (str): The variable name.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered confirmation page.
+    """
     permission_required = 'core.add_capital'
     
     # Retrieve the object for the given model class
@@ -441,6 +585,22 @@ def confirm_delete_view(request, model_class, pk, var_name):
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def delete_object_view(request, model_class, pk, var_name):
+    """
+    View function to delete an object.
+
+    Note:
+        This function is a generic view function that can be used for any model.
+        The access to this view is restricted to users with the 'core.add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+        model_class (Model): The model class of the object.
+        pk (int): The primary key of the object.
+        var_name (str): The variable name.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered confirmation page.
+    """
     permission_required = 'core.add_capital'
     # Retrieve the object for the given model class
     obj = get_object_or_404(model_class, pk=pk)
@@ -462,6 +622,18 @@ def delete_object_view(request, model_class, pk, var_name):
 
 @permission_required('core.view_capital')
 def download_csv_all_rt(request):
+    """
+    Download all data for all models in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     # Fetch all models in the "socomp" app
     app_name = 'rt'  # Replace with your app name
     app_models = apps.get_app_config(app_name).get_models()
@@ -499,6 +671,18 @@ def download_csv_all_rt(request):
 
 @permission_required('core.view_capital')
 def show_problematic_rt_data_table(request):
+    """
+    View that shows a table of problematic data in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered problematic data table.
+    """
     # Fetch all models in the "socomp" app
     app_name = 'rt'  # Replace with your app name
     app_models = apps.get_app_config(app_name).get_models()
@@ -517,6 +701,18 @@ def show_problematic_rt_data_table(request):
 
 @permission_required('core.view_capital')
 def download_csv_religious_landscape(request):
+    """
+    Download all data for the Religious Landscape model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     # Fetch all models in the "socomp" app
     app_name = 'rt'  # Replace with your app name
     app_models = apps.get_app_config(app_name).get_models()
@@ -554,6 +750,18 @@ def download_csv_religious_landscape(request):
 
 @permission_required('core.view_capital')
 def download_csv_government_restrictions(request):
+    """
+    Download all data for the Government Restrictions model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     # Fetch all models in the "socomp" app
     app_name = 'rt'  # Replace with your app name
     app_models = apps.get_app_config(app_name).get_models()
@@ -591,6 +799,18 @@ def download_csv_government_restrictions(request):
 
 @permission_required('core.view_capital')
 def download_csv_societal_restrictions(request):
+    """
+    Download all data for the Societal Restrictions model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
     # Fetch all models in the "socomp" app
     app_name = 'rt'  # Replace with your app name
     app_models = apps.get_app_config(app_name).get_models()

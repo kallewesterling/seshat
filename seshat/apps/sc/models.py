@@ -52,6 +52,23 @@ SOURCE_OF_SUPPORT_CHOICES = (
 ########## Beginning of Function Definitions for General (Vars) Models
 
 def call_my_name(self):
+    """
+    This function is used to return the name of the model instance (in lieu of
+    the __str__ representation of the model instance).
+
+    Note:
+        The model instance must have the following attributes:
+        - name
+        - polity (and polity.name)
+        - year_from
+        - year_to
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        str: The name of the model instance.
+    """
     if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
         return self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
     else:
@@ -59,9 +76,50 @@ def call_my_name(self):
 
 
 def return_citations(self):
+    """
+    This function is used to return the citations of the model instance
+    (returning the value used in the display_citations method of the model
+    instance).
+
+    Note:
+        The model instance must have the following attribute:
+        - citations
+
+        The model instance must have the following methods:
+        - zoteroer
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        str: The citations of the model instance, separated by comma.
+    """
     return ', '.join(['<a href="' + citation.zoteroer() + '">' + citation.__str__() + ' </a>' for citation in self.citations.all()[:2]])
 
 def clean_times(self):
+    """
+    This function is used to validate the year_from and year_to fields of the
+    model instance (called from each model's clean method).
+
+    Note:
+        The model instance must have the following attributes:
+        - year_from
+        - year_to
+        - polity (and polity.start_year and polity.end_year)
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        None
+
+    Raises:
+        ValidationError: If the year_from is greater than the year_to.
+        ValidationError: If the year_from is out of range.
+        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+        ValidationError: If the year_to is later than the end year of the corresponding polity.
+        ValidationError: If the year_to is out of range.
+    """
     if (self.year_from and self.year_to) and self.year_from > self.year_to:
         raise ValidationError({
             'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
@@ -89,25 +147,62 @@ def clean_times(self):
 ########## Beginning of class Definitions for general Models
 
 class Ra(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Ra")
     sc_ra = models.ForeignKey(Seshat_Expert, on_delete=models.SET_NULL, null=True, related_name="sc_research_assistant")
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Ra'
         verbose_name_plural = 'Ras'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "ra"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "ra"
     
     def show_value(self):
@@ -126,6 +221,14 @@ class Ra(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('ra-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -133,26 +236,63 @@ class Ra(SeshatCommon):
              
         
 class Polity_territory(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Polity_territory")
     polity_territory_from = models.IntegerField(blank=True, null=True)
     polity_territory_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Polity_territory'
         verbose_name_plural = 'Polity_territories'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "polity_territory"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Polity Territory"
     
     def show_value(self):
@@ -186,6 +326,14 @@ class Polity_territory(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('polity_territory-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -193,26 +341,63 @@ class Polity_territory(SeshatCommon):
              
         
 class Polity_population(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Polity_population")
     polity_population_from = models.IntegerField(blank=True, null=True)
     polity_population_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Polity_population'
         verbose_name_plural = 'Polity_populations'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "polity_population"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Polity Population"
     
     def show_value(self):
@@ -246,6 +431,14 @@ class Polity_population(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('polity_population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -253,26 +446,63 @@ class Polity_population(SeshatCommon):
              
         
 class Population_of_the_largest_settlement(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Population_of_the_largest_settlement")
     population_of_the_largest_settlement_from = models.IntegerField(blank=True, null=True)
     population_of_the_largest_settlement_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Population_of_the_largest_settlement'
         verbose_name_plural = 'Population_of_the_largest_settlements'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "population_of_the_largest_settlement"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Population of the Largest Settlement"
     
     def show_value(self):
@@ -307,6 +537,14 @@ class Population_of_the_largest_settlement(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('population_of_the_largest_settlement-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -314,26 +552,63 @@ class Population_of_the_largest_settlement(SeshatCommon):
              
         
 class Settlement_hierarchy(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Settlement_hierarchy")
     settlement_hierarchy_from = models.IntegerField(blank=True, null=True)
     settlement_hierarchy_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Settlement_hierarchy'
         verbose_name_plural = 'Settlement_hierarchies'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "settlement_hierarchy"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Settlement Hierarchy"
     
     def show_value(self):
@@ -368,6 +643,14 @@ class Settlement_hierarchy(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('settlement_hierarchy-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -375,26 +658,63 @@ class Settlement_hierarchy(SeshatCommon):
              
         
 class Administrative_level(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Administrative_level")
     administrative_level_from = models.IntegerField(blank=True, null=True)
     administrative_level_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Administrative_level'
         verbose_name_plural = 'Administrative_levels'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "administrative_level"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Administrative Level"
     
     def show_value(self):
@@ -429,6 +749,14 @@ class Administrative_level(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('administrative_level-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -436,26 +764,63 @@ class Administrative_level(SeshatCommon):
              
         
 class Religious_level(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Religious_level")
     religious_level_from = models.IntegerField(blank=True, null=True)
     religious_level_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Religious_level'
         verbose_name_plural = 'Religious_levels'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "religious_level"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Religious Level"
     
     def show_value(self):
@@ -489,6 +854,14 @@ class Religious_level(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('religious_level-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -496,26 +869,63 @@ class Religious_level(SeshatCommon):
              
         
 class Military_level(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Military_level")
     military_level_from = models.IntegerField(blank=True, null=True)
     military_level_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Military_level'
         verbose_name_plural = 'Military_levels'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "military_level"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Military Level"
     
     def show_value(self):
@@ -549,6 +959,14 @@ class Military_level(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('military_level-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -556,25 +974,62 @@ class Military_level(SeshatCommon):
              
         
 class Professional_military_officer(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Professional_military_officer")
     professional_military_officer = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Professional_military_officer'
         verbose_name_plural = 'Professional_military_officers'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "professional_military_officer"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Professional Military Officer"
     
     def show_value(self):
@@ -599,6 +1054,14 @@ class Professional_military_officer(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('professional_military_officer-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -606,25 +1069,62 @@ class Professional_military_officer(SeshatCommon):
              
         
 class Professional_soldier(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Professional_soldier")
     professional_soldier = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Professional_soldier'
         verbose_name_plural = 'Professional_soldiers'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "professional_soldier"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Professional Soldier"
     
     def show_value(self):
@@ -649,6 +1149,14 @@ class Professional_soldier(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('professional_soldier-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -656,25 +1164,62 @@ class Professional_soldier(SeshatCommon):
              
         
 class Professional_priesthood(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Professional_priesthood")
     professional_priesthood = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Professional_priesthood'
         verbose_name_plural = 'Professional_priesthoods'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "professional_priesthood"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Professional Priesthood"
     
     def show_value(self):
@@ -699,6 +1244,14 @@ class Professional_priesthood(SeshatCommon):
         return None
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('professional_priesthood-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -706,25 +1259,62 @@ class Professional_priesthood(SeshatCommon):
              
         
 class Full_time_bureaucrat(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Full_time_bureaucrat")
     full_time_bureaucrat = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Full_time_bureaucrat'
         verbose_name_plural = 'Full_time_bureaucrats'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "full_time_bureaucrat"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Full Time Bureaucrat"
     
     def show_value(self):
@@ -750,6 +1340,14 @@ class Full_time_bureaucrat(SeshatCommon):
         
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('full_time_bureaucrat-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -757,25 +1355,62 @@ class Full_time_bureaucrat(SeshatCommon):
              
         
 class Examination_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Examination_system")
     examination_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Examination_system'
         verbose_name_plural = 'Examination_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "examination_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Examination System"
     
     def show_value(self):
@@ -800,6 +1435,14 @@ class Examination_system(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('examination_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -807,25 +1450,62 @@ class Examination_system(SeshatCommon):
              
         
 class Merit_promotion(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Merit_promotion")
     merit_promotion = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Merit_promotion'
         verbose_name_plural = 'Merit_promotions'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "merit_promotion"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Merit Promotion"
     
     def show_value(self):
@@ -850,6 +1530,14 @@ class Merit_promotion(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('merit_promotion-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -857,25 +1545,62 @@ class Merit_promotion(SeshatCommon):
              
         
 class Specialized_government_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Specialized_government_building")
     specialized_government_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Specialized_government_building'
         verbose_name_plural = 'Specialized_government_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "specialized_government_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Specialized Government Building"
     
     def show_value(self):
@@ -901,6 +1626,14 @@ class Specialized_government_building(SeshatCommon):
         
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('specialized_government_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -908,25 +1641,62 @@ class Specialized_government_building(SeshatCommon):
              
         
 class Formal_legal_code(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Formal_legal_code")
     formal_legal_code = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Formal_legal_code'
         verbose_name_plural = 'Formal_legal_codes'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "formal_legal_code"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Formal Legal Code"
     
     def show_value(self):
@@ -952,6 +1722,14 @@ class Formal_legal_code(SeshatCommon):
         
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('formal_legal_code-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -959,25 +1737,62 @@ class Formal_legal_code(SeshatCommon):
              
         
 class Judge(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Judge")
     judge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Judge'
         verbose_name_plural = 'Judges'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "judge"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Judge"
     
     def show_value(self):
@@ -1002,6 +1817,14 @@ class Judge(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('judge-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1009,25 +1832,62 @@ class Judge(SeshatCommon):
              
         
 class Court(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Court")
     court = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Court'
         verbose_name_plural = 'Courts'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "court"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Court"
     
     def show_value(self):
@@ -1052,6 +1912,14 @@ class Court(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('court-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1059,25 +1927,62 @@ class Court(SeshatCommon):
              
         
 class Professional_lawyer(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Professional_lawyer")
     professional_lawyer = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Professional_lawyer'
         verbose_name_plural = 'Professional_lawyers'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "professional_lawyer"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Professional Lawyer"
     
     def show_value(self):
@@ -1102,6 +2007,14 @@ class Professional_lawyer(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('professional_lawyer-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1109,25 +2022,62 @@ class Professional_lawyer(SeshatCommon):
              
         
 class Irrigation_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Irrigation_system")
     irrigation_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Irrigation_system'
         verbose_name_plural = 'Irrigation_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "irrigation_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Irrigation System"
     
     def show_value(self):
@@ -1152,6 +2102,14 @@ class Irrigation_system(SeshatCommon):
         return None
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('irrigation_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1159,25 +2117,62 @@ class Irrigation_system(SeshatCommon):
              
         
 class Drinking_water_supply_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Drinking_water_supply_system")
     drinking_water_supply_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Drinking_water_supply_system'
         verbose_name_plural = 'Drinking_water_supply_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "drinking_water_supply_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Drinking Water Supply System"
     
     def show_value(self):
@@ -1202,6 +2197,14 @@ class Drinking_water_supply_system(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('drinking_water_supply_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1209,25 +2212,62 @@ class Drinking_water_supply_system(SeshatCommon):
              
         
 class Market(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Market")
     market = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Market'
         verbose_name_plural = 'Markets'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "market"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Market"
     
     def show_value(self):
@@ -1252,6 +2292,14 @@ class Market(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('market-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1259,25 +2307,62 @@ class Market(SeshatCommon):
              
         
 class Food_storage_site(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Food_storage_site")
     food_storage_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Food_storage_site'
         verbose_name_plural = 'Food_storage_sites'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "food_storage_site"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Food Storage Site"
     
     def show_value(self):
@@ -1302,6 +2387,14 @@ class Food_storage_site(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('food_storage_site-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1309,25 +2402,62 @@ class Food_storage_site(SeshatCommon):
              
         
 class Road(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Road")
     road = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Road'
         verbose_name_plural = 'Roads'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "road"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Road"
     
     def show_value(self):
@@ -1352,6 +2482,14 @@ class Road(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('road-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1359,25 +2497,62 @@ class Road(SeshatCommon):
              
         
 class Bridge(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Bridge")
     bridge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Bridge'
         verbose_name_plural = 'Bridges'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "bridge"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Bridge"
     
     def show_value(self):
@@ -1402,6 +2577,14 @@ class Bridge(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('bridge-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1409,25 +2592,62 @@ class Bridge(SeshatCommon):
              
         
 class Canal(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Canal")
     canal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Canal'
         verbose_name_plural = 'Canals'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "canal"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Canal"
     
     def show_value(self):
@@ -1452,6 +2672,14 @@ class Canal(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('canal-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1459,25 +2687,62 @@ class Canal(SeshatCommon):
              
         
 class Port(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Port")
     port = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Port'
         verbose_name_plural = 'Ports'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "port"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Port"
     
     def show_value(self):
@@ -1502,6 +2767,14 @@ class Port(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('port-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1509,25 +2782,62 @@ class Port(SeshatCommon):
              
         
 class Mines_or_quarry(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Mines_or_quarry")
     mines_or_quarry = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Mines_or_quarry'
         verbose_name_plural = 'Mines_or_quarries'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "mines_or_quarry"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Mines or Quarry"
     
     def show_value(self):
@@ -1552,6 +2862,14 @@ class Mines_or_quarry(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('mines_or_quarry-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1559,25 +2877,62 @@ class Mines_or_quarry(SeshatCommon):
              
         
 class Mnemonic_device(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Mnemonic_device")
     mnemonic_device = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Mnemonic_device'
         verbose_name_plural = 'Mnemonic_devices'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "mnemonic_device"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Mnemonic Device"
     
     def show_value(self):
@@ -1602,6 +2957,14 @@ class Mnemonic_device(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('mnemonic_device-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1609,25 +2972,62 @@ class Mnemonic_device(SeshatCommon):
              
         
 class Nonwritten_record(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Nonwritten_record")
     nonwritten_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Nonwritten_record'
         verbose_name_plural = 'Nonwritten_records'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "nonwritten_record"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Nonwritten Record"
     
     def show_value(self):
@@ -1652,6 +3052,14 @@ class Nonwritten_record(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('nonwritten_record-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1659,25 +3067,62 @@ class Nonwritten_record(SeshatCommon):
              
         
 class Written_record(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Written_record")
     written_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Written_record'
         verbose_name_plural = 'Written_records'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "written_record"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Written Record"
     
     def show_value(self):
@@ -1702,6 +3147,14 @@ class Written_record(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('written_record-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1709,25 +3162,62 @@ class Written_record(SeshatCommon):
              
         
 class Script(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Script")
     script = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Script'
         verbose_name_plural = 'Scripts'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "script"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Script"
     
     def show_value(self):
@@ -1752,6 +3242,14 @@ class Script(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('script-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1759,25 +3257,62 @@ class Script(SeshatCommon):
              
         
 class Non_phonetic_writing(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Non_phonetic_writing")
     non_phonetic_writing = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Non_phonetic_writing'
         verbose_name_plural = 'Non_phonetic_writings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "non_phonetic_writing"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Non Phonetic Writing"
     
     def show_value(self):
@@ -1802,6 +3337,14 @@ class Non_phonetic_writing(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('non_phonetic_writing-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1809,25 +3352,62 @@ class Non_phonetic_writing(SeshatCommon):
              
         
 class Phonetic_alphabetic_writing(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Phonetic_alphabetic_writing")
     phonetic_alphabetic_writing = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Phonetic_alphabetic_writing'
         verbose_name_plural = 'Phonetic_alphabetic_writings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "phonetic_alphabetic_writing"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Phonetic Alphabetic Writing"
     
     def show_value(self):
@@ -1852,6 +3432,14 @@ class Phonetic_alphabetic_writing(SeshatCommon):
         return "Writing System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('phonetic_alphabetic_writing-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1859,25 +3447,62 @@ class Phonetic_alphabetic_writing(SeshatCommon):
              
         
 class Lists_tables_and_classification(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Lists_tables_and_classification")
     lists_tables_and_classification = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Lists_tables_and_classification'
         verbose_name_plural = 'Lists_tables_and_classifications'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "lists_tables_and_classification"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Lists Tables and Classification"
     
     def show_value(self):
@@ -1902,6 +3527,14 @@ class Lists_tables_and_classification(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('lists_tables_and_classification-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1909,25 +3542,62 @@ class Lists_tables_and_classification(SeshatCommon):
              
         
 class Calendar(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Calendar")
     calendar = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Calendar'
         verbose_name_plural = 'Calendars'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "calendar"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Calendar"
     
     def show_value(self):
@@ -1952,6 +3622,14 @@ class Calendar(SeshatCommon):
         return None  
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('calendar-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1959,25 +3637,62 @@ class Calendar(SeshatCommon):
              
         
 class Sacred_text(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Sacred_text")
     sacred_text = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Sacred_text'
         verbose_name_plural = 'Sacred_texts'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "sacred_text"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Sacred Text"
     
     def show_value(self):
@@ -2002,6 +3717,14 @@ class Sacred_text(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('sacred_text-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2009,25 +3732,62 @@ class Sacred_text(SeshatCommon):
              
         
 class Religious_literature(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Religious_literature")
     religious_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Religious_literature'
         verbose_name_plural = 'Religious_literatures'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "religious_literature"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Religious Literature"
     
     def show_value(self):
@@ -2052,6 +3812,14 @@ class Religious_literature(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('religious_literature-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2059,25 +3827,62 @@ class Religious_literature(SeshatCommon):
              
         
 class Practical_literature(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Practical_literature")
     practical_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Practical_literature'
         verbose_name_plural = 'Practical_literatures'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "practical_literature"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Practical Literature"
     
     def show_value(self):
@@ -2102,6 +3907,14 @@ class Practical_literature(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('practical_literature-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2109,25 +3922,62 @@ class Practical_literature(SeshatCommon):
              
         
 class History(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="History")
     history = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'History'
         verbose_name_plural = 'Histories'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "history"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "History"
     
     def show_value(self):
@@ -2152,6 +4002,14 @@ class History(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('history-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2159,25 +4017,62 @@ class History(SeshatCommon):
              
         
 class Philosophy(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Philosophy")
     philosophy = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Philosophy'
         verbose_name_plural = 'Philosophies'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "philosophy"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Philosophy"
     
     def show_value(self):
@@ -2202,6 +4097,14 @@ class Philosophy(SeshatCommon):
         return "Kinds of Written Documents"
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('philosophy-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2209,25 +4112,62 @@ class Philosophy(SeshatCommon):
              
         
 class Scientific_literature(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Scientific_literature")
     scientific_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Scientific_literature'
         verbose_name_plural = 'Scientific_literatures'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "scientific_literature"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Scientific Literature"
     
     def show_value(self):
@@ -2252,6 +4192,14 @@ class Scientific_literature(SeshatCommon):
         return "Kinds of Written Documents"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('scientific_literature-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2259,25 +4207,62 @@ class Scientific_literature(SeshatCommon):
              
         
 class Fiction(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Fiction")
     fiction = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Fiction'
         verbose_name_plural = 'Fictions'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "fiction"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Fiction"
     
     def show_value(self):
@@ -2302,6 +4287,14 @@ class Fiction(SeshatCommon):
         return "Kinds of Written Documents"
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('fiction-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2309,25 +4302,62 @@ class Fiction(SeshatCommon):
              
         
 class Article(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Article")
     article = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "article"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Article"
     
     def show_value(self):
@@ -2352,6 +4382,14 @@ class Article(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('article-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2359,25 +4397,62 @@ class Article(SeshatCommon):
              
         
 class Token(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Token")
     token = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Token'
         verbose_name_plural = 'Tokens'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "token"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Token"
     
     def show_value(self):
@@ -2402,6 +4477,14 @@ class Token(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('token-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2409,25 +4492,62 @@ class Token(SeshatCommon):
              
         
 class Precious_metal(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Precious_metal")
     precious_metal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Precious_metal'
         verbose_name_plural = 'Precious_metals'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "precious_metal"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Precious Metal"
     
     def show_value(self):
@@ -2452,6 +4572,14 @@ class Precious_metal(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('precious_metal-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2459,25 +4587,62 @@ class Precious_metal(SeshatCommon):
              
         
 class Foreign_coin(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Foreign_coin")
     foreign_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Foreign_coin'
         verbose_name_plural = 'Foreign_coins'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "foreign_coin"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Foreign Coin"
     
     def show_value(self):
@@ -2502,6 +4667,14 @@ class Foreign_coin(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('foreign_coin-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2509,25 +4682,62 @@ class Foreign_coin(SeshatCommon):
              
         
 class Indigenous_coin(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Indigenous_coin")
     indigenous_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Indigenous_coin'
         verbose_name_plural = 'Indigenous_coins'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "indigenous_coin"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Indigenous Coin"
     
     def show_value(self):
@@ -2552,6 +4762,14 @@ class Indigenous_coin(SeshatCommon):
         return "Money"
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('indigenous_coin-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2559,25 +4777,62 @@ class Indigenous_coin(SeshatCommon):
              
         
 class Paper_currency(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Paper_currency")
     paper_currency = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Paper_currency'
         verbose_name_plural = 'Paper_currencies'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "paper_currency"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Paper Currency"
     
     def show_value(self):
@@ -2602,6 +4857,14 @@ class Paper_currency(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('paper_currency-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2609,25 +4872,62 @@ class Paper_currency(SeshatCommon):
              
         
 class Courier(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Courier")
     courier = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Courier'
         verbose_name_plural = 'Couriers'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "courier"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Courier"
     
     def show_value(self):
@@ -2652,6 +4952,14 @@ class Courier(SeshatCommon):
         return "Postal System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('courier-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2659,25 +4967,62 @@ class Courier(SeshatCommon):
              
         
 class Postal_station(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Postal_station")
     postal_station = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Postal_station'
         verbose_name_plural = 'Postal_stations'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "postal_station"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Postal Station"
     
     def show_value(self):
@@ -2702,6 +5047,14 @@ class Postal_station(SeshatCommon):
         return "Postal System"
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('postal_station-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2709,25 +5062,62 @@ class Postal_station(SeshatCommon):
              
         
 class General_postal_service(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="General_postal_service")
     general_postal_service = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'General_postal_service'
         verbose_name_plural = 'General_postal_services'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "general_postal_service"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "General Postal Service"
     
     def show_value(self):
@@ -2752,6 +5142,14 @@ class General_postal_service(SeshatCommon):
         return "Postal System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('general_postal_service-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2763,25 +5161,62 @@ class General_postal_service(SeshatCommon):
 
 ############################## NEW SC Variables
 class Communal_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Communal_building")
     communal_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Communal_building'
         verbose_name_plural = 'Communal_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "communal_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Communal Building"
     
     def show_value(self):
@@ -2806,6 +5241,14 @@ class Communal_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('communal_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2813,25 +5256,62 @@ class Communal_building(SeshatCommon):
     
 
 class Utilitarian_public_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Utilitarian_public_building")
     utilitarian_public_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Utilitarian_public_building'
         verbose_name_plural = 'Utilitarian_public_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "utilitarian_public_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Utilitarian Public Building"
     
     def show_value(self):
@@ -2856,6 +5336,14 @@ class Utilitarian_public_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('utilitarian_public_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2863,25 +5351,62 @@ class Utilitarian_public_building(SeshatCommon):
 
 
 class Symbolic_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Symbolic_building")
     symbolic_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Symbolic_building'
         verbose_name_plural = 'Symbolic_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "symbolic_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Symbolic Building"
     
     def show_value(self):
@@ -2906,6 +5431,14 @@ class Symbolic_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('symbolic_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2913,25 +5446,62 @@ class Symbolic_building(SeshatCommon):
 
 
 class Entertainment_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Entertainment_building")
     entertainment_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Entertainment_building'
         verbose_name_plural = 'Entertainment_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "entertainment_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Entertainment Building"
     
     def show_value(self):
@@ -2956,6 +5526,14 @@ class Entertainment_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('entertainment_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -2963,25 +5541,62 @@ class Entertainment_building(SeshatCommon):
 
 
 class Knowledge_or_information_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Knowledge_or_information_building")
     knowledge_or_information_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Knowledge_or_information_building'
         verbose_name_plural = 'Knowledge_or_information_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "knowledge_or_information_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Knowledge Or Information Building"
     
     def show_value(self):
@@ -3006,31 +5621,76 @@ class Knowledge_or_information_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('knowledge_or_information_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
     
 class Other_utilitarian_public_building(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Other_utilitarian_public_building")
     other_utilitarian_public_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Other_utilitarian_public_building'
         verbose_name_plural = 'Other_utilitarian_public_buildings'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "other_utilitarian_public_building"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Other Utilitarian Public Building"
     
     def show_value(self):
@@ -3055,6 +5715,14 @@ class Other_utilitarian_public_building(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('other_utilitarian_public_building-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3062,25 +5730,62 @@ class Other_utilitarian_public_building(SeshatCommon):
 
 
 class Special_purpose_site(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Special_purpose_site")
     special_purpose_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Special_purpose_site'
         verbose_name_plural = 'Special_purpose_sites'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "special_purpose_site"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Special Purpose Site"
     
     def show_value(self):
@@ -3105,6 +5810,14 @@ class Special_purpose_site(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('special_purpose_site-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3112,25 +5825,62 @@ class Special_purpose_site(SeshatCommon):
 
 
 class Ceremonial_site(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Ceremonial_site")
     ceremonial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Ceremonial_site'
         verbose_name_plural = 'Ceremonial_sites'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "ceremonial_site"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Ceremonial Site"
     
     def show_value(self):
@@ -3155,6 +5905,14 @@ class Ceremonial_site(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('ceremonial_site-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3162,25 +5920,62 @@ class Ceremonial_site(SeshatCommon):
 
 
 class Burial_site(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Burial_site")
     burial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Burial_site'
         verbose_name_plural = 'Burial_sites'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "burial_site"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Burial Site"
     
     def show_value(self):
@@ -3205,6 +6000,14 @@ class Burial_site(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('burial_site-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3212,25 +6015,62 @@ class Burial_site(SeshatCommon):
 
 
 class Trading_emporia(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Trading_emporia")
     trading_emporia = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Trading_emporia'
         verbose_name_plural = 'Trading_emporias'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "trading_emporia"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Trading Emporia"
     
     def show_value(self):
@@ -3255,6 +6095,14 @@ class Trading_emporia(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('trading_emporia-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3262,25 +6110,62 @@ class Trading_emporia(SeshatCommon):
 
 
 class Enclosure(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Enclosure")
     enclosure = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Enclosure'
         verbose_name_plural = 'Enclosures'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "enclosure"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Enclosure"
     
     def show_value(self):
@@ -3305,6 +6190,14 @@ class Enclosure(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('enclosure-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3312,25 +6205,62 @@ class Enclosure(SeshatCommon):
 
 
 class Length_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Length_measurement_system")
     length_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Length_measurement_system'
         verbose_name_plural = 'Length_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "length_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Length Measurement System"
     
     def show_value(self):
@@ -3355,6 +6285,14 @@ class Length_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('length_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3362,25 +6300,62 @@ class Length_measurement_system(SeshatCommon):
 
 
 class Area_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Area_measurement_system")
     area_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Area_measurement_system'
         verbose_name_plural = 'Area_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "area_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Area Measurement System"
     
     def show_value(self):
@@ -3405,6 +6380,14 @@ class Area_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('area_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3412,25 +6395,62 @@ class Area_measurement_system(SeshatCommon):
 
 
 class Volume_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Volume_measurement_system")
     volume_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Volume_measurement_system'
         verbose_name_plural = 'Volume_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "volume_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Volume Measurement System"
     
     def show_value(self):
@@ -3455,6 +6475,14 @@ class Volume_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('volume_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3462,25 +6490,62 @@ class Volume_measurement_system(SeshatCommon):
 
 
 class Weight_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Weight_measurement_system")
     weight_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Weight_measurement_system'
         verbose_name_plural = 'Weight_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "weight_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Weight Measurement System"
     
     def show_value(self):
@@ -3505,6 +6570,14 @@ class Weight_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('weight_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3512,25 +6585,62 @@ class Weight_measurement_system(SeshatCommon):
 
 
 class Time_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Time_measurement_system")
     time_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Time_measurement_system'
         verbose_name_plural = 'Time_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "time_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Time Measurement System"
     
     def show_value(self):
@@ -3555,6 +6665,14 @@ class Time_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('time_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3562,25 +6680,62 @@ class Time_measurement_system(SeshatCommon):
 
 
 class Geometrical_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Geometrical_measurement_system")
     geometrical_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Geometrical_measurement_system'
         verbose_name_plural = 'Geometrical_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "geometrical_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Geometrical Measurement System"
     
     def show_value(self):
@@ -3605,6 +6760,14 @@ class Geometrical_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('geometrical_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3612,25 +6775,62 @@ class Geometrical_measurement_system(SeshatCommon):
 
 
 class Other_measurement_system(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Other_measurement_system")
     other_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Other_measurement_system'
         verbose_name_plural = 'Other_measurement_systems'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "other_measurement_system"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Other Measurement System"
     
     def show_value(self):
@@ -3655,6 +6855,14 @@ class Other_measurement_system(SeshatCommon):
         return "Measurement System"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('other_measurement_system-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3662,25 +6870,62 @@ class Other_measurement_system(SeshatCommon):
 
 
 class Debt_and_credit_structure(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Debt_and_credit_structure")
     debt_and_credit_structure = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Debt_and_credit_structure'
         verbose_name_plural = 'Debt_and_credit_structures'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "debt_and_credit_structure"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Debt And Credit Structure"
     
     def show_value(self):
@@ -3705,6 +6950,14 @@ class Debt_and_credit_structure(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('debt_and_credit_structure-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3712,25 +6965,62 @@ class Debt_and_credit_structure(SeshatCommon):
 
 
 class Store_of_wealth(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Store_of_wealth")
     store_of_wealth = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Store_of_wealth'
         verbose_name_plural = 'Store_of_wealths'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "store_of_wealth"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Store Of Wealth"
     
     def show_value(self):
@@ -3755,31 +7045,76 @@ class Store_of_wealth(SeshatCommon):
         return "Money"
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('store_of_wealth-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
     
 class Source_of_support(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Source_of_support")
     source_of_support = models.CharField(max_length=500, choices=SOURCE_OF_SUPPORT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Source_of_support'
         verbose_name_plural = 'Source_of_supports'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "source_of_support"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Source Of Support"
     
     def show_value(self):
@@ -3804,31 +7139,76 @@ class Source_of_support(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('source_of_support-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
     
 class Occupational_complexity(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Occupational_complexity")
     occupational_complexity = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Occupational_complexity'
         verbose_name_plural = 'Occupational_complexies'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "occupational_complexity"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Occupational Complexity"
     
     def show_value(self):
@@ -3853,6 +7233,14 @@ class Occupational_complexity(SeshatCommon):
         return None
         
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('occupational_complexity-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3860,25 +7248,62 @@ class Occupational_complexity(SeshatCommon):
     
 
 class Special_purpose_house(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Special_purpose_house")
     special_purpose_house = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Special_purpose_house'
         verbose_name_plural = 'Special Purpose Houses'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "special_purpose_house"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Special Purpose House"
 
     def show_value(self):
@@ -3903,31 +7328,76 @@ class Special_purpose_house(SeshatCommon):
         return None
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('special_purpose_house-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
     
 class Other_special_purpose_site(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Other_special_purpose_site")
     other_special_purpose_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Other_special_purpose_site'
         verbose_name_plural = 'Other Special Purpose Sites'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "other_special_purpose_site"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Other Special Purpose Site"
 
     def show_value(self):
@@ -3952,6 +7422,14 @@ class Other_special_purpose_site(SeshatCommon):
         return None
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('other_special_purpose_site-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -3959,26 +7437,63 @@ class Other_special_purpose_site(SeshatCommon):
     
 
 class Largest_communication_distance(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Largest_communication_distance")
     largest_communication_distance_from = models.IntegerField(null=True, blank=True)
     largest_communication_distance_to = models.IntegerField(null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Largest_communication_distance'
         verbose_name_plural = 'Largest Communication Distances'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "largest_communication_distance"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Largest Communication Distance"
 
     def show_value(self):
@@ -4012,6 +7527,14 @@ class Largest_communication_distance(SeshatCommon):
         return None
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('largest_communication_distance-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -4019,26 +7542,63 @@ class Largest_communication_distance(SeshatCommon):
 
 
 class Fastest_individual_communication(SeshatCommon):
+    """
+    
+    """
     name = models.CharField(max_length=100, default="Fastest_individual_communication")
     fastest_individual_communication_from = models.IntegerField(null=True, blank=True)
     fastest_individual_communication_to = models.IntegerField(null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Fastest_individual_communication'
         verbose_name_plural = 'Fastest Individual Communications'
         ordering = ['year_from', 'year_to']
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "fastest_individual_communication"
 
     def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
         return "Fastest Individual Communication"
 
     def show_value(self):
@@ -4072,6 +7632,14 @@ class Fastest_individual_communication(SeshatCommon):
         return "Postal System"
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('fastest_individual_communication-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
