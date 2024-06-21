@@ -5,6 +5,7 @@ from ...accounts.models import Profile, Seshat_Expert, Seshat_Task
 from ._mixins import (
     MixinSeshatAPIAuth,
     MixinSeshatAPISerializer,
+    SeshatAPIPagination,
 )
 from ._permissions import ONLY_ADMIN_PERMISSIONS
 
@@ -17,6 +18,7 @@ class ProfileViewSet(
     """
 
     model = Profile
+    pagination_class = SeshatAPIPagination
     lookup_field = "user__username"
     permissions_dict = ONLY_ADMIN_PERMISSIONS
 
@@ -29,6 +31,7 @@ class SeshatExpertViewSet(
     """
 
     model = Seshat_Expert
+    pagination_class = SeshatAPIPagination
     lookup_field = "user__username"
     permissions_dict = ONLY_ADMIN_PERMISSIONS
 
@@ -41,5 +44,6 @@ class SeshatTaskViewSet(
     """
 
     model = Seshat_Task
+    pagination_class = SeshatAPIPagination
     permissions_dict = ONLY_ADMIN_PERMISSIONS
     fields = "__all__"
