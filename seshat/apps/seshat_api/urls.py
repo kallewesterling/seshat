@@ -1,13 +1,14 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from . import views  # temp -- remove
 
-# Create router for URLS
+# Create router for URLs
+
 router = routers.DefaultRouter()
 
 
 # Register viewsets for "account" app
+
 from .views.accounts import (
     ProfileViewSet,
     SeshatExpertViewSet,

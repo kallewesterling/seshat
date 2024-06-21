@@ -2,9 +2,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from ..serializers import GeneralSerializer
-from rest_framework.serializers import HyperlinkedRelatedField
 
-STANDARD_API_AUTHENTICATION = {
+STANDARD_API_PERMISSION = {
     "HEAD": [AllowAny],
     "OPTIONS": [AllowAny],
     "GET": [AllowAny],
@@ -13,7 +12,7 @@ STANDARD_API_AUTHENTICATION = {
     "PATCH": [IsAuthenticated],
     "DELETE": [IsAuthenticated],
 }
-"""Defines the standard authentication for the API, if no other is specified in the view."""
+"""Defines the standard permission for the API, if no other is specified in the view."""
 
 
 class SeshatAPIPagination(PageNumberPagination):
@@ -33,7 +32,7 @@ class MixinSeshatAPIAuth:
         try:
             permissions_dict = self.permissions_dict
         except AttributeError:
-            permissions_dict = STANDARD_API_AUTHENTICATION
+            permissions_dict = STANDARD_API_PERMISSION
 
         return [
             permission()
