@@ -1,15 +1,28 @@
 {% extends "core/seshat-base.html" %}
 {% load static %}
 {% load humanize %}
+{% load crispy_forms_tags %}
 
 {% block content %}
+
+<style>
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* For Firefox */
+}
+</style>
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-9">
         <h6 class="lead-2 text-success pt-3">You entered the following data for:</h6>
       <h3 class="mb-4 mt-2">{{var_name_display}}  </h3>
     </div>
-    <div class="col-md-6"> 
+    <div class="col-md-3"> 
         {% block addmore %}
         {% endblock addmore %}
     </div>
@@ -36,21 +49,20 @@
   </ul>
   <hr>
   {% endif %}
-  <table class="table align-middle table-striped table-bordered">
+  <table class="table align-middle table-bordered">
     <thead>        
-      <tr>
+      <tr style="background:rgba(194, 243, 242, 0.511)">
+        {% block myheadings %}
+        {% endblock myheadings %}
+
+        <th scope="col" style="text-align: left">Tags</th>
         <!-- headings for the newly added row come here -->
-        <th class="text-secondary" scope="col">#</th>
         <th style="text-align: left;" scope="col">Polity</th>
         <th scope="col" style="text-align: center" class="fw-bold">
              Year(s)
         </th>
         <!-- extra headings -->
-        {% block myheadings %}
-        {% endblock myheadings %}
-        {% include "core/partials/_confidence_disputed_expert.html" %}
 
-        <th scope="col" style="text-align: left">Description</th>
         <th scope="col" style="text-align: center">Update</th>
 
       </tr>
@@ -58,8 +70,10 @@
     <tbody>
           <tr>
             <div>
-              <th class="text-secondary" scope="row">1</th>
-              <td style="text-align: left;">
+              {% block extracols %}
+              {% endblock extracols %}
+             {% include "core/partials/_all_tags_inline_new.html" %}
+              <td class="ps-1" style="text-align: left;">
                 {% if object.polity.long_name %}
                 <span class="fw-bold h5">
                     <a href="{% url 'polity-detail-main' object.polity.id %}">{{ object.polity.long_name }}</a>
@@ -73,11 +87,7 @@
               </td>
               {% include "core/partials/_years_block_new_object.html" %}
               <!-- columns for extra vars come here -->
-              {% block extracols %}
-              {% endblock extracols %}
 
-             {% include "core/partials/_confidence_disputed_expert_object.html" %}
-              <td> {% autoescape off %}{{ object.description }}{% endautoescape %}</td>
               <td style="text-align: center;">
                 {% with object.clean_name|add:"-update" as meat %}
                 <div class="py-1">
@@ -90,6 +100,82 @@
         </tr>
     </tbody>
   </table>
+
+  <form method="post" action="{% url 'seshatcommentpart-create2-inline' app_name='rt' model_name=object.clean_name instance_id=object.id %}">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-5">
+          <br>
+          <span class="fs-5 fw-bold text-secondary">* Insert the first chunk of the description here:</span>
+
+          {{ form.comment_text.label_tag }} {{ form.comment_text }}<br>
+          {{ form.formset.management_form }}
+          {{ form.management_form }}
+          <div class="row">
+            <div class="col-md-12"  style="display: none;">
+              {{ form.comment_order|as_crispy_field }}
+         </div>
+         <div class="col-md-12 pt-2 d-grid gap-2">
+          <input type="submit"  class="btn btn-outline-success btn-block mt-2 fs-5 fw-bold" value="Submit">
+         </div>
+          </div>
+
+    </div>
+        <div class="col-md-7">
+          <div id="formset-container">
+              {% for form1 in form.formset %}
+  
+
+                    <div class="formset-item">
+                        {{ form.id }} {# Include the form ID for proper formset rendering #}
+                      <div class="row">
+                        <div class="col-md-12 pt-4">
+                          <span class="badge bg-secondary fs-6">Citation #{{ forloop.counter}}</span>                          
+                          <span class="float-end text-secondary">Delete
+                            {{ form1.DELETE }} 
+                          </span>  
+                        </div>
+                        <div class="col-md-12 pb-1">
+                            {{ form1.ref|as_crispy_field }} 
+                        </div>
+                        <div class="col-md-2">
+                            {{ form1.page_from|as_crispy_field }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form1.page_to|as_crispy_field }}
+                        </div>
+
+                            <div colspan="4" class="col-md-8">
+                                {{ form1.parent_pars|as_crispy_field }}
+                            </div>
+                        </div>
+    
+                    </div>
+              {% endfor %}
+  
+            </div>
+  
+          </div>
+          <div class="col-md-6 pt-4"  style="display: none;">
+               {{ form.comment_order|as_crispy_field }}
+          </div>
+          <div class="col-md-6 pt-4 d-grid gap-2">
+
+          </div>
+  
+    </div>
+    </form>
+  <!-- seshatcommentpart_create.html -->
+  <script>
+  
+  
+          $(document).ready(function() {
+            // Initialize Select2 with an empty dataset
+            $('.js-example-basic-single').select2();
+  
+  });
+      
+  </script>
 
 </div>
   {% endblock %}

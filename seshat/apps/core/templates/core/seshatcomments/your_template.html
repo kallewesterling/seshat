@@ -1,0 +1,54 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+
+
+<form method="post">    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.comment_text }}
+       </div>
+       <div class="mb-3">
+        {{ form.comment_order }}
+       </div>   
+        {{ references_formset.management_form }}
+        {{ form.references_formset.management_form }}
+        {{ form.management_form }}
+    {% for form1 in form.references_formset %}
+ 
+       
+       <div class="formset-item">
+        {{ form1.id }} {# Include the form ID for proper formset rendering #}
+
+            <tr>
+        <td class="col-md-7">
+            {{ form1.ref|as_crispy_field }} 
+        </td>
+        <td class="col-md-2">
+            {{ form1.page_from|as_crispy_field }}
+        </td>
+        <td class="col-md-2">
+            {{ form1.page_to|as_crispy_field }}
+        </td>
+        <td class="col-md-1 ps-4">
+            {{ form1.DELETE }} 
+        </td>
+                            
+        </tr>
+        <tr> {# Add a new row for parent_pars #}
+            
+            <td colspan="4" class="col-md-12">
+                {{ form1.parent_pars|as_crispy_field }}
+                <hr class="bg-colorfuln">
+            </td>
+        </tr>
+
+    </div>
+       
+       
+       {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}

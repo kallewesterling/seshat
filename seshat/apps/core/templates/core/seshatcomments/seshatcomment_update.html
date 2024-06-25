@@ -6,6 +6,7 @@
 
 
 {% block content %}
+
 {% if object.text == "No Descriptions provided." %}
 <div class="container pt-1">
     <h4>No discriptions for this fact.</h4>
@@ -13,16 +14,13 @@
     <a href="#"><button class="btn btn-danger btn-sm">Create</button></a>
 </div>
 {% else %}
-<div class="container table-responsive pt-1">
+<div class="container table-responsive pt-2">
 
-    <h5 class="lead-2 pt-2">Update Description for:
-
-    </h5>
     <table class="table align-middle table-striped">
         <thead>        
           <tr>
             <th style="text-align: left;" scope="col">Variable</th>
-            <th style="text-align: left;" scope="col">Value</th>
+            <th style="text-align: left;" scope="col">Coded Value</th>
             <th style="text-align: center;" scope="col">Polity</th>
             <th style="text-align: center;" scope="col">Year Range</th>
             <th scope="col" style="text-align: center">Certainty</th>
@@ -86,87 +84,66 @@
 
         </tbody>
       </table>
-      <div class="pt-4">
-        How its description appears on a page: <br>
-
+      <div class="pt-3 fs-6 fw-bold">
+        Description:
       </div>
-    {% autoescape off %}
+    <div class="border p-2 border-secondary rounded border-2 fs-6">
+       
 
-    <div class="border p-2 border-dark bg-light rounded border-3" style="font-size:12px;">
-        {{object}}
-    </div>
-    {% endautoescape %}
-    <form action="" method="post">
-            {% csrf_token %}
-            <legend>
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-12 pb-2">
+        {% autoescape off %}
 
+        {% for subcom in object.inner_comments_related.all %}
 
-
-
-                        <h6 class="lead-2 text-secondary pt-2">- Note that each description has several <u>subdescriptions</u><sup>*</sup>. A subdescription is a combination of some text and its corresponding citation or citations.</h6>
-                    </div>
-                    {% if messages %}
-                    <ul class="messages mt-3">
-                        {% for message in messages %}
-                        <div class="container-fluid p-0">
-                            <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-                                <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
-                            </div>
-                          </div>
-                        {% endfor %}
-                    </ul>
+            <span>
+                <span class="jidtext_{{ forloop.counter }}">
+                        {{ subcom.comment_part_text }}
+                </span>
+                <span  class="jidtextref_{{ forloop.counter }} fw-bold">
+                    {% if subcom.display_citations_plus %}
+                        {{ subcom.display_citations_plus }}
+                    {% else %}
+                    <span class="text-danger">[No Refs]</span>
                     {% endif %}
+                </span>
+                <sup class="border-bottom pt-1 pb-0 px-1 m-1 fw-bold border-dark border-3 rounded" style="background:rgb(233, 233, 233)">
+
+                {% if subcom.citations_count >= 10 %}
+                    <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square"></i></a>
+                {% else %}
+                    <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square"></i></a>
+
+                {% endif %}
+
+
+                    <a class="underline-trigger" href="{% url 'seshatcommentpart-delete' subcom.pk %}" data-counter="{{ forloop.counter }}">
+                        <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                </sup>
+            </span>
+            <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-solid fa-feather"></i>
+                <span class="hidden_jid_new_{{ forloop.counter }}" style="display:none">
+                    <sup class="badge bg-warning fw-bold text-dark" style="padding-bottom:3px; padding-top:3px;  margin-bottom:2px;">Insert Text</sup>
+                </span>
+            </a>
+
+        {% endfor %}
+
+        {% endautoescape %}
+
+    </div>
+
+                <div class="col-md-12 pb-2">
+
+
+
+
+                    <h6 class="lead-2 text-secondary pt-2">- Note that each description has several <u>subdescriptions</u><sup>*</sup>.
+                        <br>
+                        * A subdescription is a combination of some text and its corresponding citation(s).
+                    </h6>
                 </div>
-            </legend>
-        <table id="table_id" class="table align-middle  mb-4">
-            <thead>
-                <tr class="bg-success text-light">
-                  <th scope="col" class="text-secondary">#</th>
-                  <th scope="col" style="text-align: left"> SubDescriptionText</th>
-                  <th scope="col" style="text-align: left"> Citations</th>
-                  <th scope="col" style="text-align: center">Update / Insert / Delete</th>
-
-                </tr>
-              </thead>
-              <tbody>
-                {% autoescape off %}
-
-                {% for subcom in object.inner_comments_related.all %}
-
-                    <tr>
-                        <td class="text-secondary" scope="row" style="text-align: center">{{ forloop.counter0|add:1}}</td>
-                        <td class="col-md-7">
-                                {{ subcom.comment_part_text }}
-                        </td>
-                        <td class="col-md-3">
-                            {% if subcom.display_citations_plus %}
-                                {{ subcom.display_citations_plus }}
-                            {% else %}
-                            <i class="fa-solid fa-minus text-danger"></i>
-                            {% endif %}
-                        </td>
-                        <td class="col-md-2" style="text-align: center">
-
-                        {% if subcom.citations_plus_count >= 5 %}
-                            <a class="btn btn-danger btn-sm py-1 mx-2" href="{% url 'seshatcommentpart-update' subcom.pk %}"><i class="fa-regular fa-pen-to-square"></i></a>
-                        {% else %}
-                            <a class="btn btn-success btn-sm py-1 mx-2" href="{% url 'seshatcommentpart-update2' subcom.pk %}"><i class="fa-regular fa-pen-to-square"></i></a>
-                        {% endif %}
-                            <a class="btn btn-warning btn-sm py-1 mx-2" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}"><i class="fa-solid fa-arrow-down-short-wide"></i></a>
-
-                            <a class="btn btn-danger btn-sm py-1 mx-2" href="{% url 'seshatcommentpart-delete' subcom.pk %}">
-                                <i class="fa-solid fa-trash-can"></i>
-                                </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% endautoescape %}
-            </tbody>
-          </table>
-        </form>
 </div>
+
 {% endif %}
 <script>
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -179,6 +156,59 @@
         $(ctl).text(msg);
         return true;
     }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const underlineTriggers = document.querySelectorAll('.underline-trigger');
+        const newinsertTriggers = document.querySelectorAll('.newinsert-trigger');
+
+        underlineTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseover', function() {
+                const counter = this.getAttribute('data-counter');
+                const jidtext = document.querySelector(`.jidtext_${counter}`);
+                const jidtextref = document.querySelector(`.jidtextref_${counter}`);
+                if (jidtext) {
+                    jidtext.style.textDecoration = 'underline';
+                }
+                if (jidtextref) {
+                    jidtextref.style.textDecoration = 'underline';
+                }
+            });
+    
+            trigger.addEventListener('mouseout', function() {
+                const counter = this.getAttribute('data-counter');
+                const jidtext = document.querySelector(`.jidtext_${counter}`);
+                const jidtextref = document.querySelector(`.jidtextref_${counter}`);
+
+                if (jidtext) {
+                    jidtext.style.textDecoration = 'none';
+                }
+                if (jidtextref) {
+                    jidtextref.style.textDecoration = 'none';
+                }
+            });
+        });
+
+        newinsertTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseover', function() {
+                const counter = this.getAttribute('data-counter');
+                const hidden_jid_new = document.querySelector(`.hidden_jid_new_${counter}`);
+                if (hidden_jid_new) {
+                    hidden_jid_new.style.display = 'inline';
+
+                }
+            });
+
+            trigger.addEventListener('mouseout', function() {
+                const counter = this.getAttribute('data-counter');
+                const hidden_jid_new = document.querySelector(`.hidden_jid_new_${counter}`);
+
+                if (hidden_jid_new) {
+                    hidden_jid_new.style.display = 'none';
+                }
+            });
+        });
+    });
 </script>
 
   {% endblock %}
