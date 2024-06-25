@@ -129,12 +129,16 @@ def has_add_capital_permission(user):
 
 
 # Use the login_required, permission_required, and user_passes_test decorators
+
+from seshat.apps.core.forms import  SeshatCommentPartForm2
+
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
     # Retrieve the object for the given model class
     obj = get_object_or_404(model_class, pk=pk)
+    form_inline_new = SeshatCommentPartForm2(request.POST)
 
     context = {
         'object': obj,
@@ -142,6 +146,8 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
         "var_name_display": var_name_display,
         'create_new_url': myvar+"-create",
         'see_all_url': myvar+"s_all",
+        'letsdo': 'Let us do it!!!',
+        'form': form_inline_new,
     }
 
     return render(request, 'rt/rt_detail.html', context)

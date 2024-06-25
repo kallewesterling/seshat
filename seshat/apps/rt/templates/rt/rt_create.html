@@ -1,22 +1,22 @@
-{% extends "core/form_base_for_new_approach.html" %}
+{% extends "core/form_base_for_new_approach_upgrade.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
 
 {% block extra_vars %}
 
     {% if extra_var2 %}
-        <div class="col-md-6">
+        <div class="col-md-3">
             {{ extra_var|as_crispy_field }}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             {{ extra_var3|as_crispy_field }}
         </div>
-        <div class="col-md-12 pb-4">
+        <div class="col-md-6 pb-4">
             {{ extra_var2|as_crispy_field }}
         </div>
 
     {% else %}
-    <div class="col-md-12 pb-2">
+    <div class="col-md-6 pb-2">
         {{ extra_var|as_crispy_field }}
     </div>
     {% endif %}

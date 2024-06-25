@@ -81,74 +81,97 @@
             border-width: 0;
         }
           
+        .blinking-circle {
+            display: inline-block; /* Ensure it's treated as an inline element */
+            width: 10px;
+            height: 20px;
+            padding: 0px;
+            margin: 0px;
+
+            background-color: coral;
+            animation: blink 1s infinite alternate;
+        }
+    
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+    
+            100% {
+                opacity: 0;
+            }
+        }
+
 </style>
 
-<div class="container p-4">
+<div class="container pt-2">
 
 <!-- seshatcommentpart_create.html -->
 {% autoescape off %}
-How it appears on a page: <br>
+How it appears on a page (parent): <br>
 <div class="border p-2 border-dark bg-light rounded border-3">
-    {{comm_part_display}}
-</div>
+    {% for subcom in parent_comment.inner_comments_related.all %}
+    {% if subcom_order == subcom.comment_order %}
+    <span class="px-2" style="background:rgba(254, 164, 131, 0.555)">{{subcom}}</span>
+
+    {% else %}
+    <span>{{subcom}}</span>
+
+    {% endif %}
+    {% endfor %}</div>
+
 {% endautoescape %}
 
 <form method="post" action="{% url 'seshatcommentpart-update2' comm_num %}">
     {% csrf_token %}
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-5">
+        <br>
+        <span class="fs-5 fw-bold text-secondary">* Insert the updated description text here:</span>
 
         {{ form.comment_text.label_tag }} {{ form.comment_text }}<br>
         {{ form.formset.management_form }}
         {{ form.management_form }}
-      </div>
-      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12"  style="display: none;">
+            {{ form.comment_order|as_crispy_field }}
+       </div>
+       <div class="col-md-12 pt-2 d-grid gap-2">
+        <input type="submit"  class="btn btn-outline-success btn-block mt-2 fs-5 fw-bold" value="Submit">
+       </div>
+        </div>
+
+  </div>
+      <div class="col-md-7">
         <div id="formset-container">
             {% for form1 in formset %}
 
-            <table class="table align-middle pt-5">
-                    <thead class="bg-infoff" style="background-color: rgba(0, 128, 128, 0.393)">
 
-                    <tr>
-                        <th>Reference ({{forloop.counter}})</th>
-                        <th>Page from</th>
-                        <th>Page to</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
+                  <div class="formset-item">
+                      {{ form1.id }} {# Include the form ID for proper formset rendering #}
+                    <div class="row">
+                      <div class="col-md-12 pt-4">
+                        <span class="badge bg-secondary fs-6">Citation #{{ forloop.counter}}</span>                          
+                        <span class="float-end text-secondary">Delete
+                          {{ form1.DELETE }} 
+                        </span>  
+                      </div>
+                      <div class="col-md-12 pb-1">
+                          {{ form1.ref|as_crispy_field }} 
+                      </div>
+                      <div class="col-md-2">
+                          {{ form1.page_from|as_crispy_field }}
+                      </div>
+                      <div class="col-md-2">
+                          {{ form1.page_to|as_crispy_field }}
+                      </div>
 
-
-                <div class="formset-item">
-                    {{ form.id }} {# Include the form ID for proper formset rendering #}
-
-                    <tr>
-                        <td class="col-md-7">
-                            {{ form1.ref|as_crispy_field }} 
-                        </td>
-                        <td class="col-md-2">
-                            {{ form1.page_from|as_crispy_field }}
-                        </td>
-                        <td class="col-md-2">
-                            {{ form1.page_to|as_crispy_field }}
-                        </td>
-
-                        <td class="col-md-1 ps-4">
-                            {{ form1.DELETE }} 
-                        </td>
-                    </tr>
-                    <tr> {# Add a new row for parent_pars #}
-                        
-                        <td colspan="4" class="col-md-12">
-                            {{ form1.parent_pars|as_crispy_field }}
-                            <hr class="bg-colorfuln">
-                        </td>
-                    </tr>
-                    
-                </div>
-            </tbody>
-
-            </table>
+                          <div colspan="4" class="col-md-8">
+                              {{ form1.parent_pars|as_crispy_field }}
+                          </div>
+                      </div>
+  
+                  </div>
             {% endfor %}
 
           </div>
@@ -158,11 +181,14 @@ How it appears on a page: <br>
              {{ form.comment_order|as_crispy_field }}
         </div>
         <div class="col-md-6 pt-4 d-grid gap-2">
-            <input type="submit"  class="btn btn-success btn-block mt-2" value="Submit">
+
         </div>
 
   </div>
   </form>
+
+
+
 </div>
 <!-- seshatcommentpart_create.html -->
 <script>

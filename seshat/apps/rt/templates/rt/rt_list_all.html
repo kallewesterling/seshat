@@ -6,25 +6,25 @@
 
 
 {% block download_button %}
-    <a href="{% url create_url %}" class="btn btn-outline-success mx-3 my-4 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
-    <a href="{% url download_url %}" class="btn btn-outline-primary mx-3 my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
+    <a href="{% url create_url %}" class="btn btn-outline-success  float-end mb-1"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
+    <a href="{% url download_url %}" class="btn btn-outline-primary   float-end mb-1"><i class="fas fa-download"></i> &nbsp; Download All</a>
 {% endblock download_button %}
 
 {% block metadownload_button %}
-    <a href="{% url metadownload_url %}" class="btn btn-primary ms-auto py-2 my-2 float-end"><i class="fas fa-download"></i> &nbsp; Download MetaData</a>
+    <a href="{% url metadownload_url %}" class="btn btn-primary ms-auto  float-end mb-1"><i class="fas fa-download"></i> &nbsp; Download MetaData</a>
 {% endblock metadownload_button %}
 
 
 {% block myheadings_list %}
-<th class = "fw-bold" style="text-align: center; white-space: nowrap;" scope="col"><span> 
-    <a href="{% url list_all_url %}{{ordering_tag}}">&nbsp;<i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp; coded value</a>
+<th class = "fw-bold" style="text-align: left; white-space: nowrap;" scope="col"><span> 
+    <a href="{% url list_all_url %}{{ordering_tag}}"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Coded Value
 </span>
 </th>
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
-<td style="text-align: center;">
-    <span class="pt-3 h5 fw-bold {% if obj.tag == 'DSP' %}
+<td colspan="1" class="border border-1" style="text-align: left;">
+    <span class="pt-3 fw-bold {% if obj.tag == 'DSP' %}
     text-danger
     {% elif obj.tag == 'SSP' %}
         text-darkorange
@@ -41,9 +41,9 @@
 
 <!-- Update Button -->
 {% block update_button %}
-    <td style="text-align: center;">
+    <td colspan="1" style="text-align: center;">
         <small>
-            <a href="{% url update_url obj.id %}">Edit</a>
+            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i></a>
         </small>
     </td>
 {% endblock update_button %}

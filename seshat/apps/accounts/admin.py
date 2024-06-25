@@ -17,7 +17,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline, )
 
     list_display = ('username', 'email', 'first_name',
-                    'last_name', 'is_staff', 'get_location','get_email_confirmed')
+                    'last_name', 'is_staff', 'date_joined', 'last_login','get_email_confirmed')
     list_select_related = ('profile', )
 
     def get_location(self, instance):
