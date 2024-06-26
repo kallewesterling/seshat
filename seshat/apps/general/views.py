@@ -4434,7 +4434,35 @@ class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Crea
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
+        # Extract query parameters
+        polity_id_x = self.request.GET.get('polity_id_x')
+        other_polity_id_x = self.request.GET.get('other_polity_id_x')
+
+        # Filter the data based on query parameters
+        if polity_id_x and other_polity_id_x:
+            all_rels = Polity_preceding_entity.objects.filter(
+                Q(polity_id=polity_id_x) |
+                Q(other_polity_id=polity_id_x) |
+                Q(polity_id=other_polity_id_x) |
+                Q(other_polity_id=other_polity_id_x)
+            )
+        elif polity_id_x:
+            # If other_polity is None, exclude it from the filter
+            all_rels = Polity_preceding_entity.objects.filter(
+                Q(polity_id=polity_id_x) |
+                Q(other_polity_id=polity_id_x)
+            )
+        elif other_polity_id_x:
+            # If polity is None, exclude it from the filter
+            all_rels = Polity_preceding_entity.objects.filter(
+                Q(polity_id=other_polity_id_x) |
+                Q(other_polity_id=other_polity_id_x)
+            )
+        else:
+            all_rels = Polity_preceding_entity.objects.none()
+
+        # Add extra context
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Preceding Entity"
@@ -4442,6 +4470,8 @@ class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Crea
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'preceding_entity': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The preceding entity (or the largest settlement) of a polity.', 'units': None, 'choices': None, 'null_meaning': 'This polity did not have a preceding entity.'}}
         context["potential_cols"] = []
+        context["all_rels"] = all_rels  # Add filtered data to context
+
         return context
 
 

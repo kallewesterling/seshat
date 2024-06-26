@@ -18,9 +18,8 @@ urlpatterns = [
     path('vars/', views.QingVars, name='qing_vars'),
     path('playground/', views.playground, name='playground'),
     path('playgrounddownload/', views.playgrounddownload,
-         name="playgrounddownload"), 
-     path('fpl_all/', views.fpl_all,
-         name="fpl_all"), 
+         name="playgrounddownload"),
+     #path('fpl_all/', views.fpl_all,name="fpl_all"), 
 ]
 
 urlpatterns += [

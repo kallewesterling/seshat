@@ -2,257 +2,169 @@
 {% load static %}
 {% load humanize %}
 {% load mathfilters %}
+{% load custom_filters %}
 
 {% block content %}
+
+<style>
+    .accordion-body {
+        padding:0px !important;
+    }
+    .accordion-button.p-0::after {
+        flex-shrink: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding-right: 1px;
+        padding-left: 1px;
+        content: "";
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-size: 1.25rem;
+        transition: transform .1s ease-in-out;
+    }
+</style>
 <div class="container">
     {% if object_list %}
     <div class="row d-flex mt-3">
-        <div class="col-md-6">
+        <div class="col-md-9">
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
             <div class="col-md-12 justify-content-end my-3">
-                <h6><span class="text-secondary text-end">Section</span>: <mark>{{var_section}}</mark>
+                <h6><span class="text-secondary text-end">Section</span>: {{var_section}}
                     {% if var_subsection %}
                     / {{var_subsection}}
                     {% endif %}
-                </mark> </h6>      
+                 </h6>      
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
           </div>
           <div>
-            <h4 class="mb-3"><span>{{myvar}}</span></h4>
+            <h5 class="mb-3"><span class="text-secondary text-end">Variable:</span> <span>{{myvar}}</span></h5>
           </div>
             <div>
                 <h6 class="fw-bold"><span class="fw-normal"><i class="fa-solid fa-caret-right"></i> {{var_main_desc}} &nbsp;</span>
                 </h6>
             </div>
-            <div class="contributors mt-4">
-                <h6><span class="text-secondary text-end">
-                    <i class="fa-solid fa-people-group"></i> Contributors</span>: Seshat RAs and Experts
-                </h6>   
-            </div>
         </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
             {% if inner_vars %}
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="py-2 my-2 fw-bold">Metadata:</h5>
-                </div>
-                <div class="col-md-6">
+                 {% block download_button %}
+                 {% endblock download_button %}
                     {% block metadownload_button %}
                     {% endblock metadownload_button %}
-                </div>
-            </div>
-            <div class="accordion accordion-flush" id="accordionExample">
-                <div class="accordion-item" style="background-color:#fffdf2;">
-                  <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed px-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="background-color:#fffdf2;">
-                      <span class="text-success"><i class="fa-solid fa-chevron-right"></i>  &nbsp; General Metadata</span> 
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
-                    <div class="accordion-body table-responsive p-0">
-                            <table class="table align-middle table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" class="col-md-2">Variable</th>
-                                        <th scope="col" class="col-md-10">Definition</th> 
-                                        <!-- <th scope="col" class="col-md-2">Scale</th>
-                                        <th scope="col" class="col-md-2">Units</th>  -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td scope="row" class="col-md-2 text-secondary">Polity</td>
-                                        <td scope="row" class="col-md-10 text-secondary">The Seshat Polity Name</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row" class="col-md-2 text-secondary">Year(s)</td>
-                                        <td scope="row" class="col-md-10 text-secondary">The years for which we have the data. [negative = BCE]</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row"  class="col-md-2 text-secondary">Confidence</td>
-                                        <td scope="row"  class="col-md-10 text-secondary"><span class="badge rounded-pill bg-primary">Inferred</span> : The value is inferred.<br> 
-                                            <span class="badge rounded-pill bg-warning text-dark">Suspected</span> : The value is suspected (Expert Check Needed).<br> 
-                                            <span class="badge rounded-pill bg-success">Evidenced</span> : The value is backed up by sufficient evidence.</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row"  class="col-md-2 text-secondary">Disputed?</td>
-                                        <td scope="row"  class="col-md-10 text-secondary">
-                                            <b class="text-success">No</b> : No disagreement among scholars.<br> <b class="text-danger">Yes</b> : There is disagreement among scholars.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row"  class="col-md-2 text-secondary">Expert?</td>
-                                        <td scope="row"  class="col-md-10 text-secondary"><i class="fa-solid fa-xmark text-danger"></i> : Not yet Checked by a Seshat Expert. <br> <i class="fa-solid fa-check text-success"></i> : Checked and accepted by a Seshat Expert (or RA).</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item" style="background-color:#fffdf2;">
-                  <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button px-0 collapsed" type="button" data-bs-toggle="collapse"  data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="background-color:#fffdf2;">
-                    <span class="text-success"><i class="fa-solid fa-chevron-right"></i> &nbsp; Metadata Specific to this Variable</span> 
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                    <div class="accordion-body table-responsive px-0 pt-0">
-                        <table class="table align-middle table-striped table-bordered">
-                            <thead>   
-                                <tr>
-                                    <th scope="col">Variable</th>
-                                    <th scope="col">Definition</th> 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for ktop, vtop in inner_vars.items %}
-                                <tr>
-                                    <td class="fw-bold">{{ktop}}</td>
-                                    {% if vtop.var_exp %}
-                                        <td scope="col">{{vtop.var_exp}}</td> 
-                                        {% elif "Definition" in potential_cols %}
-                                        <td scope="col"></td> 
-                                    {% endif %}
-                                    {% if vtop.scale %}
-                                        <td scope="col">{{vtop.scale}}</td>
-                                        {% elif "Scale" in potential_cols %}
-                                        <td scope="col"></td> 
-                                    {% endif %}
-                                    {% if vtop.units %}
-                                        <td scope="col">{{vtop.units}}</td> 
-                                        {% elif "Units" in potential_cols %}
-                                        <td scope="col"></td> 
-                                    {% endif %}
-                                    {% if vtop.min %}
-                                        <td scope="col">{{vtop.min}}</td> 
-                                        {% elif "Min" in potential_cols %}
-                                        <td scope="col"></td> 
-                                    {% endif %}
-                                    {% if vtop.max %}
-                                        <td scope="col">{{vtop.max}}</td> 
-                                    {% elif "Max" in potential_cols %}
-                                    <td scope="col"></td> 
-                                    {% endif %}
-                                <tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                  </div>
-                </div>
-                {% endif %}
-              </div>
+            {% endif %}
           </div>
       </div>
     {% block main_description %}
     {% endblock main_description %}
     {% block secondary_description %}
     {% endblock secondary_description %}
-    <hr>
-    <div class="row d-flex align-items-center mb-3">
-        <div class="col-md-3">
-            <h5 class="fw-bold">Actual Data:</h5>
-        </div>
-        <div class="col-md-9">      
-        <!-- Download and Create Buttons -->
-    {% block download_button %}
-    {% endblock download_button %}
-    </div>
-    </div>
+
     <div class="table-container">
-        <table id="table_id" class="table align-middle table-hover table-striped table-bordered" style="padding: 0.25 rem !important;">
-            <legend class="sticky-top py-0  px-2 m-0 fs-5 " style="background-color:#FFCCCC; height:40px;  top: 55px; z-index:900;">{{myvar}}</legend>
+        <table id="table_id" class="table align-middle table-hover table-borderless" style="padding: 0.25 rem !important;">
+            <legend class="sticky-top py-0 px-3 m-0" style="background-color:#FFCCCC; height:40px;  top: 55px; z-index:900;">{{myvar}}</legend>
             <thead  class="sticky-top" style="background-color:#FFCCCC; height:40px;  top: 95px; z-index:900;">              <tr>
-                <th scope="col" class="text-secondary"  style="text-align: center">#</th>
+                <th scope="col" class="text-secondary"  style="text-align: left;">#</th>
                 <th scope="col" style="text-align: left" class="fw-bold"> 
-                    <a href="{% url list_all_url %}?orderby=polity_id">&nbsp;<i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp; Polity</a>
-                     
-                
-                </th>
-                <th scope="col" style="text-align: left" class="fw-bold">
-                    <a href="{% url list_all_url %}?orderby=year_from">&nbsp;<i class="fa-solid fa-arrow-up-short-wide"></i></a>
-                     &nbsp; Year(s) &nbsp; 
+                    <a href="{% url list_all_url %}?orderby=polity_id"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Polity
                 </th>
                 <!-- headings for extra vars -->
                 {% block myheadings_list %}
                 {% endblock myheadings_list %}
-                {% include "core/partials/_confidence_disputed_expert.html" %}
-
-                <th scope="col" style="text-align: center" class="fw-light">Edit</th>
+                <th scope="col" style="text-align: left" >Tags</th>
+                <th scope="col" style="text-align: left" class="fw-bold">
+                    <a href="{% url list_all_url %}?orderby=year_from"><i class="fa-solid fa-arrow-up-short-wide"></i></a>
+                    Year(s)
+                </th>
+                <th scope="col" style="text-align: center">Edit</th>
+                <th scope="col" style="text-align: center">Desc</th>
 
               </tr>
             </thead>
             <tbody>
                 {% for obj in object_list %}
-                    <tr>
-                    <div>
-                    <td class="text-secondary" scope="row"  style="text-align: center">{{ forloop.counter }}</td>
-                    {% if obj.polity %}
-                    <td style="text-align: left;">
-                        {% if obj.polity.long_name %}
-                        <span class="fw-bold h5">
-                            <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.long_name }}</a>
+                <tr class="p-0 m-0">
+                <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}">
+                    <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
+                      <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">
+                            <td  colspan="1">
+                                {{ forloop.counter }}
+                                {% if obj.comment and obj.comment.id > 1 %}
+                                *
+                                {% endif %}
+
+                            </td>
+
+                            {% if obj.polity %}
+                            <td  colspan="1" style="text-align: left;">
+                                {% if obj.polity.long_name %}
+                                <span class="fw-bold">
+                                    <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.long_name }}</a>
+                                </span>
+                                {% else %}
+                                <span class="fw-bold">
+                                    <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.name }}</a>
+                                </span>
+                                {% endif %}
+        
+                            </td>
+                            {% else %}
+                            <td  colspan="1" style="text-align: left;">-</td>
+                            {% endif%}
+        
+                            <!-- extra vars come here -->
+                            {% block extra_vars_list %}
+                            {% endblock extra_vars_list %}
+                                {% include "core/partials/_all_tags_inline_obj.html" %}
+        
+                            <!-- Years -->
+                            {% include "core/partials/_years_block_new_obj.html" %}
+                            <!-- Tag tag (Disputed/Suspected etc.) -->
+        
+                            {% block update_button %}
+                            {% endblock update_button %}
+                            <td  colspan="1" class="text-secondary"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
+                                </span>
+                            </td>
+
                         </span>
-                        {% else %}
-                        <span class="fw-bold h5">
-                            <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.name }}</a>
                         </span>
-                        {% endif %}
-
-                    </td>
-                    {% else %}
-                    <td style="text-align: center;">-</td>
-                    {% endif%}
-                    <!-- Years -->
-                    {% include "core/partials/_years_block_new_obj.html" %}
-
-                    <!-- extra vars come here -->
-                    {% block extra_vars_list %}
-                    {% endblock extra_vars_list %}
-                    <td style="text-align: center;">
-                        {% if obj.tag == "DSP" %}
-                                <span class="badge rounded-pill bg-danger">{{ obj.get_tag_display }}</span>
-                        {% elif  obj.tag == "SSP" %}
-                                <span class="badge rounded-pill bg-warning text-dark">{{ obj.get_tag_display }}</span>
-                        {% elif  obj.tag == "UNK" %}
-                                <span class="badge rounded-pill bg-secondary">{{ obj.get_tag_display }}</span>
-                        {% elif  obj.tag == "IFR" %}
-                                <span class="badge rounded-pill bg-primary">{{ obj.get_tag_display }}</span>
-                        {% else  %}
-                                <span class="badge rounded-pill bg-success">{{ obj.get_tag_display }}</span>
-                        {% endif %}
-                    </td>
-                    <td style="text-align: center;">
-                        {% if obj.is_disputed %}
-                        <b class="text-danger">Yes</b>
-                        {% else  %}
-                        <b class="text-success">No</b>
-                        {% endif %}
-                    </td>
-                    <td style="text-align: center;">
-                        {% if obj.expert_reviewed %}
-                        <i class="fa-solid fa-check text-success"></i>
-                        {% else  %}
-                        <i class="fa-solid fa-xmark text-danger"></i>
-                        {% endif %}
-                    </td>
-
-                    <!-- Tag tag (Disputed/Suspected etc.) -->
-                    {% if obj.display_citations %}
-                    <sup>
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="Refs:" data-bs-html="true" data-bs-trigger="focus" data-bs-content="{{ obj.display_citations }}">&nbsp;<i class="fa-solid fa-bookmark"></i></span>
-                    </sup>
-                    {% endif %}
-                    </td>
-
-                    {% block update_button %}
-                    {% endblock update_button %}
-                </div>
+                    </div>
                 </tr>
+                <tr class="p-0 m-0">
+                    <td colspan="7" class="p-0 my-0" style="width:100%">
+                        <div id="collapseOne_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ forloop.counter }}">
+                            <span class="accordion-body m-0">
+                                {% autoescape off %}
+                                {% if obj.description %}
+                                {{ obj.description|make_references_look_nicer }}
+                                <br>
+                                    {% else %}
+                                    -
+                                    {% endif%}
+                                    {% if obj.comment and obj.comment.id > 1 %}
+                                    {{obj.comment }}
+                                    <a class="p-0 m-0" 
+                                    style="display:block; overflow: hidden;" 
+                                    href="{% url 'seshatcomment-update' obj.comment.id %}">
+                                        <span class="badge bg-teal text-dark ">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            EDIT
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% endautoescape %}
+                            </span>
+                        </div>
+                    </td>    
+                </tr>
+                
+
                 {% endfor %}
             </tbody>
           </table>
         </div>
+
 
     {% else %}
     <div class="row my-4">
@@ -279,3 +191,4 @@
         })
     </script>
   {% endblock %}
+

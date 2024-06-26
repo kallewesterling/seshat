@@ -1,12 +1,13 @@
 import sys
 import importlib
 import random
+import numpy as np
 
 from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from django.contrib.sites.shortcuts import get_current_site
-from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5,CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm
+from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render
@@ -75,7 +76,7 @@ from django.shortcuts import HttpResponse
 
 from math import floor, ceil
 from django.contrib.gis.geos import GEOSGeometry
-from distinctipy import get_colors, get_hex
+from django.contrib.gis.db.models.functions import AsGeoJSON
 from django.views.generic import ListView
 
 @login_required
@@ -315,6 +316,17 @@ def seshatcodebookold(request):
     }
     return render(request, 'core/old_codebook.html', context=context)
 
+def seshatcodebooknew1(request):
+    context = {
+        'insta': "Instabilities All Over the Place..",
+    }
+    return render(request, 'core/code_book_1.html', context=context)
+
+# def seshatcodebooknew2(request):
+#     context = {
+#         'insta': "Instabilities All Over the Place..",
+#     }
+#     return render(request, 'core/new_codebook_2.html', context=context)
 
 def seshatacknowledgements(request):
     """
@@ -1352,6 +1364,112 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
     else:
         init_data = ReferenceFormSet2(prefix='refs')
         form = SeshatCommentPartForm2()
+        big_father = SeshatComment.objects.get(id=com_id)
+
+    context = {
+        'form': form,
+        'com_id': com_id,  # Include com_id in the context
+        'subcom_order': subcom_order,  # Include subcom_order in the context
+        'formset': init_data, 
+        'parent_par': big_father, 
+
+        #'comm_num': com_id,
+        #'comm_part_display': comment_part,
+    }
+    return render(request, 'core/seshatcomments/seshatcommentpart_create2.html', context)
+
+
+
+# Function based NEW:
+@permission_required('core.add_capital')
+def seshat_comment_part_create_from_null_view_inline(request, app_name, model_name, instance_id):
+    if request.method == 'POST':
+        form = SeshatCommentPartForm2(request.POST)
+        big_father = SeshatComment.objects.create(text='a new_comment_text')
+        #big_father = SeshatComment.objects.get(id=com_id)
+        com_id = big_father.pk
+        model_class = apps.get_model(app_label=app_name, model_name= model_name)
+
+        model_instance = get_object_or_404(model_class, id=instance_id)
+        model_instance.comment = big_father
+
+        model_instance.save()
+        if form.is_valid():
+            comment_text = form.cleaned_data['comment_text']
+            comment_order = form.cleaned_data['comment_order']
+            user_logged_in = request.user
+
+            try:
+                seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+            except:
+                seshat_expert_instance = None
+
+            seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_expert_instance, comment= big_father)
+
+            seshat_comment_part.save()
+
+            # Process the formset
+            reference_formset = ReferenceFormSet2(request.POST, prefix='refs')
+            if reference_formset.is_valid():
+                #print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
+                to_be_added = []
+                to_be_deleted_later = []
+                for reference_form in reference_formset:
+                    if reference_form.is_valid():
+                        try:
+                            reference = reference_form.cleaned_data['ref']
+                            page_from = reference_form.cleaned_data['page_from']
+                            page_to = reference_form.cleaned_data['page_to']
+                            to_be_deleted = reference_form.cleaned_data['DELETE']
+                            parent_pars_inserted = reference_form.cleaned_data['parent_pars']
+
+
+                            # Get or create the Citation instance
+                            if page_from and page_to:
+                                citation, created = Citation.objects.get_or_create(
+                                    ref=reference,
+                                    page_from=int(page_from),
+                                    page_to=int(page_to)
+                                )
+                                #print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
+                            else:
+                                citation, created = Citation.objects.get_or_create(
+                                    ref=reference,
+                                    page_from=None,
+                                    page_to=None
+                                )
+
+                            # Associate the Citation with the SeshatCommentPart
+                            if to_be_deleted:
+                                #comment_part.comment_citations.remove(citation)
+                                to_be_deleted_later.append((citation, parent_pars_inserted))
+                            else:
+                                #comment_part.comment_citations.add((citation, parent_pars_inserted))
+                                to_be_added.append((citation, parent_pars_inserted))
+                        except:
+                            pass  # Handle the exception as per your requirement
+                # seshat_comment_part.comment_citations.clear()
+                # seshat_comment_part.comment_citations.add(*to_be_added)
+                seshat_comment_part.comment_citations_plus.clear()
+                #seshat_comment_part.comment_citations_plus.add(*to_be_added)
+
+                for item in to_be_added:
+                    # Query for an existing row based on citation and SeshatCommentPart
+                    scp_through_ctn, created = ScpThroughCtn.objects.get_or_create(
+                        seshatcommentpart=seshat_comment_part,
+                        citation=item[0],
+                        defaults={'parent_paragraphs': item[1]}  # Set defaults including parent_paragraphs
+                    )
+
+                    # If the row already exists, update its parent_paragraphs
+                    if not created:
+                        scp_through_ctn.parent_paragraphs = item[1]
+                        scp_through_ctn.save()
+            return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+
+    else:
+        init_data = ReferenceFormSet2(prefix='refs')
+        form = SeshatCommentPartForm2()
 
     context = {
         'form': form,
@@ -1362,7 +1480,6 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
         #'comm_part_display': comment_part,
     }
     return render(request, 'core/seshatcomments/seshatcommentpart_create2.html', context)
-
 
 
 # Function based NEW:
@@ -3465,7 +3582,7 @@ def download_csv_all_polities(request):
     writer = csv.writer(response, delimiter='|')
 
     # type the headers
-    writer.writerow(['macro_region', 'home_seshat_region',  'polity_new_id', 'polity_old_id', 'polity_long_name', 'start_year', 'end_year', 'home_nga', 'G', "SC", "WF", "RT", "HS", "CC", "PT", 'polity_tag', 'shapefile_name'])
+    writer.writerow(['macro_region', 'home_seshat_region',  'polity_new_ID', 'polity_old_ID', 'polity_long_name', 'start_year', 'end_year', 'home_nga', 'G', "SC", "WF", "RT", "HS", "CC", "PT", 'polity_tag', 'shapefile_name'])
 
     items = Polity.objects.all()
     coded_value_data, freq_data = give_polity_app_data()
@@ -3513,6 +3630,8 @@ def get_or_create_citation(reference, page_from, page_to):
     )
 from django.shortcuts import render, redirect
 from .forms import SeshatCommentPartForm, SeshatCommentForm2
+
+
 from .models import SeshatCommentPart, Citation
 
 def seshatcommentpart_create_view_old(request):
@@ -3651,6 +3770,7 @@ def seshatcommentpart_create_view(request):
 
 
 # Shapefile views
+import time # TODO: delete
 
 def get_provinces(selected_base_map_gadm='province'):
     """
@@ -3687,7 +3807,7 @@ def get_provinces(selected_base_map_gadm='province'):
 
     return provinces
 
-def get_polity_shape_content(displayed_year="all", seshat_id="all"):
+def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=20, override_earliest_year=None, override_latest_year=None):
     """
     This function returns the polity shapes and other content for the map.
     Only one of displayed_year or seshat_id should be set; not both.
@@ -3702,6 +3822,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
     Returns:
         dict: The content for the polity shapes.
     """
+
     if displayed_year != "all" and seshat_id != "all":
         raise ValueError("Only one of displayed_year or seshat_id should be set not both.")
 
@@ -3712,30 +3833,16 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
     else:
         rows = VideoShapefile.objects.all()
 
-    rows = rows.values('id', 'seshat_id', 'name', 'polity', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'simplified_geom', 'geom')
 
-    shapes = []
-    for shape in rows:
-        if shape['simplified_geom'] == None:  # This may occur if the shape is so small that simplification reduced it to nothing
-            shape['simplified_geom'] = shape['geom']  # Use the original geometry in this case
-        simplified_geom = shape.pop('simplified_geom').geojson
-        shape['geom'] = simplified_geom
+    # Convert 'geom' to GeoJSON in the database query
+    rows = rows.annotate(geom_json=AsGeoJSON('geom')).values('id', 'seshat_id', 'name', 'polity', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'geom_json')
 
-        # If the polity shape is part of a personal union or meta-polity, add colour and polity years for the union
-        if shape['seshat_id']:
-            for shape2 in rows:
-                if shape2['seshat_id']:
-                    if shape['seshat_id'] in shape2['seshat_id'] and ';' in shape2['seshat_id'] and shape['seshat_id'] != shape2['seshat_id']:
-                        shape['union_colour'] = shape2['colour']
-                        shape['union_name'] = shape2['name']
-                        shape['union_start_year'] = shape2['polity_start_year']
-                        shape['union_end_year'] = shape2['polity_end_year']
-                        break  # Exit the loop once the matching shape is found
-
-        shapes.append(shape)
+    shapes = list(rows)
 
     seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id']]
+
     polities = Polity.objects.filter(new_name__in=seshat_ids).values('new_name', 'id', 'long_name')
+
     polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in polities]
 
     seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in polity_info}
@@ -3752,6 +3859,11 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
         earliest_year, latest_year = 2014, 2014
         initial_displayed_year = -3400
 
+    if override_earliest_year is not None:
+        earliest_year = override_earliest_year
+    if override_latest_year is not None:
+        latest_year = override_latest_year
+
     if displayed_year == "all":
         displayed_year = initial_displayed_year 
 
@@ -3760,10 +3872,14 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all"):
         displayed_year = earliest_year
         latest_year = max([shape['end_year'] for shape in shapes])
 
+    # Get the years for the tick marks on the year slider
+    tick_years = [round(year) for year in np.linspace(earliest_year, latest_year, num=tick_number)]
+
     content = {
         'shapes': shapes,
         'earliest_year': earliest_year,
         'display_year': displayed_year,
+        'tick_years': json.dumps(tick_years),
         'latest_year': latest_year,
         'seshat_id_page_id': seshat_id_page_id
     }
@@ -3822,8 +3938,10 @@ def assign_variables_to_shapes(shapes, app_map):
         for app_name, app_name_long in app_map.items():
             module = apps.get_app_config(app_name)
             variables[app_name_long] = {}
-            for model in module.get_models():
-                for field in model._meta.get_fields():
+            models = list(module.get_models())
+            for model in models:
+                fields = list(model._meta.get_fields())
+                for field in fields:
                     if hasattr(field, 'choices') and field.choices == ABSENT_PRESENT_CHOICES:
                         # Get the variable name and formatted name
                         if field.name == 'coded_value':  # Use the class name lower case for rt models where coded_value is used
@@ -3846,9 +3964,6 @@ def assign_variables_to_shapes(shapes, app_map):
                         if hasattr(instance, 'subsection'):
                             variable_full_name = instance.subsection() + ': ' + variable_full_name 
                         variables[app_name_long][var_name]['full_name'] = variable_full_name
-
-            # Sort a given app's variables alphabetically by full name
-            variables[app_name_long] = dict(sorted(variables[app_name_long].items(), key=lambda item: item[1]['full_name']))
 
         # Store the variables in the cache for 1 hour
         cache.set('variables', variables, 3600)
@@ -4027,8 +4142,10 @@ def common_map_view_content(content):
     Returns:
         dict: The updated content for the polity shapes.
     """
+    # start_time = time.time()
     # Add in the present/absent variables to view for the shapes
     content['shapes'], content['variables'] = assign_variables_to_shapes(content['shapes'], app_map)
+    # print(f"Time taken to assign absent/present variables to shapes: {time.time() - start_time} seconds")
 
     # Add in the categorical variables to view for the shapes
     content['shapes'], content['variables'] = assign_categorical_variables_to_shapes(content['shapes'], content['variables'])
@@ -4038,10 +4155,6 @@ def common_map_view_content(content):
 
     # Add categorical variable choices to content for dropdown selection
     content['categorical_variables'] = categorical_variables
-
-    # TODO: Temporary restriction on the latest year for the map view
-    if content['latest_year'] > 2014:
-        content['latest_year'] = 2014
 
     # Set the initial polity to highlight
     content['world_map_initial_polity'] = world_map_initial_polity
@@ -4072,7 +4185,8 @@ def map_view_initial(request):
             return redirect('{}?year={}'.format(request.path, world_map_initial_displayed_year))
     else:
         # Select a random polity for the initial view
-        world_map_initial_displayed_year, world_map_initial_polity = random_polity_shape()
+        if 'test' not in sys.argv:
+            world_map_initial_displayed_year, world_map_initial_polity = random_polity_shape()
         return redirect('{}?year={}'.format(request.path, world_map_initial_displayed_year))
 
     content = get_polity_shape_content(seshat_id=world_map_initial_polity)
@@ -4116,7 +4230,9 @@ def map_view_all(request):
     Returns:
         JsonResponse: The HTTP response with serialized JSON.
     """
-    content = get_polity_shape_content()
+
+    # Temporary restriction on the latest year for the whole map view
+    content = get_polity_shape_content(override_latest_year=2014)
 
     content = common_map_view_content(content)
 
@@ -4159,6 +4275,8 @@ def update_seshat_comment_part_view(request, pk):
     """
     comment_part = SeshatCommentPart.objects.get(id=pk)
     parent_comment_id = comment_part.comment.id
+    subcomment_order = comment_part.comment_order
+
     parent_comment_part = SeshatComment.objects.get(id=parent_comment_id)
 
     init_data={}
@@ -4182,10 +4300,15 @@ def update_seshat_comment_part_view(request, pk):
             comment_part.comment_curator = seshat_expert_instance 
             comment_part.save()
             # Process the formset
-            if parent_comment_part.inner_comments_related.count() <= 2:
+            # comment_part.comment_citations_plus
+            #print("YOOOOOOOOOOO", comment_part.comment_citations_plus.count())
+            if comment_part.citations_count <= 2:
                 reference_formset = ReferenceFormSet2(request.POST, prefix='refs')
-            else:
+            elif comment_part.citations_count <= 4:
                 reference_formset = ReferenceFormSet5(request.POST, prefix='refs')
+            else:
+                reference_formset = ReferenceFormSet10(request.POST, prefix='refs')
+
             if reference_formset.is_valid():
                 #print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
                 to_be_added = []
@@ -4194,6 +4317,7 @@ def update_seshat_comment_part_view(request, pk):
                     if reference_form.is_valid():
                         try:
                             reference = reference_form.cleaned_data['ref']
+                            #print(f"aaaaaaaaaaaaaaaaaa: {reference}")
                             page_from = reference_form.cleaned_data['page_from']
                             page_to = reference_form.cleaned_data['page_to']
                             to_be_deleted = reference_form.cleaned_data['DELETE']
@@ -4221,7 +4345,9 @@ def update_seshat_comment_part_view(request, pk):
                                 #comment_part.comment_citations.add(citation)
                                 to_be_added.append((citation, parent_pars_inserted))
                         except:
+                            #print("OOOPSI", reference_form)
                             pass  # Handle the exception as per your requirement
+                        #print("OOzzzzzzzzzzzzzzOPSI", reference_form)
                 #comment_part.comment_citations.clear()
                 #comment_part.comment_citations.add(*to_be_added)
 
@@ -4289,16 +4415,23 @@ def update_seshat_comment_part_view(request, pk):
         # ]
         if len(initial_data) <= 2:
             init_data = ReferenceFormSet2(prefix='refs', initial=initial_data)
-        elif len(initial_data) <= 5:
+            form = SeshatCommentPartForm2(initial={
+            'comment_text': comment_part.comment_part_text,
+            'comment_order': comment_part.comment_order,})
+        elif len(initial_data) <= 4:
             init_data = ReferenceFormSet5(prefix='refs', initial=initial_data)
+            form = SeshatCommentPartForm5(initial={
+            'comment_text': comment_part.comment_part_text,
+            'comment_order': comment_part.comment_order,})
         else:
-            init_data = ReferenceFormSet5(prefix='refs', initial=initial_data)
-        form = SeshatCommentPartForm2(initial={
+            init_data = ReferenceFormSet10(prefix='refs', initial=initial_data)
+            form = SeshatCommentPartForm10(initial={
             'comment_text': comment_part.comment_part_text,
             'comment_order': comment_part.comment_order,})
 
+
     #print(formset)
-    return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part})
+    return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part, 'parent_comment': parent_comment_part, 'subcom_order': subcomment_order,})
 
 
 #########################
@@ -4366,6 +4499,132 @@ def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instan
     # and replace 'model-detail' with the actual name of your detail view
     #return redirect('model-detail', pk=model_instance.id)
     return redirect('seshatcomment-update', pk=comment_instance.id)
+
+from .forms import SeshatCommentPartForm2_UPGRADE, ReferenceFormSet2_UPGRADE
+
+@login_required
+def create_a_comment_with_a_subcomment_newer(request, app_name, model_name, instance_id):
+    """
+    Create the first chunk of a new comment and assign it to a model instance and a seshat comment.
+    Get the data on citations and do the appropriate assignments there as well. 
+    """
+    if model_name == 'general':
+        model_class = apps.get_model(app_label=app_name, model_name='polity_' + model_name)
+    else:
+        model_class = apps.get_model(app_label=app_name, model_name=model_name)
+    
+    if model_class is None:
+        return HttpResponse("Model not found", status=404)
+
+    model_instance = get_object_or_404(model_class, id=instance_id)
+
+    if request.method == 'POST':
+        form = SeshatCommentPartForm2_UPGRADE(request.POST)
+        if form.is_valid():
+            comment_text = form.cleaned_data['comment_text']
+            comment_order = form.cleaned_data['comment_order']
+            references_formset = form.cleaned_data['references_formset']
+
+            ######################## Process the formset
+            references_formset = ReferenceFormSet2_UPGRADE(request.POST, prefix='refs')
+            if references_formset.is_valid():
+                #print("ALOOOOOOOOOOOOOOOOOOO: ", len(references_formset))
+                to_be_added = []
+                to_be_deleted_later = []
+                for reference_form in references_formset:
+                    if reference_form.is_valid():
+                        try:
+                            reference = reference_form.cleaned_data['ref']
+                            page_from = reference_form.cleaned_data['page_from']
+                            page_to = reference_form.cleaned_data['page_to']
+                            to_be_deleted = reference_form.cleaned_data['DELETE']
+                            parent_pars_inserted = reference_form.cleaned_data['parent_pars']
+
+
+                            # Get or create the Citation instance
+                            if page_from and page_to:
+                                citation, created = Citation.objects.get_or_create(
+                                    ref=reference,
+                                    page_from=int(page_from),
+                                    page_to=int(page_to)
+                                )
+                                #print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
+                            else:
+                                citation, created = Citation.objects.get_or_create(
+                                    ref=reference,
+                                    page_from=None,
+                                    page_to=None
+                                )
+
+                            # Associate the Citation with the SeshatCommentPart
+                            if to_be_deleted:
+                                #comment_part.comment_citations.remove(citation)
+                                to_be_deleted_later.append((citation, parent_pars_inserted))
+                            else:
+                                #comment_part.comment_citations.add((citation, parent_pars_inserted))
+                                to_be_added.append((citation, parent_pars_inserted))
+                        except:
+                            pass  # Handle the exception as per your requirement
+                # seshat_comment_part.comment_citations.clear()
+                # seshat_comment_part.comment_citations.add(*to_be_added)
+                seshat_comment_part.comment_citations_plus.clear()
+                #seshat_comment_part.comment_citations_plus.add(*to_be_added)
+
+                for item in to_be_added:
+                    # Query for an existing row based on citation and SeshatCommentPart
+                    scp_through_ctn, created = ScpThroughCtn.objects.get_or_create(
+                        seshatcommentpart=seshat_comment_part,
+                        citation=item[0],
+                        defaults={'parent_paragraphs': item[1]}  # Set defaults including parent_paragraphs
+                    )
+
+                    # If the row already exists, update its parent_paragraphs
+                    if not created:
+                        scp_through_ctn.parent_paragraphs = item[1]
+                        scp_through_ctn.save()
+            return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+        #########################################
+
+
+
+
+
+
+
+            if model_instance.comment and model_instance.comment.id > 1:
+                comment_instance = model_instance.comment
+            else:
+                comment_instance = SeshatComment.objects.create(text='New comment')
+
+            user_logged_in = request.user
+            try:
+                seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+            except Seshat_Expert.DoesNotExist:
+                seshat_expert_instance = None
+
+            subcomment_instance = SeshatCommentPart.objects.create(
+                comment_part_text=comment_text,
+                comment=comment_instance,
+                comment_curator=seshat_expert_instance,
+                comment_order=comment_order
+            )
+
+            for reference_form in references_formset:
+                ref = reference_form.cleaned_data['ref']
+                page_from = reference_form.cleaned_data['page_from']
+                page_to = reference_form.cleaned_data['page_to']
+                parent_pars = reference_form.cleaned_data['parent_pars']
+                # Process and save each reference
+
+            model_instance.comment = comment_instance
+            model_instance.save()
+
+            return redirect('seshatcomment-update', pk=comment_instance.id)
+    else:
+        form = SeshatCommentPartForm2_UPGRADE()
+
+    #return redirect('seshatcomment-update', pk=comment_instance.id)
+    return render(request, 'core/seshatcomments/your_template.html', {'form': form})
 
 
 @login_required

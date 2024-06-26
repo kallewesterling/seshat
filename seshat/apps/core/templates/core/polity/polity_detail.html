@@ -183,10 +183,6 @@
 <!-- showcase for index -->
 
 <div class="container">
-    <div>
-        <span class="fw-bolder fs-1 text-teal"><i class="fa-solid fa-star fa-sm"></i> {{ object.long_name }}</span>
-        {% polity_map pk %}
-    </div>
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="row d-flex align-items-center mb-2">
@@ -202,7 +198,10 @@
                         {% endif %}
 
                     </div>
-
+                    <div>
+                        {% polity_map pk %}
+                        <br><p></p><br>
+                    </div>
 
                     <div class="col-md-8 py-2">
                         {% if object.general_description %}
@@ -304,6 +303,8 @@
                             {% for vv in preceding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
+                                    <span class="bg-light px-1 border border-dark rounded">
+
                                     {% if  vv.other_polity.start_year == vv.other_polity.end_year %}
                                         {% if  vv.other_polity.start_year < 0 %}
                                         {{ vv.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> 
@@ -327,6 +328,8 @@
                                         {{ vv.other_polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ vv.other_polity.end_year }} <span class="text-secondary">CE</span>
                                         {% endif %}
                                     {% endif %}
+                                </span>
+
                                     <span class="h6 text-teal fw-bold ps-2">
                                         <a href="{% url 'polity-detail-main' vv.other_polity.id %}">{{ vv.other_polity }}</a>
 
@@ -339,8 +342,9 @@
                                 </div>
                             {% endif %}
                             {% endfor %}
+                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
                         {% else %}
-                            <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}">here</a>.</div>
+                            <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
 
                         <br>
@@ -351,6 +355,8 @@
                             {% for vv in succeeding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
+                                    <span class="bg-light px-1 border border-dark rounded">
+
                                     {% if  vv.polity.start_year == vv.polity.end_year %}
                                         {% if  vv.polity.start_year < 0 %}
                                         {{ vv.polity.start_year|abs }} <span class="text-secondary">BCE</span> 
@@ -373,7 +379,10 @@
                                         {% else %}
                                         {{ vv.polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ vv.polity.end_year }} <span class="text-secondary">CE</span>
                                         {% endif %}
+
                                     {% endif %}
+                                </span>
+
                                     <span class="h6 text-teal fw-bold ps-2">
                                         <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
                                     </span>
@@ -385,8 +394,9 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
+                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
                         {% else %}
-                        <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}">here</a>.</div>
+                        <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
 
                     </div>
