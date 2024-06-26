@@ -65,36 +65,51 @@ Ensure that you are correctly logged in and that the subscription you will use c
     $ az account set --subscription "<subscription-id>"
 
 
-Step 2: Activate Pulumi environment and install relevant packages
+Step 2: Create a virtual environment for Pulumi
 -----------------------------------------------------------------
 
-We assume here that you'll use our provided Pulumi setup (located in the ``/pulumi`` directory in this repository).
+You can use either Conda or Python's built-in ``venv`` module to create a virtual environment (you could also re-use the environment you set up for Seshat development and install the requirements there).
 
-If you're setting up from scratch, you can follow the below steps to set up the Pulumi environment:
+.. tabs::
 
-1. Create a new Python virtual environment:
+   .. tab:: Conda example
 
-    .. code-block:: bash
+      Create the environment:
 
-        $ python3 -m venv venv
+      .. code-block:: bash
 
-2. Activate the virtual environment and install the required packages:
+         $ conda create --name seshat_pulumi
 
-    .. code-block:: bash
+      Activate the environment:
 
-        $ source venv/bin/activate
-        $ pip install -r requirements.txt
+      .. code-block:: bash
 
-To activate the Pulumi environment and install the required packages, run the following commands:
+         $ conda activate seshat_pulumi
+
+   .. tab:: venv example
+
+      Create the environment:
+
+      .. code-block:: bash
+
+         $ python3 -m venv seshat_pulumi
+
+      Activate the environment:
+
+      .. code-block:: bash
+
+         $ source seshat_pulumi/bin/activate
+
+Install the requirements:
 
 .. code-block:: bash
 
-    $ cd pulumi
-    $ source venv/bin/activate
-    $ pip install -r requirements.txt
+    $ pip install -r pulumi/requirements.txt
 
 Step 3: Set up a Pulumi stack
 ------------------------------
+
+We assume here that you'll use our provided Pulumi setup (located in the ``/pulumi`` directory in this repository).
 
 .. admonition:: Setting up a Pulumi stack from scratch
     :class: dropdown
@@ -130,7 +145,7 @@ Step 3: Set up a Pulumi stack
    - Chose ``UKSouth`` location
    - Made custom edits to the config files for the Seshat app
 
-To set up this Pulumi stack, run the following command:
+To set up this Pulumi stack, run the following commands:
 
 .. code-block:: bash
 
