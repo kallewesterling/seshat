@@ -68,35 +68,26 @@ Ensure that you are correctly logged in and that the subscription you will use c
 Step 2: Activate Pulumi environment and install relevant packages
 -----------------------------------------------------------------
 
-.. admonition:: Setting up a Pulumi environment from scratch
-    :class: dropdown
+We assume here that you'll use our provided Pulumi setup (located in the ``/pulumi`` directory in this repository).
 
-    We assume here that you'll use our provided Pulumi setup (located in the ``/pulumi`` directory in this repository).
+If you're setting up from scratch, you can follow the below steps to set up the Pulumi environment:
 
-    If you're setting up from scratch, you can follow the below steps to set up the Pulumi environment:
+1. Create a new Python virtual environment:
 
-    1. Create a new Python virtual environment:
+    .. code-block:: bash
 
-       .. code-block:: bash
+        $ python3 -m venv venv
 
-          $ python3 -m venv venv
+2. Activate the virtual environment and install the required packages:
 
-    2. Activate the virtual environment and install the required packages:
+    .. code-block:: bash
 
-       .. code-block:: bash
-    
-          $ source venv/bin/activate
-          $ pip install -r requirements.txt
-
-    3. Set up a Pulumi stack:
-    
-       .. code-block:: bash
-
-          $ pulumi new azure-python
+        $ source venv/bin/activate
+        $ pip install -r requirements.txt
 
 .. important::
 
-   In the provided set up in the ``/pulumi`` directory, we have already set up the Pulumi environment and stack for you.
+   In the provided set up in the ``/pulumi`` directory, we have already set up the Pulumi stack for you.
 
    In the included set up, we:
 
@@ -105,7 +96,7 @@ Step 2: Activate Pulumi environment and install relevant packages
    - Chose ``UKSouth`` location
    - Made custom edits to the config files for the Seshat app
 
-To activate the provided Pulumi environment and install the required packages, run the following commands:
+To activate the Pulumi environment and install the required packages, run the following commands:
 
 .. code-block:: bash
 
@@ -121,13 +112,19 @@ Step 3: Set up a Pulumi stack
 
     If you're setting up a Pulumi stack from scratch, you can follow the below steps:
 
-    1. Initialize a new Pulumi stack:
+    1. Set up a Pulumi stack for Azure Python:
+    
+       .. code-block:: bash
+
+          $ pulumi new azure-python
+
+    2. Initialize a new Pulumi stack:
 
        .. code-block:: bash
 
           $ pulumi stack init <stack-name>
 
-    2. Select the stack:
+    3. Select the stack:
 
        .. code-block:: bash
 
