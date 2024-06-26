@@ -46,14 +46,38 @@ from .models import Ra, Polity_territory, Polity_population, Population_of_the_l
 from .forms import RaForm, Polity_territoryForm, Polity_populationForm, Population_of_the_largest_settlementForm, Settlement_hierarchyForm, Administrative_levelForm, Religious_levelForm, Military_levelForm, Professional_military_officerForm, Professional_soldierForm, Professional_priesthoodForm, Full_time_bureaucratForm, Examination_systemForm, Merit_promotionForm, Specialized_government_buildingForm, Formal_legal_codeForm, JudgeForm, CourtForm, Professional_lawyerForm, Irrigation_systemForm, Drinking_water_supply_systemForm, MarketForm, Food_storage_siteForm, RoadForm, BridgeForm, CanalForm, PortForm, Mines_or_quarryForm, Mnemonic_deviceForm, Nonwritten_recordForm, Written_recordForm, ScriptForm, Non_phonetic_writingForm, Phonetic_alphabetic_writingForm, Lists_tables_and_classificationForm, CalendarForm, Sacred_textForm, Religious_literatureForm, Practical_literatureForm, HistoryForm, PhilosophyForm, Scientific_literatureForm, FictionForm, ArticleForm, TokenForm, Precious_metalForm, Foreign_coinForm, Indigenous_coinForm, Paper_currencyForm, CourierForm, Postal_stationForm, General_postal_serviceForm
 
 class RaCreate(PermissionRequiredMixin, CreateView):
+    """
+    View for creating a new Ra object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ra
     form_class = RaForm
     template_name = "sc/ra/ra_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ra-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -67,18 +91,41 @@ class RaCreate(PermissionRequiredMixin, CreateView):
 
 
 class RaUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Ra object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ra
     form_class = RaForm
     template_name = "sc/ra/ra_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "ra"
 
         return context
 
 class RaDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Ra object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ra
     success_url = reverse_lazy('ras')
     template_name = "core/delete_general.html"
@@ -86,14 +133,34 @@ class RaDelete(PermissionRequiredMixin, DeleteView):
 
 
 class RaListView(generic.ListView):
+    """
+    Paginated view for listing all the Ra objects.
+    """
     model = Ra
     template_name = "sc/ra/ra_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ras')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "ra"
         context["var_main_desc"] = "The name of the research assistant or associate who coded the data. if more than one ra made a substantial contribution, list all via separate entries."
@@ -107,6 +174,9 @@ class RaListView(generic.ListView):
 
 
 class RaListViewAll(generic.ListView):
+    """
+    View for listing all the Ra objects.
+    """
     model = Ra
     template_name = "sc/ra/ra_list_all.html"
 
@@ -121,6 +191,17 @@ class RaListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "ra"
         context["var_main_desc"] = "The name of the research assistant or associate who coded the data. if more than one ra made a substantial contribution, list all via separate entries."
@@ -134,12 +215,27 @@ class RaListViewAll(generic.ListView):
         return context
         
 class RaDetailView(generic.DetailView):
+    """
+    View for displaying the details of a Ra object.
+    """
     model = Ra
     template_name = "sc/ra/ra_detail.html"
 
 
 @permission_required('core.view_capital')
 def ra_download(request):
+    """
+    Download all the data in the Ra model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Ra.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -162,6 +258,18 @@ def ra_download(request):
 
 @permission_required('core.view_capital')
 def ra_meta_download(request):
+    """
+    Download the metadata of the Ra model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_ras.csv"'
     
@@ -183,14 +291,38 @@ def ra_meta_download(request):
         
 
 class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_territory object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_territory
     form_class = Polity_territoryForm
     template_name = "sc/polity_territory/polity_territory_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_territory-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -204,18 +336,41 @@ class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
 
 
 class Polity_territoryUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_territory object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_territory
     form_class = Polity_territoryForm
     template_name = "sc/polity_territory/polity_territory_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Territory"
 
         return context
 
 class Polity_territoryDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_territory object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_territory
     success_url = reverse_lazy('polity_territorys')
     template_name = "core/delete_general.html"
@@ -223,14 +378,34 @@ class Polity_territoryDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_territoryListView(generic.ListView):
+    """
+    Paginated view for listing all the Polity_territory objects.
+    """
     model = Polity_territory
     template_name = "sc/polity_territory/polity_territory_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_territorys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Territory"
         context["var_main_desc"] = "Talking about social scale, polity territory is coded in squared kilometers."
@@ -244,10 +419,19 @@ class Polity_territoryListView(generic.ListView):
 
 
 class Polity_territoryListViewAll(generic.ListView):
+    """
+    View for listing all the Polity_territory objects.
+    """
     model = Polity_territory
     template_name = "sc/polity_territory/polity_territory_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_territorys_all')
 
     def get_queryset(self):
@@ -258,6 +442,17 @@ class Polity_territoryListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Territory"
         context["var_main_desc"] = "Talking about social scale, polity territory is coded in squared kilometers."
@@ -271,12 +466,27 @@ class Polity_territoryListViewAll(generic.ListView):
         return context
         
 class Polity_territoryDetailView(generic.DetailView):
+    """
+    View for displaying the details of a Polity_territory object.
+    """
     model = Polity_territory
     template_name = "sc/polity_territory/polity_territory_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_territory_download(request):
+    """
+    Download all the data in the Polity_territory model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_territory.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -299,6 +509,18 @@ def polity_territory_download(request):
 
 @permission_required('core.view_capital')
 def polity_territory_meta_download(request):
+    """
+    Download the metadata of the Polity_territory model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_polity_territorys.csv"'
     
@@ -320,14 +542,38 @@ def polity_territory_meta_download(request):
         
 
 class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_population object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_population
     form_class = Polity_populationForm
     template_name = "sc/polity_population/polity_population_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_population-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -341,18 +587,41 @@ class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Polity_populationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_population object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_population
     form_class = Polity_populationForm
     template_name = "sc/polity_population/polity_population_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Population"
 
         return context
 
 class Polity_populationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_population object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_population
     success_url = reverse_lazy('polity_populations')
     template_name = "core/delete_general.html"
@@ -360,14 +629,34 @@ class Polity_populationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_populationListView(generic.ListView):
+    """
+    Paginated view for listing all the Polity_population objects.
+    """
     model = Polity_population
     template_name = "sc/polity_population/polity_population_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_populations')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Population"
         context["var_main_desc"] = "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
@@ -381,10 +670,19 @@ class Polity_populationListView(generic.ListView):
 
 
 class Polity_populationListViewAll(generic.ListView):
+    """
+    View for listing all the Polity_population objects.
+    """
     model = Polity_population
     template_name = "sc/polity_population/polity_population_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_populations_all')
 
     def get_queryset(self):
@@ -395,6 +693,17 @@ class Polity_populationListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Population"
         context["var_main_desc"] = "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
@@ -408,12 +717,27 @@ class Polity_populationListViewAll(generic.ListView):
         return context
         
 class Polity_populationDetailView(generic.DetailView):
+    """
+    View for displaying the details of a Polity_population object.
+    """
     model = Polity_population
     template_name = "sc/polity_population/polity_population_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_population_download(request):
+    """
+    Download all the data of the Polity_population model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_population.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -436,6 +760,18 @@ def polity_population_download(request):
 
 @permission_required('core.view_capital')
 def polity_population_meta_download(request):
+    """
+    Download the metadata of the Polity_population model as a CSV file.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_polity_populations.csv"'
     
@@ -457,14 +793,38 @@ def polity_population_meta_download(request):
         
 
 class Population_of_the_largest_settlementCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Population_of_the_largest_settlement object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Population_of_the_largest_settlement
     form_class = Population_of_the_largest_settlementForm
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('population_of_the_largest_settlement-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -478,18 +838,41 @@ class Population_of_the_largest_settlementCreate(PermissionRequiredMixin, Polity
 
 
 class Population_of_the_largest_settlementUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Population_of_the_largest_settlement
     form_class = Population_of_the_largest_settlementForm
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Population of the Largest Settlement"
 
         return context
 
 class Population_of_the_largest_settlementDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Population_of_the_largest_settlement object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Population_of_the_largest_settlement
     success_url = reverse_lazy('population_of_the_largest_settlements')
     template_name = "core/delete_general.html"
@@ -497,14 +880,34 @@ class Population_of_the_largest_settlementDelete(PermissionRequiredMixin, Delete
 
 
 class Population_of_the_largest_settlementListView(generic.ListView):
+    """
+    Paginated view for listing all the Population_of_the_largest_settlement objects.
+    """
     model = Population_of_the_largest_settlement
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('population_of_the_largest_settlements')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Population of the Largest Settlement"
         context["var_main_desc"] = "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
@@ -518,10 +921,19 @@ class Population_of_the_largest_settlementListView(generic.ListView):
 
 
 class Population_of_the_largest_settlementListViewAll(generic.ListView):
+    """
+    
+    """
     model = Population_of_the_largest_settlement
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('population_of_the_largest_settlements_all')
 
     def get_queryset(self):
@@ -532,6 +944,17 @@ class Population_of_the_largest_settlementListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Population of the Largest Settlement"
         context["var_main_desc"] = "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
@@ -545,6 +968,9 @@ class Population_of_the_largest_settlementListViewAll(generic.ListView):
         return context
         
 class Population_of_the_largest_settlementDetailView(generic.DetailView):
+    """
+    
+    """
     model = Population_of_the_largest_settlement
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_detail.html"
 
@@ -594,14 +1020,38 @@ def population_of_the_largest_settlement_meta_download(request):
         
 
 class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlement_hierarchy
     form_class = Settlement_hierarchyForm
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlement_hierarchy-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -615,18 +1065,41 @@ class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Settlement_hierarchyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlement_hierarchy
     form_class = Settlement_hierarchyForm
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Settlement Hierarchy"
 
         return context
 
 class Settlement_hierarchyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Settlement_hierarchy object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlement_hierarchy
     success_url = reverse_lazy('settlement_hierarchys')
     template_name = "core/delete_general.html"
@@ -634,14 +1107,34 @@ class Settlement_hierarchyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Settlement_hierarchyListView(generic.ListView):
+    """
+    Paginated view for listing all the Settlement_hierarchy objects.
+    """
     model = Settlement_hierarchy
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlement_hierarchys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Settlement Hierarchy"
         context["var_main_desc"] = "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
@@ -655,10 +1148,19 @@ class Settlement_hierarchyListView(generic.ListView):
 
 
 class Settlement_hierarchyListViewAll(generic.ListView):
+    """
+    
+    """
     model = Settlement_hierarchy
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlement_hierarchys_all')
 
     def get_queryset(self):
@@ -669,6 +1171,17 @@ class Settlement_hierarchyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Settlement Hierarchy"
         context["var_main_desc"] = "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
@@ -682,6 +1195,9 @@ class Settlement_hierarchyListViewAll(generic.ListView):
         return context
         
 class Settlement_hierarchyDetailView(generic.DetailView):
+    """
+    
+    """
     model = Settlement_hierarchy
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_detail.html"
 
@@ -731,14 +1247,38 @@ def settlement_hierarchy_meta_download(request):
         
 
 class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Administrative_level
     form_class = Administrative_levelForm
     template_name = "sc/administrative_level/administrative_level_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('administrative_level-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -752,18 +1292,41 @@ class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Administrative_levelUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Administrative_level
     form_class = Administrative_levelForm
     template_name = "sc/administrative_level/administrative_level_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Administrative Level"
 
         return context
 
 class Administrative_levelDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Administrative_level object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Administrative_level
     success_url = reverse_lazy('administrative_levels')
     template_name = "core/delete_general.html"
@@ -771,14 +1334,34 @@ class Administrative_levelDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Administrative_levelListView(generic.ListView):
+    """
+    Paginated view for listing all the Administrative_level objects.
+    """
     model = Administrative_level
     template_name = "sc/administrative_level/administrative_level_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('administrative_levels')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Administrative Level"
         context["var_main_desc"] = "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
@@ -792,10 +1375,19 @@ class Administrative_levelListView(generic.ListView):
 
 
 class Administrative_levelListViewAll(generic.ListView):
+    """
+    
+    """
     model = Administrative_level
     template_name = "sc/administrative_level/administrative_level_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('administrative_levels_all')
 
     def get_queryset(self):
@@ -806,6 +1398,17 @@ class Administrative_levelListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Administrative Level"
         context["var_main_desc"] = "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
@@ -819,6 +1422,9 @@ class Administrative_levelListViewAll(generic.ListView):
         return context
         
 class Administrative_levelDetailView(generic.DetailView):
+    """
+    
+    """
     model = Administrative_level
     template_name = "sc/administrative_level/administrative_level_detail.html"
 
@@ -868,14 +1474,38 @@ def administrative_level_meta_download(request):
         
 
 class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_level
     form_class = Religious_levelForm
     template_name = "sc/religious_level/religious_level_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_level-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -889,18 +1519,41 @@ class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Religious_levelUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_level
     form_class = Religious_levelForm
     template_name = "sc/religious_level/religious_level_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Level"
 
         return context
 
 class Religious_levelDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Religious_level object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_level
     success_url = reverse_lazy('religious_levels')
     template_name = "core/delete_general.html"
@@ -908,14 +1561,34 @@ class Religious_levelDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Religious_levelListView(generic.ListView):
+    """
+    Paginated view for listing all the Religious_level objects.
+    """
     model = Religious_level
     template_name = "sc/religious_level/religious_level_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_levels')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Level"
         context["var_main_desc"] = "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
@@ -929,10 +1602,19 @@ class Religious_levelListView(generic.ListView):
 
 
 class Religious_levelListViewAll(generic.ListView):
+    """
+    
+    """
     model = Religious_level
     template_name = "sc/religious_level/religious_level_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_levels_all')
 
     def get_queryset(self):
@@ -943,6 +1625,17 @@ class Religious_levelListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Level"
         context["var_main_desc"] = "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
@@ -956,6 +1649,9 @@ class Religious_levelListViewAll(generic.ListView):
         return context
         
 class Religious_levelDetailView(generic.DetailView):
+    """
+    
+    """
     model = Religious_level
     template_name = "sc/religious_level/religious_level_detail.html"
 
@@ -1005,14 +1701,38 @@ def religious_level_meta_download(request):
         
 
 class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Military_level
     form_class = Military_levelForm
     template_name = "sc/military_level/military_level_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('military_level-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1026,18 +1746,41 @@ class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Military_levelUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Military_level
     form_class = Military_levelForm
     template_name = "sc/military_level/military_level_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Military Level"
 
         return context
 
 class Military_levelDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Military_level object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Military_level
     success_url = reverse_lazy('military_levels')
     template_name = "core/delete_general.html"
@@ -1045,14 +1788,34 @@ class Military_levelDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Military_levelListView(generic.ListView):
+    """
+    Paginated view for listing all the Military_level objects.
+    """
     model = Military_level
     template_name = "sc/military_level/military_level_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('military_levels')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Military Level"
         context["var_main_desc"] = "Talking about hierarchical complexity, military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
@@ -1066,7 +1829,7 @@ class Military_levelListView(generic.ListView):
 
 
 # class Military_levelListViewAll(generic.ListView):
-#     model = Military_level
+#    model = Military_level
 #     template_name = "sc/military_level/military_level_list_all.html"
 
 #     def get_absolute_url(self):
@@ -1093,6 +1856,9 @@ class Military_levelListView(generic.ListView):
 #         return context
         
 class Military_levelDetailView(generic.DetailView):
+    """
+    
+    """
     model = Military_level
     template_name = "sc/military_level/military_level_detail.html"
 
@@ -1142,14 +1908,38 @@ def military_level_meta_download(request):
         
 
 class Professional_military_officerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_military_officer
     form_class = Professional_military_officerForm
     template_name = "sc/professional_military_officer/professional_military_officer_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_military_officer-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1163,18 +1953,41 @@ class Professional_military_officerCreate(PermissionRequiredMixin, PolityIdMixin
 
 
 class Professional_military_officerUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_military_officer
     form_class = Professional_military_officerForm
     template_name = "sc/professional_military_officer/professional_military_officer_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Military Officer"
 
         return context
 
 class Professional_military_officerDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Professional_military_officer object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_military_officer
     success_url = reverse_lazy('professional_military_officers')
     template_name = "core/delete_general.html"
@@ -1182,14 +1995,34 @@ class Professional_military_officerDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Professional_military_officerListView(generic.ListView):
+    """
+    Paginated view for listing all the Professional_military_officer objects.
+    """
     model = Professional_military_officer
     template_name = "sc/professional_military_officer/professional_military_officer_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_military_officers')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Military Officer"
         context["var_main_desc"] = "Talking about professions, professional military officers refer to full-time professional military officers."
@@ -1203,10 +2036,19 @@ class Professional_military_officerListView(generic.ListView):
 
 
 class Professional_military_officerListViewAll(generic.ListView):
+    """
+    
+    """
     model = Professional_military_officer
     template_name = "sc/professional_military_officer/professional_military_officer_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_military_officers_all')
 
     def get_queryset(self):
@@ -1217,6 +2059,17 @@ class Professional_military_officerListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Military Officer"
         context["var_main_desc"] = "Talking about professions, professional military officers refer to full-time professional military officers."
@@ -1230,6 +2083,9 @@ class Professional_military_officerListViewAll(generic.ListView):
         return context
         
 class Professional_military_officerDetailView(generic.DetailView):
+    """
+    
+    """
     model = Professional_military_officer
     template_name = "sc/professional_military_officer/professional_military_officer_detail.html"
 
@@ -1279,14 +2135,38 @@ def professional_military_officer_meta_download(request):
         
 
 class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_soldier
     form_class = Professional_soldierForm
     template_name = "sc/professional_soldier/professional_soldier_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_soldier-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1300,18 +2180,41 @@ class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Professional_soldierUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_soldier
     form_class = Professional_soldierForm
     template_name = "sc/professional_soldier/professional_soldier_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Soldier"
 
         return context
 
 class Professional_soldierDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Professional_soldier object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_soldier
     success_url = reverse_lazy('professional_soldiers')
     template_name = "core/delete_general.html"
@@ -1319,14 +2222,34 @@ class Professional_soldierDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Professional_soldierListView(generic.ListView):
+    """
+    Paginated view for listing all the Professional_soldier objects.
+    """
     model = Professional_soldier
     template_name = "sc/professional_soldier/professional_soldier_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_soldiers')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Soldier"
         context["var_main_desc"] = "Talking about professions, professional soldiers refer to full-time professional soldiers."
@@ -1340,10 +2263,19 @@ class Professional_soldierListView(generic.ListView):
 
 
 class Professional_soldierListViewAll(generic.ListView):
+    """
+    
+    """
     model = Professional_soldier
     template_name = "sc/professional_soldier/professional_soldier_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_soldiers_all')
 
     def get_queryset(self):
@@ -1354,6 +2286,17 @@ class Professional_soldierListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Soldier"
         context["var_main_desc"] = "Talking about professions, professional soldiers refer to full-time professional soldiers."
@@ -1367,6 +2310,9 @@ class Professional_soldierListViewAll(generic.ListView):
         return context
         
 class Professional_soldierDetailView(generic.DetailView):
+    """
+    
+    """
     model = Professional_soldier
     template_name = "sc/professional_soldier/professional_soldier_detail.html"
 
@@ -1416,14 +2362,38 @@ def professional_soldier_meta_download(request):
         
 
 class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_priesthood
     form_class = Professional_priesthoodForm
     template_name = "sc/professional_priesthood/professional_priesthood_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_priesthood-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1437,18 +2407,41 @@ class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
 
 class Professional_priesthoodUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_priesthood
     form_class = Professional_priesthoodForm
     template_name = "sc/professional_priesthood/professional_priesthood_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Priesthood"
 
         return context
 
 class Professional_priesthoodDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Professional_priesthood object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_priesthood
     success_url = reverse_lazy('professional_priesthoods')
     template_name = "core/delete_general.html"
@@ -1456,14 +2449,34 @@ class Professional_priesthoodDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Professional_priesthoodListView(generic.ListView):
+    """
+    Paginated view for listing all the Professional_priesthood objects.
+    """
     model = Professional_priesthood
     template_name = "sc/professional_priesthood/professional_priesthood_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_priesthoods')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Priesthood"
         context["var_main_desc"] = "Talking about professions, professional priesthood refers to full-time professional priesthood."
@@ -1477,10 +2490,19 @@ class Professional_priesthoodListView(generic.ListView):
 
 
 class Professional_priesthoodListViewAll(generic.ListView):
+    """
+    
+    """
     model = Professional_priesthood
     template_name = "sc/professional_priesthood/professional_priesthood_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_priesthoods_all')
 
     def get_queryset(self):
@@ -1491,6 +2513,17 @@ class Professional_priesthoodListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Priesthood"
         context["var_main_desc"] = "Talking about professions, professional priesthood refers to full-time professional priesthood."
@@ -1504,6 +2537,9 @@ class Professional_priesthoodListViewAll(generic.ListView):
         return context
         
 class Professional_priesthoodDetailView(generic.DetailView):
+    """
+    
+    """
     model = Professional_priesthood
     template_name = "sc/professional_priesthood/professional_priesthood_detail.html"
 
@@ -1553,14 +2589,38 @@ def professional_priesthood_meta_download(request):
         
 
 class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Full_time_bureaucrat
     form_class = Full_time_bureaucratForm
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('full_time_bureaucrat-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1574,18 +2634,41 @@ class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Full_time_bureaucratUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Full_time_bureaucrat
     form_class = Full_time_bureaucratForm
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Full Time Bureaucrat"
 
         return context
 
 class Full_time_bureaucratDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Full_time_bureaucrat object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Full_time_bureaucrat
     success_url = reverse_lazy('full_time_bureaucrats')
     template_name = "core/delete_general.html"
@@ -1593,14 +2676,34 @@ class Full_time_bureaucratDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Full_time_bureaucratListView(generic.ListView):
+    """
+    Paginated view for listing all the Full_time_bureaucrat objects.
+    """
     model = Full_time_bureaucrat
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('full_time_bureaucrats')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Full Time Bureaucrat"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
@@ -1614,10 +2717,19 @@ class Full_time_bureaucratListView(generic.ListView):
 
 
 class Full_time_bureaucratListViewAll(generic.ListView):
+    """
+    
+    """
     model = Full_time_bureaucrat
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('full_time_bureaucrats_all')
 
     def get_queryset(self):
@@ -1628,6 +2740,17 @@ class Full_time_bureaucratListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Full Time Bureaucrat"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
@@ -1641,6 +2764,9 @@ class Full_time_bureaucratListViewAll(generic.ListView):
         return context
         
 class Full_time_bureaucratDetailView(generic.DetailView):
+    """
+    
+    """
     model = Full_time_bureaucrat
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_detail.html"
 
@@ -1690,14 +2816,38 @@ def full_time_bureaucrat_meta_download(request):
         
 
 class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Examination_system
     form_class = Examination_systemForm
     template_name = "sc/examination_system/examination_system_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('examination_system-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1711,18 +2861,41 @@ class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
 
 
 class Examination_systemUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Examination_system
     form_class = Examination_systemForm
     template_name = "sc/examination_system/examination_system_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Examination System"
 
         return context
 
 class Examination_systemDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Examination_system object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Examination_system
     success_url = reverse_lazy('examination_systems')
     template_name = "core/delete_general.html"
@@ -1730,14 +2903,34 @@ class Examination_systemDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Examination_systemListView(generic.ListView):
+    """
+    Paginated view for listing all the Examination_system objects.
+    """
     model = Examination_system
     template_name = "sc/examination_system/examination_system_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('examination_systems')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Examination System"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
@@ -1751,10 +2944,19 @@ class Examination_systemListView(generic.ListView):
 
 
 class Examination_systemListViewAll(generic.ListView):
+    """
+    
+    """
     model = Examination_system
     template_name = "sc/examination_system/examination_system_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('examination_systems_all')
 
     def get_queryset(self):
@@ -1765,6 +2967,17 @@ class Examination_systemListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Examination System"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
@@ -1778,6 +2991,9 @@ class Examination_systemListViewAll(generic.ListView):
         return context
         
 class Examination_systemDetailView(generic.DetailView):
+    """
+    
+    """
     model = Examination_system
     template_name = "sc/examination_system/examination_system_detail.html"
 
@@ -1827,14 +3043,38 @@ def examination_system_meta_download(request):
         
 
 class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merit_promotion
     form_class = Merit_promotionForm
     template_name = "sc/merit_promotion/merit_promotion_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merit_promotion-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1848,18 +3088,41 @@ class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Merit_promotionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merit_promotion
     form_class = Merit_promotionForm
     template_name = "sc/merit_promotion/merit_promotion_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Merit Promotion"
 
         return context
 
 class Merit_promotionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Merit_promotion object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merit_promotion
     success_url = reverse_lazy('merit_promotions')
     template_name = "core/delete_general.html"
@@ -1867,14 +3130,34 @@ class Merit_promotionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Merit_promotionListView(generic.ListView):
+    """
+    Paginated view for listing all the Merit_promotion objects.
+    """
     model = Merit_promotion
     template_name = "sc/merit_promotion/merit_promotion_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merit_promotions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Merit Promotion"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
@@ -1888,10 +3171,19 @@ class Merit_promotionListView(generic.ListView):
 
 
 class Merit_promotionListViewAll(generic.ListView):
+    """
+    
+    """
     model = Merit_promotion
     template_name = "sc/merit_promotion/merit_promotion_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merit_promotions_all')
 
     def get_queryset(self):
@@ -1902,6 +3194,17 @@ class Merit_promotionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Merit Promotion"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
@@ -1915,6 +3218,9 @@ class Merit_promotionListViewAll(generic.ListView):
         return context
         
 class Merit_promotionDetailView(generic.DetailView):
+    """
+    
+    """
     model = Merit_promotion
     template_name = "sc/merit_promotion/merit_promotion_detail.html"
 
@@ -1964,14 +3270,38 @@ def merit_promotion_meta_download(request):
         
 
 class Specialized_government_buildingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_government_building
     form_class = Specialized_government_buildingForm
     template_name = "sc/specialized_government_building/specialized_government_building_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_government_building-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1985,18 +3315,41 @@ class Specialized_government_buildingCreate(PermissionRequiredMixin, PolityIdMix
 
 
 class Specialized_government_buildingUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_government_building
     form_class = Specialized_government_buildingForm
     template_name = "sc/specialized_government_building/specialized_government_building_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Specialized Government Building"
 
         return context
 
 class Specialized_government_buildingDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Specialized_government_building object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_government_building
     success_url = reverse_lazy('specialized_government_buildings')
     template_name = "core/delete_general.html"
@@ -2004,14 +3357,34 @@ class Specialized_government_buildingDelete(PermissionRequiredMixin, DeleteView)
 
 
 class Specialized_government_buildingListView(generic.ListView):
+    """
+    Paginated view for listing all the Specialized_government_building objects.
+    """
     model = Specialized_government_building
     template_name = "sc/specialized_government_building/specialized_government_building_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_government_buildings')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Specialized Government Building"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
@@ -2025,10 +3398,19 @@ class Specialized_government_buildingListView(generic.ListView):
 
 
 class Specialized_government_buildingListViewAll(generic.ListView):
+    """
+    
+    """
     model = Specialized_government_building
     template_name = "sc/specialized_government_building/specialized_government_building_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_government_buildings_all')
 
     def get_queryset(self):
@@ -2039,6 +3421,17 @@ class Specialized_government_buildingListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Specialized Government Building"
         context["var_main_desc"] = "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
@@ -2052,6 +3445,9 @@ class Specialized_government_buildingListViewAll(generic.ListView):
         return context
         
 class Specialized_government_buildingDetailView(generic.DetailView):
+    """
+    
+    """
     model = Specialized_government_building
     template_name = "sc/specialized_government_building/specialized_government_building_detail.html"
 
@@ -2101,14 +3497,38 @@ def specialized_government_building_meta_download(request):
         
 
 class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Formal_legal_code
     form_class = Formal_legal_codeForm
     template_name = "sc/formal_legal_code/formal_legal_code_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('formal_legal_code-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2122,18 +3542,41 @@ class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Formal_legal_codeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Formal_legal_code
     form_class = Formal_legal_codeForm
     template_name = "sc/formal_legal_code/formal_legal_code_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Formal Legal Code"
 
         return context
 
 class Formal_legal_codeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Formal_legal_code object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Formal_legal_code
     success_url = reverse_lazy('formal_legal_codes')
     template_name = "core/delete_general.html"
@@ -2141,14 +3584,34 @@ class Formal_legal_codeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Formal_legal_codeListView(generic.ListView):
+    """
+    Paginated view for listing all the Formal_legal_code objects.
+    """
     model = Formal_legal_code
     template_name = "sc/formal_legal_code/formal_legal_code_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('formal_legal_codes')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Formal Legal Code"
         context["var_main_desc"] = "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
@@ -2162,10 +3625,19 @@ class Formal_legal_codeListView(generic.ListView):
 
 
 class Formal_legal_codeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Formal_legal_code
     template_name = "sc/formal_legal_code/formal_legal_code_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('formal_legal_codes_all')
 
     def get_queryset(self):
@@ -2176,6 +3648,17 @@ class Formal_legal_codeListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Formal Legal Code"
         context["var_main_desc"] = "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
@@ -2189,6 +3672,9 @@ class Formal_legal_codeListViewAll(generic.ListView):
         return context
         
 class Formal_legal_codeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Formal_legal_code
     template_name = "sc/formal_legal_code/formal_legal_code_detail.html"
 
@@ -2238,14 +3724,38 @@ def formal_legal_code_meta_download(request):
         
 
 class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Judge
     form_class = JudgeForm
     template_name = "sc/judge/judge_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('judge-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2259,18 +3769,41 @@ class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class JudgeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Judge
     form_class = JudgeForm
     template_name = "sc/judge/judge_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Judge"
 
         return context
 
 class JudgeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Judge object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Judge
     success_url = reverse_lazy('judges')
     template_name = "core/delete_general.html"
@@ -2278,14 +3811,34 @@ class JudgeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class JudgeListView(generic.ListView):
+    """
+    Paginated view for listing all the Judge objects.
+    """
     model = Judge
     template_name = "sc/judge/judge_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('judges')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Judge"
         context["var_main_desc"] = "Talking about law, judges refers only to full-time professional judges"
@@ -2299,10 +3852,19 @@ class JudgeListView(generic.ListView):
 
 
 class JudgeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Judge
     template_name = "sc/judge/judge_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('judges_all')
 
     def get_queryset(self):
@@ -2313,6 +3875,17 @@ class JudgeListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Judge"
         context["var_main_desc"] = "Talking about law, judges refers only to full-time professional judges"
@@ -2326,6 +3899,9 @@ class JudgeListViewAll(generic.ListView):
         return context
         
 class JudgeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Judge
     template_name = "sc/judge/judge_detail.html"
 
@@ -2375,14 +3951,38 @@ def judge_meta_download(request):
         
 
 class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Court
     form_class = CourtForm
     template_name = "sc/court/court_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('court-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2396,18 +3996,41 @@ class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CourtUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Court
     form_class = CourtForm
     template_name = "sc/court/court_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Court"
 
         return context
 
 class CourtDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Court object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Court
     success_url = reverse_lazy('courts')
     template_name = "core/delete_general.html"
@@ -2415,14 +4038,34 @@ class CourtDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CourtListView(generic.ListView):
+    """
+    Paginated view for listing all the Court objects.
+    """
     model = Court
     template_name = "sc/court/court_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('courts')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Court"
         context["var_main_desc"] = "Talking about law, courts are buildings specialized for legal proceedings only."
@@ -2436,10 +4079,19 @@ class CourtListView(generic.ListView):
 
 
 class CourtListViewAll(generic.ListView):
+    """
+    
+    """
     model = Court
     template_name = "sc/court/court_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('courts_all')
 
     def get_queryset(self):
@@ -2450,6 +4102,17 @@ class CourtListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Court"
         context["var_main_desc"] = "Talking about law, courts are buildings specialized for legal proceedings only."
@@ -2463,6 +4126,9 @@ class CourtListViewAll(generic.ListView):
         return context
         
 class CourtDetailView(generic.DetailView):
+    """
+    
+    """
     model = Court
     template_name = "sc/court/court_detail.html"
 
@@ -2512,14 +4178,38 @@ def court_meta_download(request):
         
 
 class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_lawyer
     form_class = Professional_lawyerForm
     template_name = "sc/professional_lawyer/professional_lawyer_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_lawyer-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2533,18 +4223,41 @@ class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateVi
 
 
 class Professional_lawyerUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_lawyer
     form_class = Professional_lawyerForm
     template_name = "sc/professional_lawyer/professional_lawyer_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Lawyer"
 
         return context
 
 class Professional_lawyerDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Professional_lawyer object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Professional_lawyer
     success_url = reverse_lazy('professional_lawyers')
     template_name = "core/delete_general.html"
@@ -2552,14 +4265,34 @@ class Professional_lawyerDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Professional_lawyerListView(generic.ListView):
+    """
+    Paginated view for listing all the Professional_lawyer objects.
+    """
     model = Professional_lawyer
     template_name = "sc/professional_lawyer/professional_lawyer_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_lawyers')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Lawyer"
         context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
@@ -2573,10 +4306,19 @@ class Professional_lawyerListView(generic.ListView):
 
 
 class Professional_lawyerListViewAll(generic.ListView):
+    """
+    
+    """
     model = Professional_lawyer
     template_name = "sc/professional_lawyer/professional_lawyer_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('professional_lawyers_all')
 
     def get_queryset(self):
@@ -2587,6 +4329,17 @@ class Professional_lawyerListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Lawyer"
         context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
@@ -2600,6 +4353,9 @@ class Professional_lawyerListViewAll(generic.ListView):
         return context
         
 class Professional_lawyerDetailView(generic.DetailView):
+    """
+    
+    """
     model = Professional_lawyer
     template_name = "sc/professional_lawyer/professional_lawyer_detail.html"
 
@@ -2649,14 +4405,38 @@ def professional_lawyer_meta_download(request):
         
 
 class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Irrigation_system
     form_class = Irrigation_systemForm
     template_name = "sc/irrigation_system/irrigation_system_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('irrigation_system-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2670,18 +4450,41 @@ class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Irrigation_systemUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Irrigation_system
     form_class = Irrigation_systemForm
     template_name = "sc/irrigation_system/irrigation_system_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Irrigation System"
 
         return context
 
 class Irrigation_systemDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Irrigation_system object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Irrigation_system
     success_url = reverse_lazy('irrigation_systems')
     template_name = "core/delete_general.html"
@@ -2689,14 +4492,34 @@ class Irrigation_systemDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Irrigation_systemListView(generic.ListView):
+    """
+    Paginated view for listing all the Irrigation_system objects.
+    """
     model = Irrigation_system
     template_name = "sc/irrigation_system/irrigation_system_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('irrigation_systems')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Irrigation System"
         context["var_main_desc"] = "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -2710,10 +4533,19 @@ class Irrigation_systemListView(generic.ListView):
 
 
 class Irrigation_systemListViewAll(generic.ListView):
+    """
+    
+    """
     model = Irrigation_system
     template_name = "sc/irrigation_system/irrigation_system_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('irrigation_systems_all')
 
     def get_queryset(self):
@@ -2724,6 +4556,17 @@ class Irrigation_systemListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Irrigation System"
         context["var_main_desc"] = "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -2737,6 +4580,9 @@ class Irrigation_systemListViewAll(generic.ListView):
         return context
         
 class Irrigation_systemDetailView(generic.DetailView):
+    """
+    
+    """
     model = Irrigation_system
     template_name = "sc/irrigation_system/irrigation_system_detail.html"
 
@@ -2786,14 +4632,38 @@ def irrigation_system_meta_download(request):
         
 
 class Drinking_water_supply_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Drinking_water_supply_system
     form_class = Drinking_water_supply_systemForm
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('drinking_water_supply_system-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2807,18 +4677,41 @@ class Drinking_water_supply_systemCreate(PermissionRequiredMixin, PolityIdMixin,
 
 
 class Drinking_water_supply_systemUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Drinking_water_supply_system
     form_class = Drinking_water_supply_systemForm
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Drinking Water Supply System"
 
         return context
 
 class Drinking_water_supply_systemDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Drinking_water_supply_system object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Drinking_water_supply_system
     success_url = reverse_lazy('drinking_water_supply_systems')
     template_name = "core/delete_general.html"
@@ -2826,14 +4719,34 @@ class Drinking_water_supply_systemDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Drinking_water_supply_systemListView(generic.ListView):
+    """
+    Paginated view for listing all the Drinking_water_supply_system objects.
+    """
     model = Drinking_water_supply_system
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('drinking_water_supply_systems')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Drinking Water Supply System"
         context["var_main_desc"] = "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -2847,10 +4760,19 @@ class Drinking_water_supply_systemListView(generic.ListView):
 
 
 class Drinking_water_supply_systemListViewAll(generic.ListView):
+    """
+    
+    """
     model = Drinking_water_supply_system
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('drinking_water_supply_systems_all')
 
     def get_queryset(self):
@@ -2861,6 +4783,17 @@ class Drinking_water_supply_systemListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Drinking Water Supply System"
         context["var_main_desc"] = "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -2874,6 +4807,9 @@ class Drinking_water_supply_systemListViewAll(generic.ListView):
         return context
         
 class Drinking_water_supply_systemDetailView(generic.DetailView):
+    """
+    
+    """
     model = Drinking_water_supply_system
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_detail.html"
 
@@ -2923,14 +4859,38 @@ def drinking_water_supply_system_meta_download(request):
         
 
 class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Market
     form_class = MarketForm
     template_name = "sc/market/market_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('market-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2944,18 +4904,41 @@ class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class MarketUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Market
     form_class = MarketForm
     template_name = "sc/market/market_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Market"
 
         return context
 
 class MarketDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Market object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Market
     success_url = reverse_lazy('markets')
     template_name = "core/delete_general.html"
@@ -2963,14 +4946,34 @@ class MarketDelete(PermissionRequiredMixin, DeleteView):
 
 
 class MarketListView(generic.ListView):
+    """
+    Paginated view for listing all the Market objects.
+    """
     model = Market
     template_name = "sc/market/market_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('markets')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Market"
         context["var_main_desc"] = "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -2984,10 +4987,19 @@ class MarketListView(generic.ListView):
 
 
 class MarketListViewAll(generic.ListView):
+    """
+    
+    """
     model = Market
     template_name = "sc/market/market_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('markets_all')
 
     def get_queryset(self):
@@ -2998,6 +5010,17 @@ class MarketListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Market"
         context["var_main_desc"] = "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -3011,6 +5034,9 @@ class MarketListViewAll(generic.ListView):
         return context
         
 class MarketDetailView(generic.DetailView):
+    """
+    
+    """
     model = Market
     template_name = "sc/market/market_detail.html"
 
@@ -3060,14 +5086,38 @@ def market_meta_download(request):
         
 
 class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Food_storage_site
     form_class = Food_storage_siteForm
     template_name = "sc/food_storage_site/food_storage_site_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('food_storage_site-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3081,18 +5131,41 @@ class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Food_storage_siteUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Food_storage_site
     form_class = Food_storage_siteForm
     template_name = "sc/food_storage_site/food_storage_site_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Food Storage Site"
 
         return context
 
 class Food_storage_siteDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Food_storage_site object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Food_storage_site
     success_url = reverse_lazy('food_storage_sites')
     template_name = "core/delete_general.html"
@@ -3100,14 +5173,34 @@ class Food_storage_siteDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Food_storage_siteListView(generic.ListView):
+    """
+    Paginated view for listing all the Food_storage_site objects.
+    """
     model = Food_storage_site
     template_name = "sc/food_storage_site/food_storage_site_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('food_storage_sites')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Food Storage Site"
         context["var_main_desc"] = "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -3121,10 +5214,19 @@ class Food_storage_siteListView(generic.ListView):
 
 
 class Food_storage_siteListViewAll(generic.ListView):
+    """
+    
+    """
     model = Food_storage_site
     template_name = "sc/food_storage_site/food_storage_site_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('food_storage_sites_all')
 
     def get_queryset(self):
@@ -3135,6 +5237,17 @@ class Food_storage_siteListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Food Storage Site"
         context["var_main_desc"] = "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
@@ -3148,6 +5261,9 @@ class Food_storage_siteListViewAll(generic.ListView):
         return context
         
 class Food_storage_siteDetailView(generic.DetailView):
+    """
+    
+    """
     model = Food_storage_site
     template_name = "sc/food_storage_site/food_storage_site_detail.html"
 
@@ -3197,14 +5313,38 @@ def food_storage_site_meta_download(request):
         
 
 class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Road
     form_class = RoadForm
     template_name = "sc/road/road_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('road-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3218,18 +5358,41 @@ class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class RoadUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Road
     form_class = RoadForm
     template_name = "sc/road/road_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Road"
 
         return context
 
 class RoadDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Road object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Road
     success_url = reverse_lazy('roads')
     template_name = "core/delete_general.html"
@@ -3237,14 +5400,34 @@ class RoadDelete(PermissionRequiredMixin, DeleteView):
 
 
 class RoadListView(generic.ListView):
+    """
+    Paginated view for listing all the Road objects.
+    """
     model = Road
     template_name = "sc/road/road_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('roads')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Road"
         context["var_main_desc"] = "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
@@ -3258,10 +5441,19 @@ class RoadListView(generic.ListView):
 
 
 class RoadListViewAll(generic.ListView):
+    """
+    
+    """
     model = Road
     template_name = "sc/road/road_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('roads_all')
 
     def get_queryset(self):
@@ -3272,6 +5464,17 @@ class RoadListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Road"
         context["var_main_desc"] = "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
@@ -3285,6 +5488,9 @@ class RoadListViewAll(generic.ListView):
         return context
         
 class RoadDetailView(generic.DetailView):
+    """
+    
+    """
     model = Road
     template_name = "sc/road/road_detail.html"
 
@@ -3334,14 +5540,38 @@ def road_meta_download(request):
         
 
 class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bridge
     form_class = BridgeForm
     template_name = "sc/bridge/bridge_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bridge-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3355,18 +5585,41 @@ class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class BridgeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bridge
     form_class = BridgeForm
     template_name = "sc/bridge/bridge_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Bridge"
 
         return context
 
 class BridgeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Bridge object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bridge
     success_url = reverse_lazy('bridges')
     template_name = "core/delete_general.html"
@@ -3374,14 +5627,34 @@ class BridgeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class BridgeListView(generic.ListView):
+    """
+    Paginated view for listing all the Bridge objects.
+    """
     model = Bridge
     template_name = "sc/bridge/bridge_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bridges')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Bridge"
         context["var_main_desc"] = "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
@@ -3395,10 +5668,19 @@ class BridgeListView(generic.ListView):
 
 
 class BridgeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Bridge
     template_name = "sc/bridge/bridge_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bridges_all')
 
     def get_queryset(self):
@@ -3409,6 +5691,17 @@ class BridgeListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Bridge"
         context["var_main_desc"] = "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
@@ -3422,6 +5715,9 @@ class BridgeListViewAll(generic.ListView):
         return context
         
 class BridgeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Bridge
     template_name = "sc/bridge/bridge_detail.html"
 
@@ -3471,14 +5767,38 @@ def bridge_meta_download(request):
         
 
 class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Canal
     form_class = CanalForm
     template_name = "sc/canal/canal_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('canal-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3492,18 +5812,41 @@ class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CanalUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Canal
     form_class = CanalForm
     template_name = "sc/canal/canal_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Canal"
 
         return context
 
 class CanalDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Canal object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Canal
     success_url = reverse_lazy('canals')
     template_name = "core/delete_general.html"
@@ -3511,14 +5854,34 @@ class CanalDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CanalListView(generic.ListView):
+    """
+    Paginated view for listing all the Canal objects.
+    """
     model = Canal
     template_name = "sc/canal/canal_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('canals')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Canal"
         context["var_main_desc"] = "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
@@ -3532,10 +5895,19 @@ class CanalListView(generic.ListView):
 
 
 class CanalListViewAll(generic.ListView):
+    """
+    
+    """
     model = Canal
     template_name = "sc/canal/canal_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('canals_all')
 
     def get_queryset(self):
@@ -3546,6 +5918,17 @@ class CanalListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Canal"
         context["var_main_desc"] = "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
@@ -3559,6 +5942,9 @@ class CanalListViewAll(generic.ListView):
         return context
         
 class CanalDetailView(generic.DetailView):
+    """
+    
+    """
     model = Canal
     template_name = "sc/canal/canal_detail.html"
 
@@ -3608,14 +5994,38 @@ def canal_meta_download(request):
         
 
 class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Port
     form_class = PortForm
     template_name = "sc/port/port_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('port-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3629,18 +6039,41 @@ class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class PortUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Port
     form_class = PortForm
     template_name = "sc/port/port_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Port"
 
         return context
 
 class PortDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Port object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Port
     success_url = reverse_lazy('ports')
     template_name = "core/delete_general.html"
@@ -3648,14 +6081,34 @@ class PortDelete(PermissionRequiredMixin, DeleteView):
 
 
 class PortListView(generic.ListView):
+    """
+    Paginated view for listing all the Port objects.
+    """
     model = Port
     template_name = "sc/port/port_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ports')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Port"
         context["var_main_desc"] = "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
@@ -3669,10 +6122,19 @@ class PortListView(generic.ListView):
 
 
 class PortListViewAll(generic.ListView):
+    """
+    
+    """
     model = Port
     template_name = "sc/port/port_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ports_all')
 
     def get_queryset(self):
@@ -3683,6 +6145,17 @@ class PortListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Port"
         context["var_main_desc"] = "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
@@ -3696,6 +6169,9 @@ class PortListViewAll(generic.ListView):
         return context
         
 class PortDetailView(generic.DetailView):
+    """
+    
+    """
     model = Port
     template_name = "sc/port/port_detail.html"
 
@@ -3745,14 +6221,38 @@ def port_meta_download(request):
         
 
 class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mines_or_quarry
     form_class = Mines_or_quarryForm
     template_name = "sc/mines_or_quarry/mines_or_quarry_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mines_or_quarry-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3766,18 +6266,41 @@ class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Mines_or_quarryUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mines_or_quarry
     form_class = Mines_or_quarryForm
     template_name = "sc/mines_or_quarry/mines_or_quarry_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mines or Quarry"
 
         return context
 
 class Mines_or_quarryDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Mines_or_quarry object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mines_or_quarry
     success_url = reverse_lazy('mines_or_quarrys')
     template_name = "core/delete_general.html"
@@ -3785,14 +6308,34 @@ class Mines_or_quarryDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Mines_or_quarryListView(generic.ListView):
+    """
+    Paginated view for listing all the Mines_or_quarry objects.
+    """
     model = Mines_or_quarry
     template_name = "sc/mines_or_quarry/mines_or_quarry_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mines_or_quarrys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mines or Quarry"
         context["var_main_desc"] = "Talking about special purpose sites, no Descriptions IN Codebook"
@@ -3806,10 +6349,19 @@ class Mines_or_quarryListView(generic.ListView):
 
 
 class Mines_or_quarryListViewAll(generic.ListView):
+    """
+    
+    """
     model = Mines_or_quarry
     template_name = "sc/mines_or_quarry/mines_or_quarry_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mines_or_quarrys_all')
 
     def get_queryset(self):
@@ -3820,6 +6372,17 @@ class Mines_or_quarryListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mines or Quarry"
         context["var_main_desc"] = "Talking about special purpose sites, no Descriptions IN Codebook"
@@ -3833,6 +6396,9 @@ class Mines_or_quarryListViewAll(generic.ListView):
         return context
         
 class Mines_or_quarryDetailView(generic.DetailView):
+    """
+    
+    """
     model = Mines_or_quarry
     template_name = "sc/mines_or_quarry/mines_or_quarry_detail.html"
 
@@ -3882,14 +6448,38 @@ def mines_or_quarry_meta_download(request):
         
 
 class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mnemonic_device
     form_class = Mnemonic_deviceForm
     template_name = "sc/mnemonic_device/mnemonic_device_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mnemonic_device-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3903,18 +6493,41 @@ class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Mnemonic_deviceUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mnemonic_device
     form_class = Mnemonic_deviceForm
     template_name = "sc/mnemonic_device/mnemonic_device_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mnemonic Device"
 
         return context
 
 class Mnemonic_deviceDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Mnemonic_device object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Mnemonic_device
     success_url = reverse_lazy('mnemonic_devices')
     template_name = "core/delete_general.html"
@@ -3922,14 +6535,34 @@ class Mnemonic_deviceDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Mnemonic_deviceListView(generic.ListView):
+    """
+    Paginated view for listing all the Mnemonic_device objects.
+    """
     model = Mnemonic_device
     template_name = "sc/mnemonic_device/mnemonic_device_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mnemonic_devices')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mnemonic Device"
         context["var_main_desc"] = "Talking about writing systems, mnemonic devices are: for example, tallies"
@@ -3943,10 +6576,19 @@ class Mnemonic_deviceListView(generic.ListView):
 
 
 class Mnemonic_deviceListViewAll(generic.ListView):
+    """
+    
+    """
     model = Mnemonic_device
     template_name = "sc/mnemonic_device/mnemonic_device_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('mnemonic_devices_all')
 
     def get_queryset(self):
@@ -3957,6 +6599,17 @@ class Mnemonic_deviceListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mnemonic Device"
         context["var_main_desc"] = "Talking about writing systems, mnemonic devices are: for example, tallies"
@@ -3970,6 +6623,9 @@ class Mnemonic_deviceListViewAll(generic.ListView):
         return context
         
 class Mnemonic_deviceDetailView(generic.DetailView):
+    """
+    
+    """
     model = Mnemonic_device
     template_name = "sc/mnemonic_device/mnemonic_device_detail.html"
 
@@ -4019,14 +6675,38 @@ def mnemonic_device_meta_download(request):
         
 
 class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Nonwritten_record
     form_class = Nonwritten_recordForm
     template_name = "sc/nonwritten_record/nonwritten_record_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('nonwritten_record-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4040,18 +6720,41 @@ class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Nonwritten_recordUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Nonwritten_record
     form_class = Nonwritten_recordForm
     template_name = "sc/nonwritten_record/nonwritten_record_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Nonwritten Record"
 
         return context
 
 class Nonwritten_recordDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Nonwritten_record object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Nonwritten_record
     success_url = reverse_lazy('nonwritten_records')
     template_name = "core/delete_general.html"
@@ -4059,14 +6762,34 @@ class Nonwritten_recordDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Nonwritten_recordListView(generic.ListView):
+    """
+    Paginated view for listing all the Nonwritten_record objects.
+    """
     model = Nonwritten_record
     template_name = "sc/nonwritten_record/nonwritten_record_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('nonwritten_records')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Nonwritten Record"
         context["var_main_desc"] = "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
@@ -4080,10 +6803,19 @@ class Nonwritten_recordListView(generic.ListView):
 
 
 class Nonwritten_recordListViewAll(generic.ListView):
+    """
+    
+    """
     model = Nonwritten_record
     template_name = "sc/nonwritten_record/nonwritten_record_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('nonwritten_records_all')
 
     def get_queryset(self):
@@ -4094,6 +6826,17 @@ class Nonwritten_recordListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Nonwritten Record"
         context["var_main_desc"] = "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
@@ -4107,6 +6850,9 @@ class Nonwritten_recordListViewAll(generic.ListView):
         return context
         
 class Nonwritten_recordDetailView(generic.DetailView):
+    """
+    
+    """
     model = Nonwritten_record
     template_name = "sc/nonwritten_record/nonwritten_record_detail.html"
 
@@ -4156,14 +6902,38 @@ def nonwritten_record_meta_download(request):
         
 
 class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Written_record
     form_class = Written_recordForm
     template_name = "sc/written_record/written_record_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('written_record-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4177,18 +6947,41 @@ class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Written_recordUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Written_record
     form_class = Written_recordForm
     template_name = "sc/written_record/written_record_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Written Record"
 
         return context
 
 class Written_recordDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Written_record object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Written_record
     success_url = reverse_lazy('written_records')
     template_name = "core/delete_general.html"
@@ -4196,14 +6989,34 @@ class Written_recordDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Written_recordListView(generic.ListView):
+    """
+    Paginated view for listing all the Written_record objects.
+    """
     model = Written_record
     template_name = "sc/written_record/written_record_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('written_records')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Written Record"
         context["var_main_desc"] = "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
@@ -4217,10 +7030,19 @@ class Written_recordListView(generic.ListView):
 
 
 class Written_recordListViewAll(generic.ListView):
+    """
+    
+    """
     model = Written_record
     template_name = "sc/written_record/written_record_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('written_records_all')
 
     def get_queryset(self):
@@ -4231,6 +7053,17 @@ class Written_recordListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Written Record"
         context["var_main_desc"] = "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
@@ -4244,6 +7077,9 @@ class Written_recordListViewAll(generic.ListView):
         return context
         
 class Written_recordDetailView(generic.DetailView):
+    """
+    
+    """
     model = Written_record
     template_name = "sc/written_record/written_record_detail.html"
 
@@ -4293,14 +7129,38 @@ def written_record_meta_download(request):
         
 
 class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Script
     form_class = ScriptForm
     template_name = "sc/script/script_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('script-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4314,18 +7174,41 @@ class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class ScriptUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Script
     form_class = ScriptForm
     template_name = "sc/script/script_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Script"
 
         return context
 
 class ScriptDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Script object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Script
     success_url = reverse_lazy('scripts')
     template_name = "core/delete_general.html"
@@ -4333,14 +7216,34 @@ class ScriptDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ScriptListView(generic.ListView):
+    """
+    Paginated view for listing all the Script objects.
+    """
     model = Script
     template_name = "sc/script/script_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scripts')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Script"
         context["var_main_desc"] = "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
@@ -4354,10 +7257,19 @@ class ScriptListView(generic.ListView):
 
 
 class ScriptListViewAll(generic.ListView):
+    """
+    
+    """
     model = Script
     template_name = "sc/script/script_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scripts_all')
 
     def get_queryset(self):
@@ -4368,6 +7280,17 @@ class ScriptListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Script"
         context["var_main_desc"] = "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
@@ -4381,6 +7304,9 @@ class ScriptListViewAll(generic.ListView):
         return context
         
 class ScriptDetailView(generic.DetailView):
+    """
+    
+    """
     model = Script
     template_name = "sc/script/script_detail.html"
 
@@ -4449,14 +7375,38 @@ def script_meta_download(request):
         
 
 class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Non_phonetic_writing
     form_class = Non_phonetic_writingForm
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('non_phonetic_writing-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4470,18 +7420,41 @@ class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Non_phonetic_writingUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Non_phonetic_writing
     form_class = Non_phonetic_writingForm
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Non Phonetic Writing"
 
         return context
 
 class Non_phonetic_writingDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Non_phonetic_writing object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Non_phonetic_writing
     success_url = reverse_lazy('non_phonetic_writings')
     template_name = "core/delete_general.html"
@@ -4489,14 +7462,34 @@ class Non_phonetic_writingDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Non_phonetic_writingListView(generic.ListView):
+    """
+    Paginated view for listing all the Non_phonetic_writing objects.
+    """
     model = Non_phonetic_writing
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('non_phonetic_writings')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Non Phonetic Writing"
         context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
@@ -4510,10 +7503,19 @@ class Non_phonetic_writingListView(generic.ListView):
 
 
 class Non_phonetic_writingListViewAll(generic.ListView):
+    """
+    
+    """
     model = Non_phonetic_writing
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('non_phonetic_writings_all')
 
     def get_queryset(self):
@@ -4524,6 +7526,17 @@ class Non_phonetic_writingListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Non Phonetic Writing"
         context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
@@ -4537,6 +7550,9 @@ class Non_phonetic_writingListViewAll(generic.ListView):
         return context
         
 class Non_phonetic_writingDetailView(generic.DetailView):
+    """
+    
+    """
     model = Non_phonetic_writing
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_detail.html"
 
@@ -4586,14 +7602,38 @@ def non_phonetic_writing_meta_download(request):
         
 
 class Phonetic_alphabetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Phonetic_alphabetic_writing
     form_class = Phonetic_alphabetic_writingForm
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('phonetic_alphabetic_writing-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4607,18 +7647,41 @@ class Phonetic_alphabetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, 
 
 
 class Phonetic_alphabetic_writingUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Phonetic_alphabetic_writing
     form_class = Phonetic_alphabetic_writingForm
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Phonetic Alphabetic Writing"
 
         return context
 
 class Phonetic_alphabetic_writingDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Phonetic_alphabetic_writing object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Phonetic_alphabetic_writing
     success_url = reverse_lazy('phonetic_alphabetic_writings')
     template_name = "core/delete_general.html"
@@ -4626,14 +7689,34 @@ class Phonetic_alphabetic_writingDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Phonetic_alphabetic_writingListView(generic.ListView):
+    """
+    Paginated view for listing all the Phonetic_alphabetic_writing objects.
+    """
     model = Phonetic_alphabetic_writing
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('phonetic_alphabetic_writings')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Phonetic Alphabetic Writing"
         context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
@@ -4647,10 +7730,19 @@ class Phonetic_alphabetic_writingListView(generic.ListView):
 
 
 class Phonetic_alphabetic_writingListViewAll(generic.ListView):
+    """
+    
+    """
     model = Phonetic_alphabetic_writing
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('phonetic_alphabetic_writings_all')
 
     def get_queryset(self):
@@ -4661,6 +7753,17 @@ class Phonetic_alphabetic_writingListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Phonetic Alphabetic Writing"
         context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
@@ -4674,6 +7777,9 @@ class Phonetic_alphabetic_writingListViewAll(generic.ListView):
         return context
         
 class Phonetic_alphabetic_writingDetailView(generic.DetailView):
+    """
+    
+    """
     model = Phonetic_alphabetic_writing
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_detail.html"
 
@@ -4723,14 +7829,38 @@ def phonetic_alphabetic_writing_meta_download(request):
         
 
 class Lists_tables_and_classificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Lists_tables_and_classification
     form_class = Lists_tables_and_classificationForm
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('lists_tables_and_classification-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4744,18 +7874,41 @@ class Lists_tables_and_classificationCreate(PermissionRequiredMixin, PolityIdMix
 
 
 class Lists_tables_and_classificationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Lists_tables_and_classification
     form_class = Lists_tables_and_classificationForm
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Lists Tables and Classification"
 
         return context
 
 class Lists_tables_and_classificationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Lists_tables_and_classification object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Lists_tables_and_classification
     success_url = reverse_lazy('lists_tables_and_classifications')
     template_name = "core/delete_general.html"
@@ -4763,14 +7916,34 @@ class Lists_tables_and_classificationDelete(PermissionRequiredMixin, DeleteView)
 
 
 class Lists_tables_and_classificationListView(generic.ListView):
+    """
+    Paginated view for listing all the Lists_tables_and_classification objects.
+    """
     model = Lists_tables_and_classification
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('lists_tables_and_classifications')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Lists Tables and Classification"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -4784,10 +7957,19 @@ class Lists_tables_and_classificationListView(generic.ListView):
 
 
 class Lists_tables_and_classificationListViewAll(generic.ListView):
+    """
+    
+    """
     model = Lists_tables_and_classification
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('lists_tables_and_classifications_all')
 
     def get_queryset(self):
@@ -4798,6 +7980,17 @@ class Lists_tables_and_classificationListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Lists Tables and Classification"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -4811,6 +8004,9 @@ class Lists_tables_and_classificationListViewAll(generic.ListView):
         return context
         
 class Lists_tables_and_classificationDetailView(generic.DetailView):
+    """
+    
+    """
     model = Lists_tables_and_classification
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_detail.html"
 
@@ -4860,14 +8056,38 @@ def lists_tables_and_classification_meta_download(request):
         
 
 class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Calendar
     form_class = CalendarForm
     template_name = "sc/calendar/calendar_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('calendar-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -4881,18 +8101,41 @@ class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CalendarUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Calendar
     form_class = CalendarForm
     template_name = "sc/calendar/calendar_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Calendar"
 
         return context
 
 class CalendarDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Calendar object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Calendar
     success_url = reverse_lazy('calendars')
     template_name = "core/delete_general.html"
@@ -4900,14 +8143,34 @@ class CalendarDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CalendarListView(generic.ListView):
+    """
+    Paginated view for listing all the Calendar objects.
+    """
     model = Calendar
     template_name = "sc/calendar/calendar_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('calendars')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Calendar"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -4921,10 +8184,19 @@ class CalendarListView(generic.ListView):
 
 
 class CalendarListViewAll(generic.ListView):
+    """
+    
+    """
     model = Calendar
     template_name = "sc/calendar/calendar_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('calendars_all')
 
     def get_queryset(self):
@@ -4935,6 +8207,17 @@ class CalendarListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Calendar"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -4948,6 +8231,9 @@ class CalendarListViewAll(generic.ListView):
         return context
         
 class CalendarDetailView(generic.DetailView):
+    """
+    
+    """
     model = Calendar
     template_name = "sc/calendar/calendar_detail.html"
 
@@ -4997,14 +8283,38 @@ def calendar_meta_download(request):
         
 
 class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sacred_text
     form_class = Sacred_textForm
     template_name = "sc/sacred_text/sacred_text_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sacred_text-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5018,18 +8328,41 @@ class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Sacred_textUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sacred_text
     form_class = Sacred_textForm
     template_name = "sc/sacred_text/sacred_text_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Sacred Text"
 
         return context
 
 class Sacred_textDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Sacred_text object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sacred_text
     success_url = reverse_lazy('sacred_texts')
     template_name = "core/delete_general.html"
@@ -5037,14 +8370,34 @@ class Sacred_textDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Sacred_textListView(generic.ListView):
+    """
+    Paginated view for listing all the Sacred_text objects.
+    """
     model = Sacred_text
     template_name = "sc/sacred_text/sacred_text_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sacred_texts')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Sacred Text"
         context["var_main_desc"] = "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
@@ -5058,10 +8411,19 @@ class Sacred_textListView(generic.ListView):
 
 
 class Sacred_textListViewAll(generic.ListView):
+    """
+    
+    """
     model = Sacred_text
     template_name = "sc/sacred_text/sacred_text_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sacred_texts_all')
 
     def get_queryset(self):
@@ -5072,6 +8434,17 @@ class Sacred_textListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Sacred Text"
         context["var_main_desc"] = "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
@@ -5085,6 +8458,9 @@ class Sacred_textListViewAll(generic.ListView):
         return context
         
 class Sacred_textDetailView(generic.DetailView):
+    """
+    
+    """
     model = Sacred_text
     template_name = "sc/sacred_text/sacred_text_detail.html"
 
@@ -5134,14 +8510,38 @@ def sacred_text_meta_download(request):
         
 
 class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_literature
     form_class = Religious_literatureForm
     template_name = "sc/religious_literature/religious_literature_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_literature-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5155,18 +8555,41 @@ class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Religious_literatureUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_literature
     form_class = Religious_literatureForm
     template_name = "sc/religious_literature/religious_literature_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Literature"
 
         return context
 
 class Religious_literatureDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Religious_literature object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Religious_literature
     success_url = reverse_lazy('religious_literatures')
     template_name = "core/delete_general.html"
@@ -5174,14 +8597,34 @@ class Religious_literatureDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Religious_literatureListView(generic.ListView):
+    """
+    Paginated view for listing all the Religious_literature objects.
+    """
     model = Religious_literature
     template_name = "sc/religious_literature/religious_literature_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_literatures')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
@@ -5195,10 +8638,19 @@ class Religious_literatureListView(generic.ListView):
 
 
 class Religious_literatureListViewAll(generic.ListView):
+    """
+    
+    """
     model = Religious_literature
     template_name = "sc/religious_literature/religious_literature_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('religious_literatures_all')
 
     def get_queryset(self):
@@ -5209,6 +8661,17 @@ class Religious_literatureListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
@@ -5222,6 +8685,9 @@ class Religious_literatureListViewAll(generic.ListView):
         return context
         
 class Religious_literatureDetailView(generic.DetailView):
+    """
+    
+    """
     model = Religious_literature
     template_name = "sc/religious_literature/religious_literature_detail.html"
 
@@ -5271,14 +8737,38 @@ def religious_literature_meta_download(request):
         
 
 class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Practical_literature
     form_class = Practical_literatureForm
     template_name = "sc/practical_literature/practical_literature_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('practical_literature-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5292,18 +8782,41 @@ class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Practical_literatureUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Practical_literature
     form_class = Practical_literatureForm
     template_name = "sc/practical_literature/practical_literature_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Practical Literature"
 
         return context
 
 class Practical_literatureDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Practical_literature object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Practical_literature
     success_url = reverse_lazy('practical_literatures')
     template_name = "core/delete_general.html"
@@ -5311,14 +8824,34 @@ class Practical_literatureDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Practical_literatureListView(generic.ListView):
+    """
+    Paginated view for listing all the Practical_literature objects.
+    """
     model = Practical_literature
     template_name = "sc/practical_literature/practical_literature_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('practical_literatures')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Practical Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
@@ -5332,10 +8865,19 @@ class Practical_literatureListView(generic.ListView):
 
 
 class Practical_literatureListViewAll(generic.ListView):
+    """
+    
+    """
     model = Practical_literature
     template_name = "sc/practical_literature/practical_literature_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('practical_literatures_all')
 
     def get_queryset(self):
@@ -5346,6 +8888,17 @@ class Practical_literatureListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Practical Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
@@ -5359,6 +8912,9 @@ class Practical_literatureListViewAll(generic.ListView):
         return context
         
 class Practical_literatureDetailView(generic.DetailView):
+    """
+    
+    """
     model = Practical_literature
     template_name = "sc/practical_literature/practical_literature_detail.html"
 
@@ -5408,14 +8964,38 @@ def practical_literature_meta_download(request):
         
 
 class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = History
     form_class = HistoryForm
     template_name = "sc/history/history_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('history-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5429,18 +9009,41 @@ class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class HistoryUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = History
     form_class = HistoryForm
     template_name = "sc/history/history_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "History"
 
         return context
 
 class HistoryDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing History object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = History
     success_url = reverse_lazy('historys')
     template_name = "core/delete_general.html"
@@ -5448,14 +9051,34 @@ class HistoryDelete(PermissionRequiredMixin, DeleteView):
 
 
 class HistoryListView(generic.ListView):
+    """
+    Paginated view for listing all the History objects.
+    """
     model = History
     template_name = "sc/history/history_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('historys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "History"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -5469,10 +9092,19 @@ class HistoryListView(generic.ListView):
 
 
 class HistoryListViewAll(generic.ListView):
+    """
+    
+    """
     model = History
     template_name = "sc/history/history_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('historys_all')
 
     def get_queryset(self):
@@ -5483,6 +9115,17 @@ class HistoryListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "History"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -5496,6 +9139,9 @@ class HistoryListViewAll(generic.ListView):
         return context
         
 class HistoryDetailView(generic.DetailView):
+    """
+    
+    """
     model = History
     template_name = "sc/history/history_detail.html"
 
@@ -5545,14 +9191,38 @@ def history_meta_download(request):
         
 
 class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Philosophy
     form_class = PhilosophyForm
     template_name = "sc/philosophy/philosophy_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('philosophy-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5566,18 +9236,41 @@ class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class PhilosophyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Philosophy
     form_class = PhilosophyForm
     template_name = "sc/philosophy/philosophy_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Philosophy"
 
         return context
 
 class PhilosophyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Philosophy object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Philosophy
     success_url = reverse_lazy('philosophys')
     template_name = "core/delete_general.html"
@@ -5585,14 +9278,34 @@ class PhilosophyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class PhilosophyListView(generic.ListView):
+    """
+    Paginated view for listing all the Philosophy objects.
+    """
     model = Philosophy
     template_name = "sc/philosophy/philosophy_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('philosophys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Philosophy"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -5606,10 +9319,19 @@ class PhilosophyListView(generic.ListView):
 
 
 class PhilosophyListViewAll(generic.ListView):
+    """
+    
+    """
     model = Philosophy
     template_name = "sc/philosophy/philosophy_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('philosophys_all')
 
     def get_queryset(self):
@@ -5620,6 +9342,17 @@ class PhilosophyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Philosophy"
         context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
@@ -5633,6 +9366,9 @@ class PhilosophyListViewAll(generic.ListView):
         return context
         
 class PhilosophyDetailView(generic.DetailView):
+    """
+    
+    """
     model = Philosophy
     template_name = "sc/philosophy/philosophy_detail.html"
 
@@ -5682,14 +9418,38 @@ def philosophy_meta_download(request):
         
 
 class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scientific_literature
     form_class = Scientific_literatureForm
     template_name = "sc/scientific_literature/scientific_literature_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scientific_literature-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5703,18 +9463,41 @@ class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
 
 class Scientific_literatureUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scientific_literature
     form_class = Scientific_literatureForm
     template_name = "sc/scientific_literature/scientific_literature_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Scientific Literature"
 
         return context
 
 class Scientific_literatureDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Scientific_literature object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scientific_literature
     success_url = reverse_lazy('scientific_literatures')
     template_name = "core/delete_general.html"
@@ -5722,14 +9505,34 @@ class Scientific_literatureDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Scientific_literatureListView(generic.ListView):
+    """
+    Paginated view for listing all the Scientific_literature objects.
+    """
     model = Scientific_literature
     template_name = "sc/scientific_literature/scientific_literature_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scientific_literatures')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Scientific Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
@@ -5743,10 +9546,19 @@ class Scientific_literatureListView(generic.ListView):
 
 
 class Scientific_literatureListViewAll(generic.ListView):
+    """
+    
+    """
     model = Scientific_literature
     template_name = "sc/scientific_literature/scientific_literature_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scientific_literatures_all')
 
     def get_queryset(self):
@@ -5757,6 +9569,17 @@ class Scientific_literatureListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Scientific Literature"
         context["var_main_desc"] = "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
@@ -5770,6 +9593,9 @@ class Scientific_literatureListViewAll(generic.ListView):
         return context
         
 class Scientific_literatureDetailView(generic.DetailView):
+    """
+    
+    """
     model = Scientific_literature
     template_name = "sc/scientific_literature/scientific_literature_detail.html"
 
@@ -5819,14 +9645,38 @@ def scientific_literature_meta_download(request):
         
 
 class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Fiction
     form_class = FictionForm
     template_name = "sc/fiction/fiction_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fiction-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5840,18 +9690,41 @@ class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class FictionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Fiction
     form_class = FictionForm
     template_name = "sc/fiction/fiction_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Fiction"
 
         return context
 
 class FictionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Fiction object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Fiction
     success_url = reverse_lazy('fictions')
     template_name = "core/delete_general.html"
@@ -5859,14 +9732,34 @@ class FictionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class FictionListView(generic.ListView):
+    """
+    Paginated view for listing all the Fiction objects.
+    """
     model = Fiction
     template_name = "sc/fiction/fiction_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fictions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Fiction"
         context["var_main_desc"] = "Talking about kinds of written documents, fiction includes poetry."
@@ -5880,10 +9773,19 @@ class FictionListView(generic.ListView):
 
 
 class FictionListViewAll(generic.ListView):
+    """
+    
+    """
     model = Fiction
     template_name = "sc/fiction/fiction_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fictions_all')
 
     def get_queryset(self):
@@ -5894,6 +9796,17 @@ class FictionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Fiction"
         context["var_main_desc"] = "Talking about kinds of written documents, fiction includes poetry."
@@ -5907,6 +9820,9 @@ class FictionListViewAll(generic.ListView):
         return context
         
 class FictionDetailView(generic.DetailView):
+    """
+    
+    """
     model = Fiction
     template_name = "sc/fiction/fiction_detail.html"
 
@@ -5956,14 +9872,38 @@ def fiction_meta_download(request):
         
 
 class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Article
     form_class = ArticleForm
     template_name = "sc/article/article_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('article-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -5977,12 +9917,29 @@ class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class ArticleUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Article
     form_class = ArticleForm
     template_name = "sc/article/article_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Article"
         context["testvar"] = ["a", "bb", "ccc"]
@@ -5991,6 +9948,12 @@ class ArticleUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Article object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Article
     success_url = reverse_lazy('articles')
     template_name = "core/delete_general.html"
@@ -5998,14 +9961,34 @@ class ArticleDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ArticleListView(generic.ListView):
+    """
+    Paginated view for listing all the Article objects.
+    """
     model = Article
     template_name = "sc/article/article_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('articles')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Article"
         context["var_main_desc"] = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
@@ -6019,10 +10002,19 @@ class ArticleListView(generic.ListView):
 
 
 class ArticleListViewAll(generic.ListView):
+    """
+    
+    """
     model = Article
     template_name = "sc/article/article_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('articles_all')
 
     def get_queryset(self):
@@ -6033,6 +10025,17 @@ class ArticleListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Article"
         context["var_main_desc"] = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
@@ -6046,6 +10049,9 @@ class ArticleListViewAll(generic.ListView):
         return context
         
 class ArticleDetailView(generic.DetailView):
+    """
+    
+    """
     model = Article
     template_name = "sc/article/article_detail.html"
 
@@ -6095,14 +10101,38 @@ def article_meta_download(request):
         
 
 class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Token
     form_class = TokenForm
     template_name = "sc/token/token_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('token-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6116,18 +10146,38 @@ class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class TokenUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+    """
     model = Token
     form_class = TokenForm
     template_name = "sc/token/token_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Token"
 
         return context
 
 class TokenDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Token object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Token
     success_url = reverse_lazy('tokens')
     template_name = "core/delete_general.html"
@@ -6135,14 +10185,34 @@ class TokenDelete(PermissionRequiredMixin, DeleteView):
 
 
 class TokenListView(generic.ListView):
+    """
+    Paginated view for listing all the Token objects.
+    """
     model = Token
     template_name = "sc/token/token_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('tokens')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Token"
         context["var_main_desc"] = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
@@ -6156,10 +10226,19 @@ class TokenListView(generic.ListView):
 
 
 class TokenListViewAll(generic.ListView):
+    """
+    
+    """
     model = Token
     template_name = "sc/token/token_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('tokens_all')
 
     def get_queryset(self):
@@ -6170,6 +10249,17 @@ class TokenListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Token"
         context["var_main_desc"] = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
@@ -6183,6 +10273,9 @@ class TokenListViewAll(generic.ListView):
         return context
         
 class TokenDetailView(generic.DetailView):
+    """
+    
+    """
     model = Token
     template_name = "sc/token/token_detail.html"
 
@@ -6232,14 +10325,38 @@ def token_meta_download(request):
         
 
 class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Precious_metal
     form_class = Precious_metalForm
     template_name = "sc/precious_metal/precious_metal_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('precious_metal-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6253,18 +10370,41 @@ class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Precious_metalUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Precious_metal
     form_class = Precious_metalForm
     template_name = "sc/precious_metal/precious_metal_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Precious Metal"
 
         return context
 
 class Precious_metalDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Precious_metal object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Precious_metal
     success_url = reverse_lazy('precious_metals')
     template_name = "core/delete_general.html"
@@ -6272,14 +10412,34 @@ class Precious_metalDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Precious_metalListView(generic.ListView):
+    """
+    Paginated view for listing all the Precious_metal objects.
+    """
     model = Precious_metal
     template_name = "sc/precious_metal/precious_metal_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('precious_metals')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Precious Metal"
         context["var_main_desc"] = "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
@@ -6293,10 +10453,19 @@ class Precious_metalListView(generic.ListView):
 
 
 class Precious_metalListViewAll(generic.ListView):
+    """
+    
+    """
     model = Precious_metal
     template_name = "sc/precious_metal/precious_metal_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('precious_metals_all')
 
     def get_queryset(self):
@@ -6307,6 +10476,17 @@ class Precious_metalListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Precious Metal"
         context["var_main_desc"] = "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
@@ -6320,6 +10500,9 @@ class Precious_metalListViewAll(generic.ListView):
         return context
         
 class Precious_metalDetailView(generic.DetailView):
+    """
+    
+    """
     model = Precious_metal
     template_name = "sc/precious_metal/precious_metal_detail.html"
 
@@ -6369,14 +10552,38 @@ def precious_metal_meta_download(request):
         
 
 class Foreign_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Foreign_coin
     form_class = Foreign_coinForm
     template_name = "sc/foreign_coin/foreign_coin_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('foreign_coin-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6390,18 +10597,41 @@ class Foreign_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Foreign_coinUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Foreign_coin
     form_class = Foreign_coinForm
     template_name = "sc/foreign_coin/foreign_coin_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Foreign Coin"
 
         return context
 
 class Foreign_coinDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Foreign_coin object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Foreign_coin
     success_url = reverse_lazy('foreign_coins')
     template_name = "core/delete_general.html"
@@ -6409,14 +10639,34 @@ class Foreign_coinDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Foreign_coinListView(generic.ListView):
+    """
+    Paginated view for listing all the Foreign_coin objects.
+    """
     model = Foreign_coin
     template_name = "sc/foreign_coin/foreign_coin_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('foreign_coins')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Foreign Coin"
         context["var_main_desc"] = "NO Descriptions IN Codebook"
@@ -6430,10 +10680,19 @@ class Foreign_coinListView(generic.ListView):
 
 
 class Foreign_coinListViewAll(generic.ListView):
+    """
+    
+    """
     model = Foreign_coin
     template_name = "sc/foreign_coin/foreign_coin_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('foreign_coins_all')
 
     def get_queryset(self):
@@ -6444,6 +10703,17 @@ class Foreign_coinListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Foreign Coin"
         context["var_main_desc"] = "NO Descriptions IN Codebook"
@@ -6457,6 +10727,9 @@ class Foreign_coinListViewAll(generic.ListView):
         return context
         
 class Foreign_coinDetailView(generic.DetailView):
+    """
+    
+    """
     model = Foreign_coin
     template_name = "sc/foreign_coin/foreign_coin_detail.html"
 
@@ -6506,14 +10779,38 @@ def foreign_coin_meta_download(request):
         
 
 class Indigenous_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Indigenous_coin
     form_class = Indigenous_coinForm
     template_name = "sc/indigenous_coin/indigenous_coin_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('indigenous_coin-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6527,18 +10824,41 @@ class Indigenous_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Indigenous_coinUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Indigenous_coin
     form_class = Indigenous_coinForm
     template_name = "sc/indigenous_coin/indigenous_coin_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Indigenous Coin"
 
         return context
 
 class Indigenous_coinDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Indigenous_coin object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Indigenous_coin
     success_url = reverse_lazy('indigenous_coins')
     template_name = "core/delete_general.html"
@@ -6546,14 +10866,34 @@ class Indigenous_coinDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Indigenous_coinListView(generic.ListView):
+    """
+    Paginated view for listing all the Indigenous_coin objects.
+    """
     model = Indigenous_coin
     template_name = "sc/indigenous_coin/indigenous_coin_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('indigenous_coins')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Indigenous Coin"
         context["var_main_desc"] = "NO Descriptions IN Codebook"
@@ -6567,10 +10907,19 @@ class Indigenous_coinListView(generic.ListView):
 
 
 class Indigenous_coinListViewAll(generic.ListView):
+    """
+    
+    """
     model = Indigenous_coin
     template_name = "sc/indigenous_coin/indigenous_coin_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('indigenous_coins_all')
 
     def get_queryset(self):
@@ -6581,6 +10930,17 @@ class Indigenous_coinListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Indigenous Coin"
         context["var_main_desc"] = "NO Descriptions IN Codebook"
@@ -6594,6 +10954,9 @@ class Indigenous_coinListViewAll(generic.ListView):
         return context
         
 class Indigenous_coinDetailView(generic.DetailView):
+    """
+    
+    """
     model = Indigenous_coin
     template_name = "sc/indigenous_coin/indigenous_coin_detail.html"
 
@@ -6644,14 +11007,38 @@ def indigenous_coin_meta_download(request):
         
 
 class Paper_currencyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Paper_currency
     form_class = Paper_currencyForm
     template_name = "sc/paper_currency/paper_currency_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('paper_currency-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6665,18 +11052,41 @@ class Paper_currencyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Paper_currencyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Paper_currency
     form_class = Paper_currencyForm
     template_name = "sc/paper_currency/paper_currency_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Paper Currency"
 
         return context
 
 class Paper_currencyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Paper_currency object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Paper_currency
     success_url = reverse_lazy('paper_currencys')
     template_name = "core/delete_general.html"
@@ -6684,14 +11094,34 @@ class Paper_currencyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Paper_currencyListView(generic.ListView):
+    """
+    Paginated view for listing all the Paper_currency objects.
+    """
     model = Paper_currency
     template_name = "sc/paper_currency/paper_currency_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('paper_currencys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Paper Currency"
         context["var_main_desc"] = "Paper currency or another kind of fiat money. note that this only refers to indigenously produced paper currency. code absent if colonial money is used."
@@ -6705,10 +11135,19 @@ class Paper_currencyListView(generic.ListView):
 
 
 class Paper_currencyListViewAll(generic.ListView):
+    """
+    
+    """
     model = Paper_currency
     template_name = "sc/paper_currency/paper_currency_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('paper_currencys_all')
 
     def get_queryset(self):
@@ -6719,6 +11158,17 @@ class Paper_currencyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Paper Currency"
         context["var_main_desc"] = "Paper currency or another kind of fiat money. note that this only refers to indigenously produced paper currency. code absent if colonial money is used."
@@ -6732,6 +11182,9 @@ class Paper_currencyListViewAll(generic.ListView):
         return context
         
 class Paper_currencyDetailView(generic.DetailView):
+    """
+    
+    """
     model = Paper_currency
     template_name = "sc/paper_currency/paper_currency_detail.html"
 
@@ -6781,14 +11234,38 @@ def paper_currency_meta_download(request):
         
 
 class CourierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Courier
     form_class = CourierForm
     template_name = "sc/courier/courier_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('courier-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6802,6 +11279,12 @@ class CourierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CourierUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Courier
     form_class = CourierForm
     template_name = "sc/courier/courier_update.html"
@@ -6814,6 +11297,12 @@ class CourierUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class CourierDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Courier object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Courier
     success_url = reverse_lazy('couriers')
     template_name = "core/delete_general.html"
@@ -6821,14 +11310,34 @@ class CourierDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CourierListView(generic.ListView):
+    """
+    Paginated view for listing all the Courier objects.
+    """
     model = Courier
     template_name = "sc/courier/courier_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('couriers')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Courier"
         context["var_main_desc"] = "Full-time professional couriers."
@@ -6842,10 +11351,19 @@ class CourierListView(generic.ListView):
 
 
 class CourierListViewAll(generic.ListView):
+    """
+    
+    """
     model = Courier
     template_name = "sc/courier/courier_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('couriers_all')
 
     def get_queryset(self):
@@ -6856,6 +11374,17 @@ class CourierListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Courier"
         context["var_main_desc"] = "Full-time professional couriers."
@@ -6869,6 +11398,9 @@ class CourierListViewAll(generic.ListView):
         return context
         
 class CourierDetailView(generic.DetailView):
+    """
+    
+    """
     model = Courier
     template_name = "sc/courier/courier_detail.html"
 
@@ -6918,14 +11450,38 @@ def courier_meta_download(request):
         
 
 class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Postal_station
     form_class = Postal_stationForm
     template_name = "sc/postal_station/postal_station_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('postal_station-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -6939,18 +11495,41 @@ class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Postal_stationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Postal_station
     form_class = Postal_stationForm
     template_name = "sc/postal_station/postal_station_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Postal Station"
 
         return context
 
 class Postal_stationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Postal_station object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Postal_station
     success_url = reverse_lazy('postal_stations')
     template_name = "core/delete_general.html"
@@ -6958,14 +11537,34 @@ class Postal_stationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Postal_stationListView(generic.ListView):
+    """
+    Paginated view for listing all the Postal_station objects.
+    """
     model = Postal_station
     template_name = "sc/postal_station/postal_station_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('postal_stations')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Postal Station"
         context["var_main_desc"] = "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
@@ -6979,10 +11578,19 @@ class Postal_stationListView(generic.ListView):
 
 
 class Postal_stationListViewAll(generic.ListView):
+    """
+    
+    """
     model = Postal_station
     template_name = "sc/postal_station/postal_station_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('postal_stations_all')
 
     def get_queryset(self):
@@ -6993,6 +11601,17 @@ class Postal_stationListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Postal Station"
         context["var_main_desc"] = "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
@@ -7006,6 +11625,9 @@ class Postal_stationListViewAll(generic.ListView):
         return context
         
 class Postal_stationDetailView(generic.DetailView):
+    """
+    
+    """
     model = Postal_station
     template_name = "sc/postal_station/postal_station_detail.html"
 
@@ -7055,14 +11677,38 @@ def postal_station_meta_download(request):
         
 
 class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = General_postal_service
     form_class = General_postal_serviceForm
     template_name = "sc/general_postal_service/general_postal_service_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('general_postal_service-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -7076,18 +11722,41 @@ class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, Creat
 
 
 class General_postal_serviceUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = General_postal_service
     form_class = General_postal_serviceForm
     template_name = "sc/general_postal_service/general_postal_service_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "General Postal Service"
 
         return context
 
 class General_postal_serviceDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing General_postal_service object.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = General_postal_service
     success_url = reverse_lazy('general_postal_services')
     template_name = "core/delete_general.html"
@@ -7095,14 +11764,34 @@ class General_postal_serviceDelete(PermissionRequiredMixin, DeleteView):
 
 
 class General_postal_serviceListView(generic.ListView):
+    """
+    Paginated view for listing all the General_postal_service objects.
+    """
     model = General_postal_service
     template_name = "sc/general_postal_service/general_postal_service_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('general_postal_services')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "General Postal Service"
         context["var_main_desc"] = "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
@@ -7116,10 +11805,19 @@ class General_postal_serviceListView(generic.ListView):
 
 
 class General_postal_serviceListViewAll(generic.ListView):
+    """
+    
+    """
     model = General_postal_service
     template_name = "sc/general_postal_service/general_postal_service_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('general_postal_services_all')
 
     def get_queryset(self):
@@ -7130,6 +11828,17 @@ class General_postal_serviceListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "General Postal Service"
         context["var_main_desc"] = "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
@@ -7143,6 +11852,9 @@ class General_postal_serviceListViewAll(generic.ListView):
         return context
         
 class General_postal_serviceDetailView(generic.DetailView):
+    """
+    
+    """
     model = General_postal_service
     template_name = "sc/general_postal_service/general_postal_service_detail.html"
 

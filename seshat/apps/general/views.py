@@ -46,14 +46,38 @@ from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_
 from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
 class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
+    """
+    View for creating a new Polity_research_assistant.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_research_assistant
     form_class = Polity_research_assistantForm
     template_name = "general/polity_research_assistant/polity_research_assistant_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_research_assistant-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -67,18 +91,41 @@ class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
 
 
 class Polity_research_assistantUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_research_assistant.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_research_assistant
     form_class = Polity_research_assistantForm
     template_name = "general/polity_research_assistant/polity_research_assistant_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Research Assistant"
 
         return context
 
 class Polity_research_assistantDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_research_assistant.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_research_assistant
     success_url = reverse_lazy('polity_research_assistants')
     template_name = "core/delete_general.html"
@@ -86,14 +133,34 @@ class Polity_research_assistantDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_research_assistantListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_research_assistant instances.
+    """
     model = Polity_research_assistant
     template_name = "general/polity_research_assistant/polity_research_assistant_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_research_assistants')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Research Assistant"
         context["var_main_desc"] = "The ra(s) who worked on a polity."
@@ -107,13 +174,28 @@ class Polity_research_assistantListView(generic.ListView):
 
 
 class Polity_research_assistantListViewAll(generic.ListView):
+    """
+    View for listing all Polity_research_assistant instances.
+    """
     model = Polity_research_assistant
     template_name = "general/polity_research_assistant/polity_research_assistant_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_research_assistants_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_research_assistant instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_research_assistant instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -121,6 +203,17 @@ class Polity_research_assistantListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Research Assistant"
         context["var_main_desc"] = "The ra(s) who worked on a polity."
@@ -134,12 +227,27 @@ class Polity_research_assistantListViewAll(generic.ListView):
         return context
         
 class Polity_research_assistantDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_research_assistant instance.
+    """
     model = Polity_research_assistant
     template_name = "general/polity_research_assistant/polity_research_assistant_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_research_assistant_download(request):
+    """
+    Download a CSV file of all Polity_research_assistant instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_research_assistant.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -158,6 +266,18 @@ def polity_research_assistant_download(request):
 
 @permission_required('core.view_capital')
 def polity_research_assistant_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_research_assistant instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_research_assistants.csv"'
     
@@ -179,14 +299,38 @@ def polity_research_assistant_meta_download(request):
         
 
 class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_utm_zone.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_utm_zone
     form_class = Polity_utm_zoneForm
     template_name = "general/polity_utm_zone/polity_utm_zone_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_utm_zone-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -200,18 +344,41 @@ class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Polity_utm_zoneUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_utm_zone.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_utm_zone
     form_class = Polity_utm_zoneForm
     template_name = "general/polity_utm_zone/polity_utm_zone_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Utm Zone"
 
         return context
 
 class Polity_utm_zoneDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_utm_zone.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_utm_zone
     success_url = reverse_lazy('polity_utm_zones')
     template_name = "core/delete_general.html"
@@ -219,14 +386,34 @@ class Polity_utm_zoneDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_utm_zoneListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_utm_zone instances.
+    """
     model = Polity_utm_zone
     template_name = "general/polity_utm_zone/polity_utm_zone_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_utm_zones')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Utm Zone"
         context["var_main_desc"] = "The utm zone of a polity."
@@ -240,13 +427,28 @@ class Polity_utm_zoneListView(generic.ListView):
 
 
 class Polity_utm_zoneListViewAll(generic.ListView):
+    """
+    View for listing all Polity_utm_zone instances.
+    """
     model = Polity_utm_zone
     template_name = "general/polity_utm_zone/polity_utm_zone_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_utm_zones_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_utm_zone instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_utm_zone instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -254,6 +456,17 @@ class Polity_utm_zoneListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Utm Zone"
         context["var_main_desc"] = "The utm zone of a polity."
@@ -267,12 +480,27 @@ class Polity_utm_zoneListViewAll(generic.ListView):
         return context
         
 class Polity_utm_zoneDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_utm_zone instance.
+    """
     model = Polity_utm_zone
     template_name = "general/polity_utm_zone/polity_utm_zone_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_utm_zone_download(request):
+    """
+    Download a CSV file of all Polity_utm_zone instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_utm_zone.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -291,6 +519,18 @@ def polity_utm_zone_download(request):
 
 @permission_required('core.view_capital')
 def polity_utm_zone_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_utm_zone instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_utm_zones.csv"'
     
@@ -312,14 +552,38 @@ def polity_utm_zone_meta_download(request):
         
 
 class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_original_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_original_name
     form_class = Polity_original_nameForm
     template_name = "general/polity_original_name/polity_original_name_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_original_name-create')
+
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -333,18 +597,41 @@ class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Polity_original_nameUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_original_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_original_name
     form_class = Polity_original_nameForm
     template_name = "general/polity_original_name/polity_original_name_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Original Name"
 
         return context
 
 class Polity_original_nameDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_original_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_original_name
     success_url = reverse_lazy('polity_original_names')
     template_name = "core/delete_general.html"
@@ -352,14 +639,34 @@ class Polity_original_nameDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_original_nameListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_original_name instances.
+    """
     model = Polity_original_name
     template_name = "general/polity_original_name/polity_original_name_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_original_names')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Original Name"
         context["var_main_desc"] = "The original name of a polity."
@@ -373,13 +680,28 @@ class Polity_original_nameListView(generic.ListView):
 
 
 class Polity_original_nameListViewAll(generic.ListView):
+    """
+    View for listing all Polity_original_name instances.
+    """
     model = Polity_original_name
     template_name = "general/polity_original_name/polity_original_name_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_original_names_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_original_name instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_original_name instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -387,6 +709,17 @@ class Polity_original_nameListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Original Name"
         context["var_main_desc"] = "The original name of a polity."
@@ -400,12 +733,27 @@ class Polity_original_nameListViewAll(generic.ListView):
         return context
         
 class Polity_original_nameDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_original_name instance.
+    """
     model = Polity_original_name
     template_name = "general/polity_original_name/polity_original_name_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_original_name_download(request):
+    """
+    Download a CSV file of all Polity_original_name instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_original_name.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -424,6 +772,18 @@ def polity_original_name_download(request):
 
 @permission_required('core.view_capital')
 def polity_original_name_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_original_name instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_original_names.csv"'
     
@@ -445,14 +805,38 @@ def polity_original_name_meta_download(request):
         
 
 class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_alternative_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternative_name
     form_class = Polity_alternative_nameForm
     template_name = "general/polity_alternative_name/polity_alternative_name_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternative_name-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -466,18 +850,41 @@ class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
 
 class Polity_alternative_nameUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_alternative_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternative_name
     form_class = Polity_alternative_nameForm
     template_name = "general/polity_alternative_name/polity_alternative_name_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternative Name"
 
         return context
 
 class Polity_alternative_nameDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_alternative_name.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternative_name
     success_url = reverse_lazy('polity_alternative_names')
     template_name = "core/delete_general.html"
@@ -485,14 +892,34 @@ class Polity_alternative_nameDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_alternative_nameListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_alternative_name instances.
+    """
     model = Polity_alternative_name
     template_name = "general/polity_alternative_name/polity_alternative_name_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternative_names')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternative Name"
         context["var_main_desc"] = "The alternative name of a polity."
@@ -506,13 +933,28 @@ class Polity_alternative_nameListView(generic.ListView):
 
 
 class Polity_alternative_nameListViewAll(generic.ListView):
+    """
+    View for listing all Polity_alternative_name instances.
+    """
     model = Polity_alternative_name
     template_name = "general/polity_alternative_name/polity_alternative_name_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternative_names_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_alternative_name instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_alternative_name instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -520,6 +962,17 @@ class Polity_alternative_nameListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternative Name"
         context["var_main_desc"] = "The alternative name of a polity."
@@ -533,12 +986,27 @@ class Polity_alternative_nameListViewAll(generic.ListView):
         return context
         
 class Polity_alternative_nameDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_alternative_name instance.
+    """
     model = Polity_alternative_name
     template_name = "general/polity_alternative_name/polity_alternative_name_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_alternative_name_download(request):
+    """
+    Download a CSV file of all Polity_alternative_name instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_alternative_name.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -557,6 +1025,18 @@ def polity_alternative_name_download(request):
 
 @permission_required('core.view_capital')
 def polity_alternative_name_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_alternative_name instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_alternative_names.csv"'
     
@@ -578,12 +1058,24 @@ def polity_alternative_name_meta_download(request):
         
 
 class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_peak_years.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_peak_years
     form_class = Polity_peak_yearsForm
     template_name = "general/polity_peak_years/polity_peak_years_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_peak_years-create')
     
     # def form_valid(self, form):
@@ -597,6 +1089,15 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     #     return super().form_valid(form)
     
     def get_initial(self):
+        """
+        Get the initial value of the polity field from the query string.
+
+        Note:
+            TODO This should already be handled by the PolityIdMixin.
+
+        Returns:
+            dict: The initial value of the polity field.
+        """
         initial = super(Polity_peak_yearsCreate, self).get_initial()
         polity_id_x = self.request.GET.get('polity_id_x')
         initial['polity'] = polity_id_x
@@ -604,6 +1105,17 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         return initial
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -620,12 +1132,29 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
 
 
 class Polity_peak_yearsUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_peak_years.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_peak_years
     form_class = Polity_peak_yearsForm
     template_name = "general/polity_peak_years/polity_peak_years_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Peak Years"
         context["mysection"] = "General Variables"
@@ -636,6 +1165,12 @@ class Polity_peak_yearsUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Polity_peak_yearsDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_peak_years.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_peak_years
     success_url = reverse_lazy('polity_peak_yearss')
     template_name = "core/delete_general.html"
@@ -643,14 +1178,34 @@ class Polity_peak_yearsDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_peak_yearsListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_peak_years instances.
+    """
     model = Polity_peak_years
     template_name = "general/polity_peak_years/polity_peak_years_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_peak_yearss')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Peak Years"
         context["var_main_desc"] = "The peak years of a polity."
@@ -666,13 +1221,28 @@ class Polity_peak_yearsListView(generic.ListView):
 
 
 class Polity_peak_yearsListViewAll(generic.ListView):
+    """
+    View for listing all Polity_peak_years instances.
+    """
     model = Polity_peak_years
     template_name = "general/polity_peak_years/polity_peak_years_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_peak_yearss_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_peak_years instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_peak_years instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -680,6 +1250,17 @@ class Polity_peak_yearsListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Peak Years"
         context["var_main_desc"] = "The peak years of a polity."
@@ -695,12 +1276,27 @@ class Polity_peak_yearsListViewAll(generic.ListView):
         return context
         
 class Polity_peak_yearsDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_peak_years instance.
+    """
     model = Polity_peak_years
     template_name = "general/polity_peak_years/polity_peak_years_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_peak_years_download(request):
+    """
+    Download a CSV file of all Polity_peak_years instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_peak_years.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -719,6 +1315,18 @@ def polity_peak_years_download(request):
 
 @permission_required('core.view_capital')
 def polity_peak_years_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_peak_years instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_peak_yearss.csv"'
     
@@ -740,14 +1348,38 @@ def polity_peak_years_meta_download(request):
         
 
 class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_duration.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_duration
     form_class = Polity_durationForm
     template_name = "general/polity_duration/polity_duration_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_duration-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -763,12 +1395,29 @@ class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Polity_durationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_duration.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_duration
     form_class = Polity_durationForm
     template_name = "general/polity_duration/polity_duration_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Duration"
         context["mysection"] = "General Variables"
@@ -779,6 +1428,12 @@ class Polity_durationUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Polity_durationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_duration.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_duration
     success_url = reverse_lazy('polity_durations')
     template_name = "core/delete_general.html"
@@ -786,14 +1441,34 @@ class Polity_durationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_durationListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_duration instances.
+    """
     model = Polity_duration
     template_name = "general/polity_duration/polity_duration_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_durations')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Duration"
         context["var_main_desc"] = "The lifetime of a polity."
@@ -807,13 +1482,28 @@ class Polity_durationListView(generic.ListView):
 
 
 class Polity_durationListViewAll(generic.ListView):
+    """
+    View for listing all Polity_duration instances.
+    """
     model = Polity_duration
     template_name = "general/polity_duration/polity_duration_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_durations_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_duration instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_duration instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -821,6 +1511,17 @@ class Polity_durationListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Duration"
         context["var_main_desc"] = "The lifetime of a polity."
@@ -834,12 +1535,27 @@ class Polity_durationListViewAll(generic.ListView):
         return context
         
 class Polity_durationDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_duration instance.
+    """
     model = Polity_duration
     template_name = "general/polity_duration/polity_duration_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_duration_download(request):
+    """
+    Download a CSV file of all Polity_duration instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_duration.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -858,6 +1574,18 @@ def polity_duration_download(request):
 
 @permission_required('core.view_capital')
 def polity_duration_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_duration instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_durations.csv"'
     
@@ -879,19 +1607,52 @@ def polity_duration_meta_download(request):
         
 
 class Polity_degree_of_centralizationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_degree_of_centralization.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_degree_of_centralization
     form_class = Polity_degree_of_centralizationForm
     template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the degree_of_centralization field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['degree_of_centralization'].choices = sorted(form.fields['degree_of_centralization'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_degree_of_centralization-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -905,23 +1666,55 @@ class Polity_degree_of_centralizationCreate(PermissionRequiredMixin, PolityIdMix
 
 
 class Polity_degree_of_centralizationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_degree_of_centralization.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_degree_of_centralization
     form_class = Polity_degree_of_centralizationForm
     template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the degree_of_centralization field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['degree_of_centralization'].choices = sorted(form.fields['degree_of_centralization'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Degree of Centralization"
 
         return context
 
 class Polity_degree_of_centralizationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_degree_of_centralization.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_degree_of_centralization
     success_url = reverse_lazy('polity_degree_of_centralizations')
     template_name = "core/delete_general.html"
@@ -929,14 +1722,34 @@ class Polity_degree_of_centralizationDelete(PermissionRequiredMixin, DeleteView)
 
 
 class Polity_degree_of_centralizationListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_degree_of_centralization instances.
+    """
     model = Polity_degree_of_centralization
     template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_degree_of_centralizations')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Degree of Centralization"
         context["var_main_desc"] = "The degree of centralization of a polity."
@@ -950,13 +1763,28 @@ class Polity_degree_of_centralizationListView(generic.ListView):
 
 
 class Polity_degree_of_centralizationListViewAll(generic.ListView):
+    """
+    View for listing all Polity_degree_of_centralization instances.
+    """
     model = Polity_degree_of_centralization
     template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_degree_of_centralizations_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_degree_of_centralization instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_degree_of_centralization instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -964,6 +1792,17 @@ class Polity_degree_of_centralizationListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Degree of Centralization"
         context["var_main_desc"] = "The degree of centralization of a polity."
@@ -977,12 +1816,27 @@ class Polity_degree_of_centralizationListViewAll(generic.ListView):
         return context
         
 class Polity_degree_of_centralizationDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_degree_of_centralization instance.
+    """
     model = Polity_degree_of_centralization
     template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_degree_of_centralization_download(request):
+    """
+    Download a CSV file of all Polity_degree_of_centralization instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_degree_of_centralization.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1001,6 +1855,18 @@ def polity_degree_of_centralization_download(request):
 
 @permission_required('core.view_capital')
 def polity_degree_of_centralization_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_degree_of_centralization instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_degree_of_centralizations.csv"'
     
@@ -1022,19 +1888,52 @@ def polity_degree_of_centralization_meta_download(request):
         
 
 class Polity_suprapolity_relationsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_suprapolity_relations.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_suprapolity_relations
     form_class = Polity_suprapolity_relationsForm
     template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the supra_polity_relations field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['supra_polity_relations'].choices = sorted(form.fields['supra_polity_relations'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_suprapolity_relations-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1054,17 +1953,43 @@ class Polity_suprapolity_relationsCreate(PermissionRequiredMixin, PolityIdMixin,
 
 
 class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_suprapolity_relations.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_suprapolity_relations
     form_class = Polity_suprapolity_relationsForm
     template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the supra_polity_relations field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['supra_polity_relations'].choices = sorted(form.fields['supra_polity_relations'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["mysubsection"] = "General Variables"
         context["var_section"] = "General Variables"
@@ -1078,6 +2003,12 @@ class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Polity_suprapolity_relationsDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_suprapolity_relations.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_suprapolity_relations
     success_url = reverse_lazy('polity_suprapolity_relationss')
     template_name = "core/delete_general.html"
@@ -1085,14 +2016,34 @@ class Polity_suprapolity_relationsDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_suprapolity_relationsListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_suprapolity_relations instances.
+    """
     model = Polity_suprapolity_relations
     template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_suprapolity_relationss')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Suprapolity Relations"
         context["var_main_desc"] = "The supra polity relations of a polity."
@@ -1106,13 +2057,28 @@ class Polity_suprapolity_relationsListView(generic.ListView):
 
 
 class Polity_suprapolity_relationsListViewAll(generic.ListView):
+    """
+    View for listing all Polity_suprapolity_relations instances.
+    """
     model = Polity_suprapolity_relations
     template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_suprapolity_relationss_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_suprapolity_relations instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_suprapolity_relations instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1120,6 +2086,17 @@ class Polity_suprapolity_relationsListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Suprapolity Relations"
         context["var_main_desc"] = "The supra polity relations of a polity."
@@ -1133,12 +2110,27 @@ class Polity_suprapolity_relationsListViewAll(generic.ListView):
         return context
         
 class Polity_suprapolity_relationsDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_suprapolity_relations instance.
+    """
     model = Polity_suprapolity_relations
     template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_suprapolity_relations_download(request):
+    """
+    Download a CSV file of all Polity_suprapolity_relations instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_suprapolity_relations.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1162,6 +2154,18 @@ def polity_suprapolity_relations_download(request):
 
 @permission_required('core.view_capital')
 def polity_suprapolity_relations_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_suprapolity_relations instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_suprapolity_relationss.csv"'
     
@@ -1183,14 +2187,38 @@ def polity_suprapolity_relations_meta_download(request):
         
 
 class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_capital.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_capital
     form_class = Polity_capitalForm
     template_name = "general/polity_capital/polity_capital_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_capital-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1204,12 +2232,29 @@ class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Polity_capitalUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_capital.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_capital
     form_class = Polity_capitalForm
     template_name = "general/polity_capital/polity_capital_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Capital"
         context["my_exp"] = "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
@@ -1217,6 +2262,12 @@ class Polity_capitalUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Polity_capitalDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_capital.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_capital
     success_url = reverse_lazy('polity_capitals')
     template_name = "core/delete_general.html"
@@ -1224,14 +2275,34 @@ class Polity_capitalDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_capitalListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_capital instances.
+    """
     model = Polity_capital
     template_name = "general/polity_capital/polity_capital_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_capitals')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Capital"
         context["var_main_desc"] = "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
@@ -1245,13 +2316,28 @@ class Polity_capitalListView(generic.ListView):
 
 
 class Polity_capitalListViewAll(generic.ListView):
+    """
+    View for listing all Polity_capital instances.
+    """
     model = Polity_capital
     template_name = "general/polity_capital/polity_capital_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_capitals_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_capital instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_capital instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1259,6 +2345,17 @@ class Polity_capitalListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Capital"
         context["var_main_desc"] = "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
@@ -1272,12 +2369,27 @@ class Polity_capitalListViewAll(generic.ListView):
         return context
         
 class Polity_capitalDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_capital instance.
+    """
     model = Polity_capital
     template_name = "general/polity_capital/polity_capital_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_capital_download(request):
+    """
+    Download a CSV file of all Polity_capital instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_capital.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1301,6 +2413,18 @@ def polity_capital_download(request):
 
 @permission_required('core.view_capital')
 def polity_capital_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_capital instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_capitals.csv"'
     
@@ -1322,19 +2446,52 @@ def polity_capital_meta_download(request):
         
 
 class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_language.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language
     form_class = Polity_languageForm
     template_name = "general/polity_language/polity_language_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the language field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['language'].choices = sorted(form.fields['language'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_language-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1348,23 +2505,55 @@ class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Polity_languageUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_language.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language
     form_class = Polity_languageForm
     template_name = "general/polity_language/polity_language_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the language field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['language'].choices = sorted(form.fields['language'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language"
 
         return context
 
 class Polity_languageDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_language.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language
     success_url = reverse_lazy('polity_languages')
     template_name = "core/delete_general.html"
@@ -1372,14 +2561,34 @@ class Polity_languageDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_languageListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_language instances.
+    """
     model = Polity_language
     template_name = "general/polity_language/polity_language_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_languages')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language"
         context["var_main_desc"] = "The language of a polity."
@@ -1393,13 +2602,28 @@ class Polity_languageListView(generic.ListView):
 
 
 class Polity_languageListViewAll(generic.ListView):
+    """
+    View for listing all Polity_language instances.
+    """
     model = Polity_language
     template_name = "general/polity_language/polity_language_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_languages_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_language instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_language instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1407,6 +2631,17 @@ class Polity_languageListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language"
         context["var_main_desc"] = "The language of a polity."
@@ -1420,12 +2655,27 @@ class Polity_languageListViewAll(generic.ListView):
         return context
         
 class Polity_languageDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_language instance.
+    """
     model = Polity_language
     template_name = "general/polity_language/polity_language_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_language_download(request):
+    """
+    Download a CSV file of all Polity_language instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_language.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1444,6 +2694,18 @@ def polity_language_download(request):
 
 @permission_required('core.view_capital')
 def polity_language_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_language instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_languages.csv"'
     
@@ -1465,19 +2727,52 @@ def polity_language_meta_download(request):
         
 
 class Polity_linguistic_familyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_linguistic_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_linguistic_family
     form_class = Polity_linguistic_familyForm
     template_name = "general/polity_linguistic_family/polity_linguistic_family_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the linguistic_family field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['linguistic_family'].choices = sorted(form.fields['linguistic_family'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_linguistic_family-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1491,23 +2786,55 @@ class Polity_linguistic_familyCreate(PermissionRequiredMixin, PolityIdMixin, Cre
 
 
 class Polity_linguistic_familyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_linguistic_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_linguistic_family
     form_class = Polity_linguistic_familyForm
     template_name = "general/polity_linguistic_family/polity_linguistic_family_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the linguistic_family field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['linguistic_family'].choices = sorted(form.fields['linguistic_family'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Linguistic Family"
 
         return context
 
 class Polity_linguistic_familyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_linguistic_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_linguistic_family
     success_url = reverse_lazy('polity_linguistic_familys')
     template_name = "core/delete_general.html"
@@ -1515,14 +2842,34 @@ class Polity_linguistic_familyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_linguistic_familyListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_linguistic_family instances.
+    """
     model = Polity_linguistic_family
     template_name = "general/polity_linguistic_family/polity_linguistic_family_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_linguistic_familys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Linguistic Family"
         context["var_main_desc"] = "The linguistic family of a polity."
@@ -1536,13 +2883,28 @@ class Polity_linguistic_familyListView(generic.ListView):
 
 
 class Polity_linguistic_familyListViewAll(generic.ListView):
+    """
+    View for listing all Polity_linguistic_family instances.
+    """
     model = Polity_linguistic_family
     template_name = "general/polity_linguistic_family/polity_linguistic_family_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_linguistic_familys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_linguistic_family instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_linguistic_family instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1550,6 +2912,17 @@ class Polity_linguistic_familyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Linguistic Family"
         context["var_main_desc"] = "The linguistic family of a polity."
@@ -1563,12 +2936,27 @@ class Polity_linguistic_familyListViewAll(generic.ListView):
         return context
         
 class Polity_linguistic_familyDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_linguistic_family instance.
+    """
     model = Polity_linguistic_family
     template_name = "general/polity_linguistic_family/polity_linguistic_family_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_linguistic_family_download(request):
+    """
+    Download a CSV file of all Polity_linguistic_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_linguistic_family.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1587,6 +2975,18 @@ def polity_linguistic_family_download(request):
 
 @permission_required('core.view_capital')
 def polity_linguistic_family_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_linguistic_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_linguistic_familys.csv"'
     
@@ -1608,14 +3008,38 @@ def polity_linguistic_family_meta_download(request):
         
 
 class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin,CreateView):
+    """
+    View for creating a new Polity_language_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language_genus
     form_class = Polity_language_genusForm
     template_name = "general/polity_language_genus/polity_language_genus_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_language_genus-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1629,18 +3053,41 @@ class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin,CreateV
 
 
 class Polity_language_genusUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_language_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language_genus
     form_class = Polity_language_genusForm
     template_name = "general/polity_language_genus/polity_language_genus_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language Genus"
 
         return context
 
 class Polity_language_genusDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_language_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_language_genus
     success_url = reverse_lazy('polity_language_genuss')
     template_name = "core/delete_general.html"
@@ -1648,14 +3095,34 @@ class Polity_language_genusDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_language_genusListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_language_genus instances.
+    """
     model = Polity_language_genus
     template_name = "general/polity_language_genus/polity_language_genus_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_language_genuss')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language Genus"
         context["var_main_desc"] = "The language genus of a polity."
@@ -1669,13 +3136,28 @@ class Polity_language_genusListView(generic.ListView):
 
 
 class Polity_language_genusListViewAll(generic.ListView):
+    """
+    View for listing all Polity_language_genus instances.
+    """
     model = Polity_language_genus
     template_name = "general/polity_language_genus/polity_language_genus_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_language_genuss_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_language_genus instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_language_genus instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1683,6 +3165,17 @@ class Polity_language_genusListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Language Genus"
         context["var_main_desc"] = "The language genus of a polity."
@@ -1696,12 +3189,27 @@ class Polity_language_genusListViewAll(generic.ListView):
         return context
         
 class Polity_language_genusDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_language_genus instance.
+    """
     model = Polity_language_genus
     template_name = "general/polity_language_genus/polity_language_genus_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_language_genus_download(request):
+    """
+    Download a CSV file of all Polity_language_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_language_genus.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1720,6 +3228,18 @@ def polity_language_genus_download(request):
 
 @permission_required('core.view_capital')
 def polity_language_genus_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_language_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_language_genuss.csv"'
     
@@ -1741,19 +3261,52 @@ def polity_language_genus_meta_download(request):
         
 
 class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_genus
     form_class = Polity_religion_genusForm
     template_name = "general/polity_religion_genus/polity_religion_genus_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion_genus field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion_genus'].choices = sorted(form.fields['religion_genus'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_genus-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1767,23 +3320,55 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
 
 class Polity_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_genus
     form_class = Polity_religion_genusForm
     template_name = "general/polity_religion_genus/polity_religion_genus_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion_genus field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion_genus'].choices = sorted(form.fields['religion_genus'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Genus"
 
         return context
 
 class Polity_religion_genusDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_genus
     success_url = reverse_lazy('polity_religion_genuss')
     template_name = "core/delete_general.html"
@@ -1791,14 +3376,34 @@ class Polity_religion_genusDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_religion_genusListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_religion_genus instances.
+    """
     model = Polity_religion_genus
     template_name = "general/polity_religion_genus/polity_religion_genus_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_genuss')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Genus"
         context["var_main_desc"] = "The religion genus of a polity."
@@ -1812,13 +3417,28 @@ class Polity_religion_genusListView(generic.ListView):
 
 
 class Polity_religion_genusListViewAll(generic.ListView):
+    """
+    View for listing all Polity_religion_genus instances.
+    """
     model = Polity_religion_genus
     template_name = "general/polity_religion_genus/polity_religion_genus_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_genuss_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_religion_genus instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_religion_genus instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1826,6 +3446,17 @@ class Polity_religion_genusListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Genus"
         context["var_main_desc"] = "The religion genus of a polity."
@@ -1839,12 +3470,27 @@ class Polity_religion_genusListViewAll(generic.ListView):
         return context
         
 class Polity_religion_genusDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_religion_genus instance.
+    """
     model = Polity_religion_genus
     template_name = "general/polity_religion_genus/polity_religion_genus_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_religion_genus_download(request):
+    """
+    Download a CSV file of all Polity_religion_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_religion_genus.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -1863,6 +3509,18 @@ def polity_religion_genus_download(request):
 
 @permission_required('core.view_capital')
 def polity_religion_genus_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_religion_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_religion_genuss.csv"'
     
@@ -1884,17 +3542,41 @@ def polity_religion_genus_meta_download(request):
         
 
 class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_family
     form_class = Polity_religion_familyForm
     template_name = "general/polity_religion_family/polity_religion_family_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion_family field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion_family'].choices = sorted(form.fields['religion_family'].choices, key=lambda x: x[1].lower())
         return form
     
     def get_initial(self):
+        """
+        Get the initial value of the polity field from the query string.
+
+        Note:
+            TODO This should already be handled by the PolityIdMixin.
+
+        Returns:
+            dict: The initial value of the polity field.
+        """
         initial = super(Polity_religion_familyCreate, self).get_initial()
         polity_id_x = self.request.GET.get('polity_id_x')
         initial['polity'] = polity_id_x
@@ -1902,8 +3584,26 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
         return initial
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_family-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -1917,23 +3617,55 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
 
 
 class Polity_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_family
     form_class = Polity_religion_familyForm
     template_name = "general/polity_religion_family/polity_religion_family_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion_family field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion_family'].choices = sorted(form.fields['religion_family'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Family"
 
         return context
 
 class Polity_religion_familyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion_family
     success_url = reverse_lazy('polity_religion_familys')
     template_name = "core/delete_general.html"
@@ -1941,14 +3673,34 @@ class Polity_religion_familyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_religion_familyListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_religion_family instances.
+    """
     model = Polity_religion_family
     template_name = "general/polity_religion_family/polity_religion_family_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_familys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Family"
         context["var_main_desc"] = "The religion family of a polity."
@@ -1962,13 +3714,28 @@ class Polity_religion_familyListView(generic.ListView):
 
 
 class Polity_religion_familyListViewAll(generic.ListView):
+    """
+    View for listing all Polity_religion_family instances.
+    """
     model = Polity_religion_family
     template_name = "general/polity_religion_family/polity_religion_family_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion_familys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_religion_family instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_religion_family instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -1976,6 +3743,17 @@ class Polity_religion_familyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion Family"
         context["var_main_desc"] = "The religion family of a polity."
@@ -1989,12 +3767,27 @@ class Polity_religion_familyListViewAll(generic.ListView):
         return context
         
 class Polity_religion_familyDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_religion_family instance.
+    """
     model = Polity_religion_family
     template_name = "general/polity_religion_family/polity_religion_family_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_religion_family_download(request):
+    """
+    Download a CSV file of all Polity_religion_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_religion_family.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2013,6 +3806,18 @@ def polity_religion_family_download(request):
 
 @permission_required('core.view_capital')
 def polity_religion_family_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_religion_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_religion_familys.csv"'
     
@@ -2034,19 +3839,52 @@ def polity_religion_family_meta_download(request):
         
 
 class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion
     form_class = Polity_religionForm
     template_name = "general/polity_religion/polity_religion_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion'].choices = sorted(form.fields['religion'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religion-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2060,23 +3898,55 @@ class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Polity_religionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion
     form_class = Polity_religionForm
     template_name = "general/polity_religion/polity_religion_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the religion field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['religion'].choices = sorted(form.fields['religion'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion"
 
         return context
 
 class Polity_religionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religion
     success_url = reverse_lazy('polity_religions')
     template_name = "core/delete_general.html"
@@ -2084,14 +3954,34 @@ class Polity_religionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_religionListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_religion instances.
+    """
     model = Polity_religion
     template_name = "general/polity_religion/polity_religion_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion"
         context["var_main_desc"] = "The religion of a polity."
@@ -2105,13 +3995,28 @@ class Polity_religionListView(generic.ListView):
 
 
 class Polity_religionListViewAll(generic.ListView):
+    """
+    View for listing all Polity_religion instances.
+    """
     model = Polity_religion
     template_name = "general/polity_religion/polity_religion_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religions_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_religion instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_religion instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2119,6 +4024,17 @@ class Polity_religionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religion"
         context["var_main_desc"] = "The religion of a polity."
@@ -2132,12 +4048,27 @@ class Polity_religionListViewAll(generic.ListView):
         return context
         
 class Polity_religionDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_religion instance.
+    """
     model = Polity_religion
     template_name = "general/polity_religion/polity_religion_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_religion_download(request):
+    """
+    Download a CSV file of all Polity_religion instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_religion.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2156,6 +4087,18 @@ def polity_religion_download(request):
 
 @permission_required('core.view_capital')
 def polity_religion_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_religion instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_religions.csv"'
     
@@ -2177,19 +4120,52 @@ def polity_religion_meta_download(request):
         
 
 class Polity_relationship_to_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_relationship_to_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_relationship_to_preceding_entity
     form_class = Polity_relationship_to_preceding_entityForm
     template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the relationship_to_preceding_entity field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['relationship_to_preceding_entity'].choices = sorted(form.fields['relationship_to_preceding_entity'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_relationship_to_preceding_entity-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2203,23 +4179,55 @@ class Polity_relationship_to_preceding_entityCreate(PermissionRequiredMixin, Pol
 
 
 class Polity_relationship_to_preceding_entityUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_relationship_to_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_relationship_to_preceding_entity
     form_class = Polity_relationship_to_preceding_entityForm
     template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the relationship_to_preceding_entity field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['relationship_to_preceding_entity'].choices = sorted(form.fields['relationship_to_preceding_entity'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Relationship to Preceding Entity"
 
         return context
 
 class Polity_relationship_to_preceding_entityDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_relationship_to_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_relationship_to_preceding_entity
     success_url = reverse_lazy('polity_relationship_to_preceding_entitys')
     template_name = "core/delete_general.html"
@@ -2227,14 +4235,34 @@ class Polity_relationship_to_preceding_entityDelete(PermissionRequiredMixin, Del
 
 
 class Polity_relationship_to_preceding_entityListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_relationship_to_preceding_entity instances.
+    """
     model = Polity_relationship_to_preceding_entity
     template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_relationship_to_preceding_entitys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Relationship to Preceding Entity"
         context["var_main_desc"] = "The polity relationship to preceding (quasi)polity"
@@ -2248,13 +4276,28 @@ class Polity_relationship_to_preceding_entityListView(generic.ListView):
 
 
 class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
+    """
+    View for listing all Polity_relationship_to_preceding_entity instances.
+    """
     model = Polity_relationship_to_preceding_entity
     template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_relationship_to_preceding_entitys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_relationship_to_preceding_entity instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_relationship_to_preceding_entity instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2262,6 +4305,17 @@ class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Relationship to Preceding Entity"
         context["var_main_desc"] = "The polity relationship to preceding (quasi)polity"
@@ -2275,12 +4329,27 @@ class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
         return context
         
 class Polity_relationship_to_preceding_entityDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_relationship_to_preceding_entity instance.
+    """
     model = Polity_relationship_to_preceding_entity
     template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_relationship_to_preceding_entity_download(request):
+    """
+    Download a CSV file of all Polity_relationship_to_preceding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_relationship_to_preceding_entity.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2299,6 +4368,18 @@ def polity_relationship_to_preceding_entity_download(request):
 
 @permission_required('core.view_capital')
 def polity_relationship_to_preceding_entity_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_relationship_to_preceding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_relationship_to_preceding_entitys.csv"'
     
@@ -2320,14 +4401,38 @@ def polity_relationship_to_preceding_entity_meta_download(request):
         
 
 class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_preceding_entity
     form_class = Polity_preceding_entityForm
     template_name = "general/polity_preceding_entity/polity_preceding_entity_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_preceding_entity-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
 
         # Extract query parameters
@@ -2371,14 +4476,30 @@ class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
 
 class Polity_preceding_entityUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_preceding_entity
     form_class = Polity_preceding_entityForm
     template_name = "general/polity_preceding_entity/polity_preceding_entity_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        """
+        Get the context data of the view.
 
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
 
         if self.object.polity and self.object.other_polity:
             all_rels = Polity_preceding_entity.objects.filter(
@@ -2409,6 +4530,12 @@ class Polity_preceding_entityUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Polity_preceding_entityDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_preceding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_preceding_entity
     success_url = reverse_lazy('polity_preceding_entitys')
     template_name = "core/delete_general.html"
@@ -2416,14 +4543,34 @@ class Polity_preceding_entityDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_preceding_entityListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_preceding_entity instances.
+    """
     model = Polity_preceding_entity
     template_name = "general/polity_preceding_entity/polity_preceding_entity_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_preceding_entitys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Preceding Entity"
         context["var_main_desc"] = "The preceding entity of a polity."
@@ -2437,13 +4584,28 @@ class Polity_preceding_entityListView(generic.ListView):
 
 
 class Polity_preceding_entityListViewAll(generic.ListView):
+    """
+    View for listing all Polity_preceding_entity instances.
+    """
     model = Polity_preceding_entity
     template_name = "general/polity_preceding_entity/polity_preceding_entity_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_preceding_entitys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_preceding_entity instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_preceding_entity instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2451,6 +4613,17 @@ class Polity_preceding_entityListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Preceding Entity"
         context["var_main_desc"] = "The preceding entity of a polity."
@@ -2464,12 +4637,27 @@ class Polity_preceding_entityListViewAll(generic.ListView):
         return context
         
 class Polity_preceding_entityDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_preceding_entity instance.
+    """
     model = Polity_preceding_entity
     template_name = "general/polity_preceding_entity/polity_preceding_entity_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_preceding_entity_download(request):
+    """
+    Download a CSV file of all Polity_preceding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_preceding_entity.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2488,6 +4676,18 @@ def polity_preceding_entity_download(request):
 
 @permission_required('core.view_capital')
 def polity_preceding_entity_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_preceding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_preceding_entitys.csv"'
     
@@ -2509,14 +4709,38 @@ def polity_preceding_entity_meta_download(request):
         
 
 class Polity_succeeding_entityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_succeeding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_succeeding_entity
     form_class = Polity_succeeding_entityForm
     template_name = "general/polity_succeeding_entity/polity_succeeding_entity_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_succeeding_entity-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2530,18 +4754,41 @@ class Polity_succeeding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Cre
 
 
 class Polity_succeeding_entityUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_succeeding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_succeeding_entity
     form_class = Polity_succeeding_entityForm
     template_name = "general/polity_succeeding_entity/polity_succeeding_entity_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Succeeding Entity"
 
         return context
 
 class Polity_succeeding_entityDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_succeeding_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_succeeding_entity
     success_url = reverse_lazy('polity_succeeding_entitys')
     template_name = "core/delete_general.html"
@@ -2549,14 +4796,34 @@ class Polity_succeeding_entityDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_succeeding_entityListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_succeeding_entity instances.
+    """
     model = Polity_succeeding_entity
     template_name = "general/polity_succeeding_entity/polity_succeeding_entity_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_succeeding_entitys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Succeeding Entity"
         context["var_main_desc"] = "The succeeding entity of a polity."
@@ -2570,13 +4837,28 @@ class Polity_succeeding_entityListView(generic.ListView):
 
 
 class Polity_succeeding_entityListViewAll(generic.ListView):
+    """
+    View for listing all Polity_succeeding_entity instances.
+    """
     model = Polity_succeeding_entity
     template_name = "general/polity_succeeding_entity/polity_succeeding_entity_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_succeeding_entitys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_succeeding_entity instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_succeeding_entity instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2584,6 +4866,17 @@ class Polity_succeeding_entityListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Succeeding Entity"
         context["var_main_desc"] = "The succeeding entity of a polity."
@@ -2597,12 +4890,27 @@ class Polity_succeeding_entityListViewAll(generic.ListView):
         return context
         
 class Polity_succeeding_entityDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_succeeding_entity instance.
+    """
     model = Polity_succeeding_entity
     template_name = "general/polity_succeeding_entity/polity_succeeding_entity_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_succeeding_entity_download(request):
+    """
+    Download a CSV file of all Polity_succeeding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_succeeding_entity.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2621,6 +4929,18 @@ def polity_succeeding_entity_download(request):
 
 @permission_required('core.view_capital')
 def polity_succeeding_entity_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_succeeding_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_succeeding_entitys.csv"'
     
@@ -2642,14 +4962,38 @@ def polity_succeeding_entity_meta_download(request):
         
 
 class Polity_supracultural_entityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_supracultural_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_supracultural_entity
     form_class = Polity_supracultural_entityForm
     template_name = "general/polity_supracultural_entity/polity_supracultural_entity_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_supracultural_entity-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2663,18 +5007,41 @@ class Polity_supracultural_entityCreate(PermissionRequiredMixin, PolityIdMixin, 
 
 
 class Polity_supracultural_entityUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_supracultural_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_supracultural_entity
     form_class = Polity_supracultural_entityForm
     template_name = "general/polity_supracultural_entity/polity_supracultural_entity_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Supracultural Entity"
 
         return context
 
 class Polity_supracultural_entityDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_supracultural_entity.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_supracultural_entity
     success_url = reverse_lazy('polity_supracultural_entitys')
     template_name = "core/delete_general.html"
@@ -2682,14 +5049,34 @@ class Polity_supracultural_entityDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_supracultural_entityListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_supracultural_entity instances.
+    """
     model = Polity_supracultural_entity
     template_name = "general/polity_supracultural_entity/polity_supracultural_entity_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_supracultural_entitys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Supracultural Entity"
         context["var_main_desc"] = "The supracultural entity of a polity."
@@ -2703,13 +5090,28 @@ class Polity_supracultural_entityListView(generic.ListView):
 
 
 class Polity_supracultural_entityListViewAll(generic.ListView):
+    """
+    View for listing all Polity_supracultural_entity instances.
+    """
     model = Polity_supracultural_entity
     template_name = "general/polity_supracultural_entity/polity_supracultural_entity_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_supracultural_entitys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_supracultural_entity instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_supracultural_entity instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2717,6 +5119,17 @@ class Polity_supracultural_entityListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Supracultural Entity"
         context["var_main_desc"] = "The supracultural entity of a polity."
@@ -2730,12 +5143,27 @@ class Polity_supracultural_entityListViewAll(generic.ListView):
         return context
         
 class Polity_supracultural_entityDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_supracultural_entity instance.
+    """
     model = Polity_supracultural_entity
     template_name = "general/polity_supracultural_entity/polity_supracultural_entity_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_supracultural_entity_download(request):
+    """
+    Download a CSV file of all Polity_supracultural_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_supracultural_entity.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2754,6 +5182,18 @@ def polity_supracultural_entity_download(request):
 
 @permission_required('core.view_capital')
 def polity_supracultural_entity_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_supracultural_entity instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_supracultural_entitys.csv"'
     
@@ -2775,14 +5215,38 @@ def polity_supracultural_entity_meta_download(request):
         
 
 class Polity_scale_of_supracultural_interactionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_scale_of_supracultural_interaction.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_scale_of_supracultural_interaction
     form_class = Polity_scale_of_supracultural_interactionForm
     template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_scale_of_supracultural_interaction-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2796,18 +5260,41 @@ class Polity_scale_of_supracultural_interactionCreate(PermissionRequiredMixin, P
 
 
 class Polity_scale_of_supracultural_interactionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_scale_of_supracultural_interaction.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_scale_of_supracultural_interaction
     form_class = Polity_scale_of_supracultural_interactionForm
     template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Scale of Supracultural Interaction"
 
         return context
 
 class Polity_scale_of_supracultural_interactionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_scale_of_supracultural_interaction.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_scale_of_supracultural_interaction
     success_url = reverse_lazy('polity_scale_of_supracultural_interactions')
     template_name = "core/delete_general.html"
@@ -2815,14 +5302,34 @@ class Polity_scale_of_supracultural_interactionDelete(PermissionRequiredMixin, D
 
 
 class Polity_scale_of_supracultural_interactionListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_scale_of_supracultural_interaction instances.
+    """
     model = Polity_scale_of_supracultural_interaction
     template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_scale_of_supracultural_interactions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Scale of Supracultural Interaction"
         context["var_main_desc"] = "The scale of Supra Cultural Interaction of a polity."
@@ -2836,13 +5343,28 @@ class Polity_scale_of_supracultural_interactionListView(generic.ListView):
 
 
 class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
+    """
+    View for listing all Polity_scale_of_supracultural_interaction instances.
+    """
     model = Polity_scale_of_supracultural_interaction
     template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_scale_of_supracultural_interactions_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_scale_of_supracultural_interaction instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_scale_of_supracultural_interaction instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2850,6 +5372,17 @@ class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Scale of Supracultural Interaction"
         context["var_main_desc"] = "The scale of Supra Cultural Interaction of a polity."
@@ -2863,12 +5396,27 @@ class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
         return context
         
 class Polity_scale_of_supracultural_interactionDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_scale_of_supracultural_interaction instance.
+    """
     model = Polity_scale_of_supracultural_interaction
     template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_scale_of_supracultural_interaction_download(request):
+    """
+    Download a CSV file of all Polity_scale_of_supracultural_interaction instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_scale_of_supracultural_interaction.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2887,6 +5435,18 @@ def polity_scale_of_supracultural_interaction_download(request):
 
 @permission_required('core.view_capital')
 def polity_scale_of_supracultural_interaction_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_scale_of_supracultural_interaction instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_scale_of_supracultural_interactions.csv"'
     
@@ -2908,19 +5468,52 @@ def polity_scale_of_supracultural_interaction_meta_download(request):
         
 
 class Polity_alternate_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_alternate_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_genus
     form_class = Polity_alternate_religion_genusForm
     template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion_genus' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion_genus'].choices = sorted(form.fields['alternate_religion_genus'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_genus-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -2934,23 +5527,55 @@ class Polity_alternate_religion_genusCreate(PermissionRequiredMixin, PolityIdMix
 
 
 class Polity_alternate_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_alternate_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_genus
     form_class = Polity_alternate_religion_genusForm
     template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion_genus' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion_genus'].choices = sorted(form.fields['alternate_religion_genus'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Genus"
 
         return context
 
 class Polity_alternate_religion_genusDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_alternate_religion_genus.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_genus
     success_url = reverse_lazy('polity_alternate_religion_genuss')
     template_name = "core/delete_general.html"
@@ -2958,14 +5583,34 @@ class Polity_alternate_religion_genusDelete(PermissionRequiredMixin, DeleteView)
 
 
 class Polity_alternate_religion_genusListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_alternate_religion_genus instances.
+    """
     model = Polity_alternate_religion_genus
     template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_genuss')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Genus"
         context["var_main_desc"] = "The alternate religion genus of a polity."
@@ -2979,13 +5624,28 @@ class Polity_alternate_religion_genusListView(generic.ListView):
 
 
 class Polity_alternate_religion_genusListViewAll(generic.ListView):
+    """
+    View for listing all Polity_alternate_religion_genus instances.
+    """
     model = Polity_alternate_religion_genus
     template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_genuss_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_alternate_religion_genus instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_alternate_religion_genus instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -2993,6 +5653,17 @@ class Polity_alternate_religion_genusListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Genus"
         context["var_main_desc"] = "The alternate religion genus of a polity."
@@ -3006,12 +5677,27 @@ class Polity_alternate_religion_genusListViewAll(generic.ListView):
         return context
         
 class Polity_alternate_religion_genusDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_alternate_religion_genus instance.
+    """
     model = Polity_alternate_religion_genus
     template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_genus_download(request):
+    """
+    Download a CSV file of all Polity_alternate_religion_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_alternate_religion_genus.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3030,6 +5716,18 @@ def polity_alternate_religion_genus_download(request):
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_genus_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_alternate_religion_genus instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_alternate_religion_genuss.csv"'
     
@@ -3051,19 +5749,52 @@ def polity_alternate_religion_genus_meta_download(request):
         
 
 class Polity_alternate_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_alternate_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_family
     form_class = Polity_alternate_religion_familyForm
     template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion_family' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion_family'].choices = sorted(form.fields['alternate_religion_family'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_family-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3077,23 +5808,55 @@ class Polity_alternate_religion_familyCreate(PermissionRequiredMixin, PolityIdMi
 
 
 class Polity_alternate_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_alternate_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_family
     form_class = Polity_alternate_religion_familyForm
     template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion_family' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion_family'].choices = sorted(form.fields['alternate_religion_family'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Family"
 
         return context
 
 class Polity_alternate_religion_familyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_alternate_religion_family.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion_family
     success_url = reverse_lazy('polity_alternate_religion_familys')
     template_name = "core/delete_general.html"
@@ -3101,14 +5864,34 @@ class Polity_alternate_religion_familyDelete(PermissionRequiredMixin, DeleteView
 
 
 class Polity_alternate_religion_familyListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_alternate_religion_family instances.
+    """
     model = Polity_alternate_religion_family
     template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_familys')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Family"
         context["var_main_desc"] = "The alternate religion family of a polity."
@@ -3122,13 +5905,28 @@ class Polity_alternate_religion_familyListView(generic.ListView):
 
 
 class Polity_alternate_religion_familyListViewAll(generic.ListView):
+    """
+    View for listing all Polity_alternate_religion_family instances.
+    """
     model = Polity_alternate_religion_family
     template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion_familys_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_alternate_religion_family instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_alternate_religion_family instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -3136,6 +5934,17 @@ class Polity_alternate_religion_familyListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion Family"
         context["var_main_desc"] = "The alternate religion family of a polity."
@@ -3149,12 +5958,27 @@ class Polity_alternate_religion_familyListViewAll(generic.ListView):
         return context
         
 class Polity_alternate_religion_familyDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_alternate_religion_family instance.
+    """
     model = Polity_alternate_religion_family
     template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_family_download(request):
+    """
+    Download a CSV file of all Polity_alternate_religion_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_alternate_religion_family.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3173,6 +5997,18 @@ def polity_alternate_religion_family_download(request):
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_family_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_alternate_religion_family instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_alternate_religion_familys.csv"'
     
@@ -3194,19 +6030,52 @@ def polity_alternate_religion_family_meta_download(request):
         
 
 class Polity_alternate_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_alternate_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion
     form_class = Polity_alternate_religionForm
     template_name = "general/polity_alternate_religion/polity_alternate_religion_form.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion'].choices = sorted(form.fields['alternate_religion'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religion-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3220,23 +6089,55 @@ class Polity_alternate_religionCreate(PermissionRequiredMixin, PolityIdMixin, Cr
 
 
 class Polity_alternate_religionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_alternate_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion
     form_class = Polity_alternate_religionForm
     template_name = "general/polity_alternate_religion/polity_alternate_religion_update.html"
     permission_required = 'core.add_capital'
 
     def get_form(self, form_class=None):
+        """
+        Get the form of the view. Sort the choices of the 'alternate_religion' field.
+
+        Args:
+            form_class: The form class. Defaults to None.
+
+        Returns:
+            Form: The form of the view.
+        """
         form = super().get_form(form_class)
         form.fields['alternate_religion'].choices = sorted(form.fields['alternate_religion'].choices, key=lambda x: x[1].lower())
         return form
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion"
 
         return context
 
 class Polity_alternate_religionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_alternate_religion.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_alternate_religion
     success_url = reverse_lazy('polity_alternate_religions')
     template_name = "core/delete_general.html"
@@ -3244,14 +6145,34 @@ class Polity_alternate_religionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_alternate_religionListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_alternate_religion instances.
+    """
     model = Polity_alternate_religion
     template_name = "general/polity_alternate_religion/polity_alternate_religion_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion"
         context["var_main_desc"] = "The alternate religion  of a polity."
@@ -3265,13 +6186,28 @@ class Polity_alternate_religionListView(generic.ListView):
 
 
 class Polity_alternate_religionListViewAll(generic.ListView):
+    """
+    View for listing all Polity_alternate_religion instances.
+    """
     model = Polity_alternate_religion
     template_name = "general/polity_alternate_religion/polity_alternate_religion_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_alternate_religions_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_alternate_religion instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_alternate_religion instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -3279,6 +6215,17 @@ class Polity_alternate_religionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Alternate Religion"
         context["var_main_desc"] = "The alternate religion  of a polity."
@@ -3292,12 +6239,27 @@ class Polity_alternate_religionListViewAll(generic.ListView):
         return context
         
 class Polity_alternate_religionDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_alternate_religion instance.
+    """
     model = Polity_alternate_religion
     template_name = "general/polity_alternate_religion/polity_alternate_religion_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_download(request):
+    """
+    Download a CSV file of all Polity_alternate_religion instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_alternate_religion.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3316,6 +6278,18 @@ def polity_alternate_religion_download(request):
 
 @permission_required('core.view_capital')
 def polity_alternate_religion_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_alternate_religion instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_alternate_religions.csv"'
     
@@ -3337,14 +6311,38 @@ def polity_alternate_religion_meta_download(request):
         
 
 class Polity_expertCreate(PermissionRequiredMixin, CreateView):
+    """
+    View for creating a new Polity_expert.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_expert
     form_class = Polity_expertForm
     template_name = "general/polity_expert/polity_expert_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_expert-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3358,18 +6356,41 @@ class Polity_expertCreate(PermissionRequiredMixin, CreateView):
 
 
 class Polity_expertUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_expert.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_expert
     form_class = Polity_expertForm
     template_name = "general/polity_expert/polity_expert_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Expert"
 
         return context
 
 class Polity_expertDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_expert.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_expert
     success_url = reverse_lazy('polity_experts')
     template_name = "core/delete_general.html"
@@ -3377,14 +6398,34 @@ class Polity_expertDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_expertListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_expert instances.
+    """
     model = Polity_expert
     template_name = "general/polity_expert/polity_expert_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_experts')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Expert"
         context["var_main_desc"] = "The expert of a polity."
@@ -3398,13 +6439,28 @@ class Polity_expertListView(generic.ListView):
 
 
 class Polity_expertListViewAll(generic.ListView):
+    """
+    View for listing all Polity_expert instances.
+    """
     model = Polity_expert
     template_name = "general/polity_expert/polity_expert_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_experts_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_expert instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_expert instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -3412,6 +6468,17 @@ class Polity_expertListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Expert"
         context["var_main_desc"] = "The expert of a polity."
@@ -3425,12 +6492,27 @@ class Polity_expertListViewAll(generic.ListView):
         return context
         
 class Polity_expertDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_expert instance.
+    """
     model = Polity_expert
     template_name = "general/polity_expert/polity_expert_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_expert_download(request):
+    """
+    Download a CSV file of all Polity_expert instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_expert.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3449,6 +6531,18 @@ def polity_expert_download(request):
 
 @permission_required('core.view_capital')
 def polity_expert_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_expert instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_experts.csv"'
     
@@ -3470,14 +6564,38 @@ def polity_expert_meta_download(request):
         
 
 class Polity_editorCreate(PermissionRequiredMixin, CreateView):
+    """
+    View for creating a new Polity_editor.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_editor
     form_class = Polity_editorForm
     template_name = "general/polity_editor/polity_editor_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_editor-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3491,18 +6609,41 @@ class Polity_editorCreate(PermissionRequiredMixin, CreateView):
 
 
 class Polity_editorUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_editor.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_editor
     form_class = Polity_editorForm
     template_name = "general/polity_editor/polity_editor_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Editor"
 
         return context
 
 class Polity_editorDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_editor.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_editor
     success_url = reverse_lazy('polity_editors')
     template_name = "core/delete_general.html"
@@ -3510,14 +6651,34 @@ class Polity_editorDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_editorListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_editor instances.
+    """
     model = Polity_editor
     template_name = "general/polity_editor/polity_editor_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_editors')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Editor"
         context["var_main_desc"] = "The editor of a polity."
@@ -3531,13 +6692,28 @@ class Polity_editorListView(generic.ListView):
 
 
 class Polity_editorListViewAll(generic.ListView):
+    """
+    View for listing all Polity_editor instances.
+    """
     model = Polity_editor
     template_name = "general/polity_editor/polity_editor_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_editors_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_editor instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_editor instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -3545,6 +6721,17 @@ class Polity_editorListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Editor"
         context["var_main_desc"] = "The editor of a polity."
@@ -3558,12 +6745,27 @@ class Polity_editorListViewAll(generic.ListView):
         return context
         
 class Polity_editorDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_editor instance.
+    """
     model = Polity_editor
     template_name = "general/polity_editor/polity_editor_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_editor_download(request):
+    """
+    Download a CSV file of all Polity_editor instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_editor.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3582,6 +6784,18 @@ def polity_editor_download(request):
 
 @permission_required('core.view_capital')
 def polity_editor_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_editor instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_editors.csv"'
     
@@ -3603,14 +6817,38 @@ def polity_editor_meta_download(request):
         
 
 class Polity_religious_traditionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_religious_tradition.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religious_tradition
     form_class = Polity_religious_traditionForm
     template_name = "general/polity_religious_tradition/polity_religious_tradition_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religious_tradition-create')
+    
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         # get the explanattion:
         context["mysection"] = "General Variables"
@@ -3624,18 +6862,41 @@ class Polity_religious_traditionCreate(PermissionRequiredMixin, PolityIdMixin, C
 
 
 class Polity_religious_traditionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_religious_tradition.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religious_tradition
     form_class = Polity_religious_traditionForm
     template_name = "general/polity_religious_tradition/polity_religious_tradition_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religious Tradition"
 
         return context
 
 class Polity_religious_traditionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_religious_tradition.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polity_religious_tradition
     success_url = reverse_lazy('polity_religious_traditions')
     template_name = "core/delete_general.html"
@@ -3643,14 +6904,34 @@ class Polity_religious_traditionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Polity_religious_traditionListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_religious_tradition instances.
+    """
     model = Polity_religious_tradition
     template_name = "general/polity_religious_tradition/polity_religious_tradition_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religious_traditions')
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religious Tradition"
         context["var_main_desc"] = "The details of religious traditions."
@@ -3664,13 +6945,28 @@ class Polity_religious_traditionListView(generic.ListView):
 
 
 class Polity_religious_traditionListViewAll(generic.ListView):
+    """
+    View for listing all Polity_religious_tradition instances.
+    """
     model = Polity_religious_tradition
     template_name = "general/polity_religious_tradition/polity_religious_tradition_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polity_religious_traditions_all')
 
     def get_queryset(self):
+        """
+        Get the queryset of Polity_religious_tradition instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_religious_tradition instances.
+        """
         order = self.request.GET.get('orderby', 'year_from')
         order2 = self.request.GET.get('orderby2', 'year_to')
         #orders = [order, order2]
@@ -3678,6 +6974,17 @@ class Polity_religious_traditionListViewAll(generic.ListView):
         return new_context
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Religious Tradition"
         context["var_main_desc"] = "The details of religious traditions."
@@ -3691,12 +6998,27 @@ class Polity_religious_traditionListViewAll(generic.ListView):
         return context
         
 class Polity_religious_traditionDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_religious_tradition instance.
+    """
     model = Polity_religious_tradition
     template_name = "general/polity_religious_tradition/polity_religious_tradition_detail.html"
 
 
 @permission_required('core.view_capital')
 def polity_religious_tradition_download(request):
+    """
+    Download a CSV file of all Polity_religious_tradition instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Polity_religious_tradition.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -3715,6 +7037,18 @@ def polity_religious_tradition_download(request):
 
 @permission_required('core.view_capital')
 def polity_religious_tradition_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_religious_tradition instances.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polity_religious_traditions.csv"'
     
@@ -3886,6 +7220,18 @@ def generalvars(request):
 
 @permission_required('core.view_capital')
 def download_csv_all_general(request):
+    """
+    Download a CSV file of all general variables. This includes all models in the "general" app.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     # Fetch all models in the "general" app
     app_name = 'general' 
     app_models = apps.get_app_config(app_name).get_models()
@@ -3936,6 +7282,12 @@ def download_csv_all_general(request):
 
 ######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 def send_test_email():
+    """
+    Send a test email.
+
+    Returns:
+        None
+    """
     send_mail(
         'Test Email',
         'This is a test email from Django.',

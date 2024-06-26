@@ -15,7 +15,7 @@ from .serializers import UserSerializer, GroupSerializer, PolitySerializer, Refe
 from .models import Album, Track
 
 #from .serializers import PolitySerializer
-# Create your views here.
+
 
 
 class UserViewSet(viewsets.ModelViewSet):

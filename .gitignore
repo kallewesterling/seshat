@@ -220,3 +220,7 @@ pulumi/logs
 pulumi/Pulumi.seshat.yaml
 scripts
 .DS_Store
+*.ipynb
+
+docs/source/api/seshat/
+docs/source/api/custom_filters/

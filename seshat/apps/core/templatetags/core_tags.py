@@ -10,9 +10,17 @@ register = template.Library()
 @register.inclusion_tag('core/polity_map.html')
 def polity_map(pk, test=False):
     """
-        This function is used by the polity_map template and gets the specific polity shape data and capital information.
-        Sets include_polity_map to False if there is no shape data.
-        include_polity_map is used to determine whether to display the map on polity_detail.html.
+    This function is used by the polity_map template and gets the specific
+    polity shape data and capital information. Sets include_polity_map to False
+    if there is no shape data. include_polity_map is used to determine whether
+    to display the map on polity_detail.html.
+
+    Args:
+        pk (int): The primary key of the polity.
+
+    Returns:
+        dict: The content dictionary containing the polity shape data and
+            capital information.
     """
     page_id = str(pk)
     polity = Polity.objects.get(id=page_id)
@@ -49,7 +57,16 @@ def polity_map(pk, test=False):
 
 def get_polity_capitals(pk):
     """
-        Get all the capitals for a polity and coordinates.
+    Get all the capitals for a polity and coordinates.
+
+    Args:
+        pk (int): The primary key of the polity.
+
+    Returns:
+        list: A list of dictionaries containing the capital name, latitude,
+            longitude, start year (or 0 or None if they aren't present in the
+            database), and end year (or 0 or None if they aren't present in
+            the database).
     """
     capitals_info = []
     polity_capitals = Polity_capital.objects.filter(polity_id=pk)

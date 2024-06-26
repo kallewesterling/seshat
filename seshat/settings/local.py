@@ -1,3 +1,7 @@
+"""
+Settings for local development of the Seshat project.
+"""
+
 # flake8: noqa
 
 from .base import *
@@ -21,6 +25,11 @@ if os.getenv('GITHUB_ACTIONS') == 'true':
             'PASSWORD': 'postgres'
         }
     }
+    """
+    Database settings for GitHub Actions.
+
+    :noindex:
+    """
 else:
 
     # Initialise environment variables
@@ -37,6 +46,11 @@ else:
             'PASSWORD': env('PASSWORD')
         }
     }
+    """
+    Database settings for local development.
+
+    :noindex:
+    """
 
 django_settings_module = os.environ.get('DJANGO_SETTINGS_MODULE')
 
@@ -54,6 +68,12 @@ my_current_server = "127.0.0.1:8000"
 
 ALLOWED_HOSTS = ['127.0.0.1',
                  'localhost']
+"""Set ALLOWED_HOSTS to allow the server to run without a domain name for local testing."""
 
 if 'test' in sys.argv:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    """
+    Specifies static files storage for testing environments.
+
+    :noindex:
+    """
