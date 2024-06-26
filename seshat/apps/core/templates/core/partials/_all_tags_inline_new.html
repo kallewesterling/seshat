@@ -1,0 +1,40 @@
+<td>
+
+<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="References: {{ object.display_citations }}">
+    {% if object.tag == "DSP" %}
+    <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ object.get_tag_display }}</span>
+    {% elif  object.tag == "SSP" %}
+    <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#d4507c;"> {{ object.get_tag_display }}</span>
+    {% elif  object.tag == "UNK" %}
+    <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ object.get_tag_display }}</span>
+    {% elif  object.tag == "IFR" %}
+    <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ object.get_tag_display }}</span>
+    {% else  %}
+        <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ object.get_tag_display }}</span>
+    {% endif %}
+    </a>
+
+    <!-- Disputred tag (Disputed/or Not etc.) -->
+{% if object.is_disputed %}
+
+<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Scholarly Disagreement (Disputed)">
+    <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
+</a>
+
+{% endif %}
+
+<!-- Disputred tag (Disputed/or Not etc.) -->
+{% if object.is_uncertain %}
+<a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+    <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+</a>
+{% endif %}
+
+<!-- Expert Checked Tag -->
+{% if object.expert_reviewed %}
+    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="By: {{ object.curators_list }}">
+        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+    </a>
+{% endif %}
+    
+</td>

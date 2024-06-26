@@ -2,8 +2,7 @@ Setting up Seshat in a local Ubuntu environment
 ===============================================
 
 .. hint::
-
-   Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on the Mac. Instructions for setting up an Ubuntu VM on a Mac can be found :doc:`here </getting-started/setup/local/macos-ubuntu.rst>`.
+    Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on the Mac. Instructions for setting up an Ubuntu VM on a Mac can be found `here <../getting-started/setup/local/macos-ubuntu.rst>`_.
 
 
 Prerequisites
@@ -269,7 +268,7 @@ Ensure that all Django database migrations have run:
 Step 11: Load the shape data
 ----------------------------
 
-If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions in [spatialdb.rst](../spatialdb.rst).
+If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions `here <../spatialdb.rst>`_.
 
 
 Step 12: Run Django

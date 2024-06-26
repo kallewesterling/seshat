@@ -3,20 +3,20 @@
 {% load humanize %}
 
 {% block addmore %}
-<a href="{% url create_new_url %}" class="btn btn-outline-success mx-3 my-4 float-end"> &#128934; &nbsp; Add Another Fact &nbsp; <i class="fa fa-plus"></i>
+<a href="{% url create_new_url %}" class="btn btn-outline-success my-2 float-end"> Add Another Fact
 </a>
-<a href="{% url see_all_url %}" class="btn btn-outline-primary ms-auto my-4 float-end">&#8983; See All Such Facts
+<a href="{% url see_all_url %}" class="btn btn-outline-primary ms-auto my-2 float-end">See All Such Facts
 </a>
 {% endblock addmore %}
 
 {% block myheadings %}
-<th class = "fw-bold" style="text-align: center;" scope="col">{{var_name_display}}
+<th class = "fw-bold" style="text-align: left;" scope="col">Coded Value
 </th>
 {% endblock myheadings %}
 
 {% block extracols %}
 
-<td style="text-align: center;">
+<td style="text-align: left;">
 <span class="h5 fw-bold {% if object.tag == 'DSP' %}
 text-danger
 {% elif object.tag == 'SSP' %}
