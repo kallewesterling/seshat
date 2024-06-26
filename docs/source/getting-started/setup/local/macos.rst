@@ -239,7 +239,7 @@ Ensure that all Django database migrations have run:
 Step 11: Load the shape data
 ----------------------------
 
-If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions in [spatialdb.rst](../spatialdb.rst).
+If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions `here <../spatialdb.rst>`_.
 
 
 Step 12: Run Django
