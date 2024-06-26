@@ -42,7 +42,7 @@ The following instructions assume you have the following software installed:
 
         If you need to install Homebrew, you can find instructions on how to do so on `Homebrew's website <https://brew.sh/>`_.
 
-    If you don't have Pulumi installed, you can install it using Homebrew.
+    If you don't have Pulumi installed, follow the `documentation <https://www.pulumi.com/docs/install/>`_ e.g. on a Mac:
 
     .. code-block:: bash
 
