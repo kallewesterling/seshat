@@ -1,7 +1,8 @@
 Setting up Seshat in a local Ubuntu environment
 ===============================================
 
-Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on the Mac. Instructions for setting up an Ubuntu VM on a Mac can be found :doc:`here </getting-started/setup/local/macos-ubuntu.rst>`.
+.. hint::
+    Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on the Mac. Instructions for setting up an Ubuntu VM on a Mac can be found `here <../getting-started/setup/local/macos-ubuntu.rst>`_.
 
 
 Prerequisites
