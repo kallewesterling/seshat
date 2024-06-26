@@ -85,17 +85,6 @@ If you're setting up from scratch, you can follow the below steps to set up the 
         $ source venv/bin/activate
         $ pip install -r requirements.txt
 
-.. important::
-
-   In the provided set up in the ``/pulumi`` directory, we have already set up the Pulumi stack for you.
-
-   In the included set up, we:
-
-   - Chose a sensible project name: `seshat-dev`
-   - Chose default stack name
-   - Chose ``UKSouth`` location
-   - Made custom edits to the config files for the Seshat app
-
 To activate the Pulumi environment and install the required packages, run the following commands:
 
 .. code-block:: bash
@@ -132,11 +121,16 @@ Step 3: Set up a Pulumi stack
 
 .. important::
 
-    In the provided set up in the ``/pulumi`` directory, we have already set up the Pulumi stack for you.
+   In the provided set up in the ``/pulumi`` directory, we have already set up the Pulumi stack for you.
 
-    In the included set up, we chose the stack name `seshat`.
+   In the included set up, we:
 
-To set up the Pulumi stack, run the following command:
+   - Chose a sensible project name: `seshat-dev`
+   - Chose the stack name `seshat`
+   - Chose ``UKSouth`` location
+   - Made custom edits to the config files for the Seshat app
+
+To set up this Pulumi stack, run the following command:
 
 .. code-block:: bash
 
