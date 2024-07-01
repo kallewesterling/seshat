@@ -344,12 +344,12 @@
 
                         seshat_id_page_id = data.seshat_id_page_id;
                         allCapitalsInfo = data.all_capitals_info;
-                        plotPolities();
                         document.getElementById('dateSlide').min = data.earliest_year;
                         document.getElementById('dateSlide').max = data.latest_year;
-                        allPolitiesLoaded = true;
                         tick_years = JSON.parse(data.tick_years);
                         setSliderTicks(tick_years);
+                        plotPolities();
+                        allPolitiesLoaded = true;
                         document.getElementById('loadingIndicator').style.display = 'none';
 
                         return fetch('/core/provinces_and_countries');
