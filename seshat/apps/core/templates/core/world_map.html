@@ -190,7 +190,10 @@
                 <fieldset>
                     <label for="enterYear">Enter year:</label>
                     <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;"
-                        onchange="storeYear()">
+                        onchange="storeYear()"><br><br>
+                    <label for="enterYear">Increment (years):</label>
+                    <input type="number" id="increment" name="increment" value="100" style="width: 75px;"
+                        onchange="yearIncrement()">
                     <button id="minusButton" type="button" onclick="adjustSliderDown()">-</button>
                     <button id="plusButton" type="button" onclick="adjustSliderUp()">+</button><br><br>
                     <label for="playButton">Run animation:</label>

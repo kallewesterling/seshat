@@ -7,14 +7,16 @@ function updateSliderOutput() {
 }
 
 function adjustSliderUp() {
-    slider.value = Number(slider.value) + 1;
+    increment = Number(document.getElementById('increment').value)
+    slider.value = Number(slider.value) + increment;
     enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
     updateSliderOutput(); // Update the displayed year
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
 }
 
 function adjustSliderDown() {
-    slider.value = Number(slider.value) - 1;
+    increment = Number(document.getElementById('increment').value)
+    slider.value = Number(slider.value) - increment;
     enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
     updateSliderOutput(); // Update the displayed year
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
