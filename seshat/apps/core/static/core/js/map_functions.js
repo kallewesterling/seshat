@@ -22,25 +22,11 @@ function adjustSliderDown() {
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
 }
 
-function updateSliderValue(value) {
-    var sliderValue = document.getElementById('sliderValue');
-    switch (value) {
-        case '1':
-            sliderValue.textContent = '1 y/s';  // See the values in the startPlay function below
-            break;
-        case '2':
-            sliderValue.textContent = '5 y/s';
-            break;
-        case '3':
-            sliderValue.textContent = '20 y/s';
-            break;
-        case '4':
-            sliderValue.textContent = '50 y/s';
-            break;
-        case '5':
-            sliderValue.textContent = '100 y/s';
-            break;
-    }
+function playRateValue() {
+    console.log('called')
+    var increment = Number(document.getElementById('increment').value);
+    var playRate = document.getElementById('playRate')
+    playRate.textContent = increment + ' y/s';
     plotPolities();
 }
 
@@ -88,21 +74,9 @@ function setSliderTicks (tickYears) {
 
 function startPlay() {
     stopPlay(); // Clear existing interval before starting a new one
+    var increment = Number(document.getElementById('increment').value);
 
-    var animationSpeed = parseFloat(playRateInput.value);
-    if (animationSpeed == 1) {
-        var yearsPerSecond = 1;
-    } else if (animationSpeed == 2) {
-        var yearsPerSecond = 5;
-    } else if (animationSpeed == 3) {
-        var yearsPerSecond = 20;
-    } else if (animationSpeed == 4) {
-        var yearsPerSecond = 50;
-    } else if (animationSpeed == 5) {
-        var yearsPerSecond = 100;
-    }
-
-    var milliseconds = 1 / (yearsPerSecond / 1000);
+    var milliseconds = 1 / (increment / 1000);
 
     playInterval = setInterval(function () {
         // Increment the slider value by 1
