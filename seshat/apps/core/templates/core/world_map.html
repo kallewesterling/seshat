@@ -96,6 +96,11 @@
         scrollbar-width: none;  /* Firefox */
     }
 
+    .federicka-huge {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 90px;
+    }
+
 </style>
 <body style="background-color: #fffdf2;">
     <div class="wrapper">
@@ -105,14 +110,11 @@
     <div style="display: flex;">
         <div style="width: 15%">
             <fieldset>
-                <legend>
-                    <h3 class="h1 text-teal federicka-bigger" id="sliderDate"></h3>
-                    <!-- Add a loading indicator -->
-                    <div id="loadingIndicator">
-                        <p id="loadingText" style="font-size: 16px;">Loading all polities for all years...</p>
-                        <div class="spinner"></div>                   
-                    </div>
-                </legend>
+                <!-- Add a loading indicator -->
+                <div id="loadingIndicator">
+                    <p id="loadingText" style="font-size: 16px;">Loading all polities for all years...</p>
+                    <div class="spinner"></div>                   
+                </div>
 
                 <div class="slidecontainer">
                     <label for="chooseVariable">Variable: </label>
@@ -200,7 +202,9 @@
             </fieldset>
         </div>
         <div style="position: relative; height: 85vh; width: 80%">
-            <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
+            <div id="map" style="height: 100%; width: 100%; z-index: 0; position: relative;">
+                <h1 class="text-teal federicka-huge" id="sliderDate" style="position: absolute; top: 85%; left: 12%; transform: translate(-50%, -50%); z-index: 1000;"></h1>
+            </div>
             <div id="sliderdiv"
                 style="display: block; position: absolute; bottom: 1vh; width: 100%; z-index: 2; overflow-x: auto;">
                 <fieldset>
