@@ -917,6 +917,8 @@
             if (variable in categorical_variables) {
                 localStorage.setItem(variable, document.getElementById('chooseCategoricalVariableSelection').value);
             };
+
+            adjustScroll();
         }
 
         // Initial plot on page load
