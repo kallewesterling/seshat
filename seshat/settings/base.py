@@ -3,10 +3,10 @@ from pathlib import Path
 
 import os
 
-import django_heroku
+# import django_heroku
 
-import dj_database_url
-from decouple import Csv, config
+# import dj_database_url
+from decouple import config
 import sys
 
 from django.contrib.messages import constants as messages
@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'leaflet',
     #'easyaudit',
+    'rest_framework.authtoken'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -351,6 +352,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
 # CORS ALLOWED ORIGINS
@@ -364,7 +369,7 @@ CORS_ALLOWED_ORIGINS = [
 #LOGOUT_REDIRECT_URL = 'logout'
 
 # I believe this says: Hey Heroku, do your local settings, don't care about my static_root, static_url etc.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 #print("###################")
 #print(STATICFILES_DIRS)
 #print(STATIC_ROOT)
