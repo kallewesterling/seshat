@@ -22,6 +22,20 @@ function adjustSliderDown() {
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
 }
 
+function adjustSliderStartYear() {
+    slider.value = slider.min;
+    enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
+    updateSliderOutput(); // Update the displayed year
+    plotPolities(); // This function is defined differently in the world_map and polity_map templates
+}
+
+function adjustSliderEndYear() {
+    slider.value = slider.max;
+    enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
+    updateSliderOutput(); // Update the displayed year
+    plotPolities(); // This function is defined differently in the world_map and polity_map templates
+}
+
 function playRateValue() {
     console.log('called')
     var increment = Number(document.getElementById('increment').value);
