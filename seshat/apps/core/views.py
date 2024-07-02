@@ -3807,7 +3807,7 @@ def get_provinces(selected_base_map_gadm='province'):
 
     return provinces
 
-def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=100, override_earliest_year=None, override_latest_year=None):
+def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=80, override_earliest_year=None, override_latest_year=None):
     """
     This function returns the polity shapes and other content for the map.
     Only one of displayed_year or seshat_id should be set; not both.
