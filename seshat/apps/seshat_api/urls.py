@@ -93,7 +93,7 @@ router.register(
     ScpThroughCtnViewSet,
     basename="comment-part-through-citation",
 )
-router.register(r"core/commons", SeshatCommonViewSet, basename="common")
+#router.register(r"core/commons", SeshatCommonViewSet, basename="common")
 router.register(r"core/religions", ReligionViewSet, basename="religion")
 router.register(
     r"core/video-shapefiles",
