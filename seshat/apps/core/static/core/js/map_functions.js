@@ -157,7 +157,7 @@ function switchBaseMap() {
         baseShapeData.forEach(function (shape) {
             // Ensure the geometry is not empty
             if (shape.geometry && shape.geometry.type) {
-                gadmFillColour = 'white';  // Default fill colour
+                gadmFillColour = "#fffdf2";  // Default fill colour
                 if (shape.country.toLowerCase().includes('sea')) {
                     gadmFillColour = 'lightblue';
                 }
@@ -341,7 +341,7 @@ function updateLegend() {
         colorBox.style.display = 'inline-block';
         colorBox.style.width = '20px';
         colorBox.style.height = '20px';
-        colorBox.style.backgroundColor = 'white';
+        colorBox.style.backgroundColor = '#fffdf2';
         colorBox.style.border = '1px solid black';
         colorBox.style.marginRight = '10px';
 
