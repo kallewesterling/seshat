@@ -842,27 +842,27 @@
                                             if (shape2.polity === shape.polity) {                                           
                                                 shapesData[i]['weight'] = newWeight;
                                             }
-                                            // Set the weight for shapes with multiple seshat_ids e.g. personal unions
-                                            if (shape2.seshat_id.includes(shape.seshat_id) && shape2.seshat_id.includes(';') && shape2.seshat_id != shape.seshat_id) {
-                                                shapesData[i]['weight'] = newWeight;
-                                                // Split shape2.seshat_id into an array of seshat_ids
-                                                var seshat_ids = shape2.seshat_id.split(';');
-                                                // Update the weight of the corresponding layer
-                                                map.eachLayer(function (layer) {
-                                                    if (layer.feature && layer.feature.properties && seshat_ids.includes(layer.feature.properties.seshat_id)) {
-                                                        layer.setStyle({
-                                                            weight: newWeight
-                                                        });
-                                                        j = 0;
-                                                        shapesData.forEach(function (shape3) {
-                                                            if (layer.feature.properties.seshat_id === shape3.seshat_id) {
-                                                                shapesData[j]['weight'] = newWeight;
-                                                            }
-                                                            j++;
-                                                        });
-                                                    }
-                                                });
-                                            }
+                                            // Set the weight for shapes with multiple seshat_ids e.g. personal unions TODO: fixme (this results in lots of things getting their weight updated)
+                                            // if (shape2.seshat_id.includes(shape.seshat_id) && shape2.seshat_id.includes(';') && shape2.seshat_id != shape.seshat_id) {
+                                            //     shapesData[i]['weight'] = newWeight;
+                                            //     // Split shape2.seshat_id into an array of seshat_ids
+                                            //     var seshat_ids = shape2.seshat_id.split(';');
+                                            //     // Update the weight of the corresponding layer
+                                            //     map.eachLayer(function (layer) {
+                                            //         if (layer.feature && layer.feature.properties && seshat_ids.includes(layer.feature.properties.seshat_id)) {
+                                            //             layer.setStyle({
+                                            //                 weight: newWeight
+                                            //             });
+                                            //             j = 0;
+                                            //             shapesData.forEach(function (shape3) {
+                                            //                 if (layer.feature.properties.seshat_id === shape3.seshat_id) {
+                                            //                     shapesData[j]['weight'] = newWeight;
+                                            //                 }
+                                            //                 j++;
+                                            //             });
+                                            //         }
+                                            //     });
+                                            // }
                                             i++;
                                         });
                                         updateLegend();
