@@ -113,7 +113,7 @@
     {% include "core/partials/_navbar.html" %}
     {% block content %}
     <div style="display: flex; height: 85vh;">
-        <div style="width: 15%; position: relative; height: 100%;">
+        <div style="width: 20%; position: relative; height: 100%;">
             <fieldset>
                 <legend>
                     <h1 class="text-teal federicka-big">Seshat World Map</h1>
@@ -198,11 +198,11 @@
                         onchange="playRateValue();">
                     <button id="minusButton" type="button" onclick="adjustSliderDown()">-</button>
                     <button id="plusButton" type="button" onclick="adjustSliderUp()">+</button><br><br>
-                    <label for="playButton">Run animation:</label>
-                    <button id="playButton" type="button" onclick="startPlay()">▶️</button>
-                    <button id="stopButton" type="button" onclick="stopPlay()">⏸</button><br>
                     <label for="playRate">Play rate: </label>
                     <span id="playRate">100 y/s</span><br>
+                    <label for="playButton">Run animation:</label>
+                    <button id="playButton" type="button" onclick="startPlay()">▶️</button>
+                    <button id="stopButton" type="button" onclick="stopPlay()">⏸</button><br><br>
                 </fieldset>
             </div>
         </div>
