@@ -204,6 +204,7 @@
                 </select><br>
                 <p>Click a country or province.</p>
             </fieldset>
+            <div id="popup"></div>
             <div id="yearControls" style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
                 <fieldset>
                     <label for="enterYear">Enter year:</label>
@@ -785,7 +786,11 @@
                                     };
                                 };
                                 popupContent = popupContent + `</table>`;
-                                layer.bindPopup(popupContent);
+
+                                // Add the popup to the popup div
+                                layer.on('click', function (e) {
+                                    document.getElementById('popup').innerHTML = popupContent;
+                                });
 
                                 // Listen for the click event on the layer
                                 layer.on('click', function (e) {            
