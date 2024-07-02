@@ -806,31 +806,26 @@
                                 };
                                 popupContent = popupContent + `</table>`;
 
-                                // Add the popup to the popup div
-                                layer.on('click', function (e) {
+                                // Listen for the click event on the layer
+                                layer.on('click', function (e) {        
+                                    
+                                    // Add the popup to the popup div
                                     document.getElementById('popup').innerHTML = popupContent;
                                     // Set the border colour of the popup div
                                     document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
                                     // Increase the border width of the popup div
                                     document.getElementById('popup').style.borderWidth = '4px';
-                                });
 
-                                // Listen for the click event on the layer
-                                layer.on('click', function (e) {            
                                     if (variable == 'polity'){
                                         if (shape.weight === 0) {
                                             // Increase the weight of the clicked layer
                                             newWeight = polityBorderWeightSelected;
                                             this.setStyle({
                                                 weight: newWeight
-                                            });
-                                            // Open the popup
-                                            layer.openPopup();
+                                            });                        
                                         } else {
                                             // Decrease the weight of the clicked layer
                                             newWeight = polityBorderWeight;
-                                            // Close the popup
-                                            layer.closePopup();
                                         };
                                         // Update weights in this layer and others of the same polity
                                         map.eachLayer(function (layer) {
