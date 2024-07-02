@@ -130,6 +130,8 @@
         height: 20%;
         overflow: auto;
         padding: 10px;
+        border-style: solid;
+        border-width: 0px;
     }
 
 </style>
@@ -660,6 +662,8 @@
                                 layer.feature.properties.seshat_id = shape.seshat_id || '';
                                 // Add polity name to the layer
                                 layer.feature.properties.polity = shape.polity;
+                                // Add the colour to the layer
+                                layer.feature.properties.colour = shapeColour;
 
                                 var popupContent = `
                                     <table>
@@ -799,6 +803,10 @@
                                 // Add the popup to the popup div
                                 layer.on('click', function (e) {
                                     document.getElementById('popup').innerHTML = popupContent;
+                                    // Set the border colour of the popup div
+                                    document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
+                                    // Increase the border width of the popup div
+                                    document.getElementById('popup').style.borderWidth = '4px';
                                 });
 
                                 // Listen for the click event on the layer
