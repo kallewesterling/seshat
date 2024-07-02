@@ -669,6 +669,7 @@
                                     `;
                                 }
                                 if (shape.seshat_id in seshat_id_page_id) {
+                                    var polityId = seshat_id_page_id[shape.seshat_id]['id'];
                                     longName = seshat_id_page_id[shape.seshat_id]['long_name'];
                                     if (longName == ''){
                                         longName = '[Page empty]'
@@ -676,7 +677,7 @@
                                     popupContent = popupContent + `
                                         <tr>
                                             <td>Seshat Page</td>
-                                            <td>${longName} (${shape.seshat_id})</td>
+                                            <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
                                         </tr>
                                     `;
                                 }
