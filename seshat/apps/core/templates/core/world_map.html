@@ -76,7 +76,7 @@
 
     #variableLegend {
         position: absolute;
-        bottom: 85;
+        bottom: 90;
         right: 10;
         background-color: rgba(255, 253, 242, 0.8);
         padding: 10px;
@@ -96,6 +96,12 @@
         scrollbar-width: none;  /* Firefox */
         background-color: rgba(255, 253, 242, 0.8);
         padding: 10px;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        z-index: 2;
+        overflow-x: auto;
     }
 
     .federicka-big {
@@ -110,7 +116,7 @@
 
     #sliderDate {
         position: absolute;
-        top: 80%;
+        top: 79%;
         left: 16%;
         transform: translate(-50%, -50%);
         z-index: 1000;
@@ -222,8 +228,7 @@
             <div id="map" style="height: 100%; width: 100%; z-index: 0; position: relative;">
                 <h1 class="text-teal federicka-huge" id="sliderDate"></h1>
             </div>
-            <div id="sliderdiv"
-                style="display: block; position: absolute; bottom: 1vh; width: 100%; z-index: 2; overflow-x: auto;">
+            <div id="sliderdiv">
                 <fieldset>
                     <div class="slider-container" style="position: relative; width: 400%;">
                         <datalist id="yearTickmarks"></datalist>
