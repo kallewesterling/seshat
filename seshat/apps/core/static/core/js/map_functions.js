@@ -7,38 +7,40 @@ function updateSliderOutput() {
 }
 
 function adjustSliderUp() {
-    slider.value = Number(slider.value) + 1;
+    increment = Number(document.getElementById('increment').value)
+    slider.value = Number(slider.value) + increment;
     enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
     updateSliderOutput(); // Update the displayed year
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
 }
 
 function adjustSliderDown() {
-    slider.value = Number(slider.value) - 1;
+    increment = Number(document.getElementById('increment').value)
+    slider.value = Number(slider.value) - increment;
     enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
     updateSliderOutput(); // Update the displayed year
     plotPolities(); // This function is defined differently in the world_map and polity_map templates
 }
 
-function updateSliderValue(value) {
-    var sliderValue = document.getElementById('sliderValue');
-    switch (value) {
-        case '1':
-            sliderValue.textContent = '1 y/s';  // See the values in the startPlay function below
-            break;
-        case '2':
-            sliderValue.textContent = '5 y/s';
-            break;
-        case '3':
-            sliderValue.textContent = '20 y/s';
-            break;
-        case '4':
-            sliderValue.textContent = '50 y/s';
-            break;
-        case '5':
-            sliderValue.textContent = '100 y/s';
-            break;
-    }
+function adjustSliderStartYear() {
+    slider.value = slider.min;
+    enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
+    updateSliderOutput(); // Update the displayed year
+    plotPolities(); // This function is defined differently in the world_map and polity_map templates
+}
+
+function adjustSliderEndYear() {
+    slider.value = slider.max;
+    enterYearInput.value = slider.value; // Sync enterYear input with dateSlide value
+    updateSliderOutput(); // Update the displayed year
+    plotPolities(); // This function is defined differently in the world_map and polity_map templates
+}
+
+function playRateValue() {
+    console.log('called')
+    var increment = Number(document.getElementById('increment').value);
+    var playRate = document.getElementById('playRate')
+    playRate.textContent = increment + ' y/s';
     plotPolities();
 }
 
@@ -86,21 +88,9 @@ function setSliderTicks (tickYears) {
 
 function startPlay() {
     stopPlay(); // Clear existing interval before starting a new one
+    var increment = Number(document.getElementById('increment').value);
 
-    var animationSpeed = parseFloat(playRateInput.value);
-    if (animationSpeed == 1) {
-        var yearsPerSecond = 1;
-    } else if (animationSpeed == 2) {
-        var yearsPerSecond = 5;
-    } else if (animationSpeed == 3) {
-        var yearsPerSecond = 20;
-    } else if (animationSpeed == 4) {
-        var yearsPerSecond = 50;
-    } else if (animationSpeed == 5) {
-        var yearsPerSecond = 100;
-    }
-
-    var milliseconds = 1 / (yearsPerSecond / 1000);
+    var milliseconds = 1 / (increment / 1000);
 
     playInterval = setInterval(function () {
         // Increment the slider value by 1
@@ -167,7 +157,7 @@ function switchBaseMap() {
         baseShapeData.forEach(function (shape) {
             // Ensure the geometry is not empty
             if (shape.geometry && shape.geometry.type) {
-                gadmFillColour = 'white';  // Default fill colour
+                gadmFillColour = "#fffdf2";  // Default fill colour
                 if (shape.country.toLowerCase().includes('sea')) {
                     gadmFillColour = 'lightblue';
                 }
@@ -351,7 +341,7 @@ function updateLegend() {
         colorBox.style.display = 'inline-block';
         colorBox.style.width = '20px';
         colorBox.style.height = '20px';
-        colorBox.style.backgroundColor = 'white';
+        colorBox.style.backgroundColor = '#fffdf2';
         colorBox.style.border = '1px solid black';
         colorBox.style.marginRight = '10px';
 
@@ -360,6 +350,14 @@ function updateLegend() {
 
         legendDiv.appendChild(legendItem);
     }
+}
+
+function clearSelection() {
+    document.getElementById('popup').innerHTML = '';
+    shapesData.forEach(function (shape) {
+        shape['weight'] = 0;
+    });
+    plotPolities();
 }
 
 function updateCategoricalVariableSelection(variable){
