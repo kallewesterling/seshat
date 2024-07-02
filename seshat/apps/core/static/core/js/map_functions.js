@@ -352,6 +352,14 @@ function updateLegend() {
     }
 }
 
+function clearSelection() {
+    document.getElementById('popup').innerHTML = '';
+    shapesData.forEach(function (shape) {
+        shape['weight'] = 0;
+    });
+    plotPolities();
+}
+
 function updateCategoricalVariableSelection(variable){
     var dropdown = document.getElementById('chooseCategoricalVariableSelection');
     dropdown.innerHTML = '';
