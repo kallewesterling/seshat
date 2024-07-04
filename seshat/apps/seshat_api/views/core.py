@@ -83,7 +83,7 @@ class RegionViewSet(
 
 class NGAViewSet(MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet):
     """
-    A viewset for viewing and editing NGA.
+    A viewset for viewing and editing NGAs, Natural Geographic Areas.
     """
 
     model = Nga
