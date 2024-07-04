@@ -824,13 +824,6 @@
 
                                 // Listen for the click event on the layer
                                 layer.on('click', function (e) {        
-                                    
-                                    // Add the popup to the popup div
-                                    document.getElementById('popup').innerHTML = popupContent;
-                                    // Set the border colour of the popup div
-                                    document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
-                                    // Increase the border width of the popup div
-                                    document.getElementById('popup').style.borderWidth = '4px';
 
                                     if (variable == 'polity'){
                                         if (shape.weight === 0) {
@@ -838,10 +831,18 @@
                                             newWeight = polityBorderWeightSelected;
                                             this.setStyle({
                                                 weight: newWeight
-                                            });                        
+                                            });
+                                            // Add the popup to the popup div
+                                            document.getElementById('popup').innerHTML = popupContent;
+                                            // Set the border colour of the popup div
+                                            document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
+                                            // Increase the border width of the popup div
+                                            document.getElementById('popup').style.borderWidth = '4px';                        
                                         } else {
                                             // Decrease the weight of the clicked layer
                                             newWeight = polityBorderWeight;
+                                            // Remove the popup from the popup div
+                                            document.getElementById('popup').innerHTML = '';
                                         };
                                         // Update weights in this layer and others of the same polity
                                         map.eachLayer(function (layer) {
@@ -881,7 +882,14 @@
                                             i++;
                                         });
                                         updateLegend();
-                                    };
+                                    } else {
+                                        // Add the popup to the popup div
+                                        document.getElementById('popup').innerHTML = popupContent;
+                                        // Set the border colour of the popup div
+                                        document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
+                                        // Increase the border width of the popup div
+                                        document.getElementById('popup').style.borderWidth = '4px';
+                                    }
                                     L.DomEvent.stopPropagation(e);
                                 });
                             }
