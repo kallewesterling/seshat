@@ -483,6 +483,7 @@
             var variable = document.getElementById('chooseVariable').value;
             var selectedYear = document.getElementById('dateSlide').value;
             var opacity = document.getElementById('opacitySlide').value;
+            var atLeastOnePolityHighlighted = false;
 
             // If variable has changed from the previous selection
             if (localStorage.getItem('variable') != variable) {
@@ -622,6 +623,10 @@
                     // If the shape spans the selected year
                     // Ignore shapes that are in a union during this year (because we are plotting the union)
                     if ((parseInt(shape.start_year) <= selectedYearInt && parseInt(shape.end_year) >= selectedYearInt) && !dontPlotMeBecauseImInAUnion.includes(shape.seshat_id)) {
+
+                        if (shapeWeight > 0){
+                            atLeastOnePolityHighlighted = true;
+                        }
 
                         // Format the area float
                         const formattedArea = parseFloat(shape.area).toLocaleString('en-US', {
@@ -819,13 +824,6 @@
 
                                 // Listen for the click event on the layer
                                 layer.on('click', function (e) {        
-                                    
-                                    // Add the popup to the popup div
-                                    document.getElementById('popup').innerHTML = popupContent;
-                                    // Set the border colour of the popup div
-                                    document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
-                                    // Increase the border width of the popup div
-                                    document.getElementById('popup').style.borderWidth = '4px';
 
                                     if (variable == 'polity'){
                                         if (shape.weight === 0) {
@@ -833,10 +831,18 @@
                                             newWeight = polityBorderWeightSelected;
                                             this.setStyle({
                                                 weight: newWeight
-                                            });                        
+                                            });
+                                            // Add the popup to the popup div
+                                            document.getElementById('popup').innerHTML = popupContent;
+                                            // Set the border colour of the popup div
+                                            document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
+                                            // Increase the border width of the popup div
+                                            document.getElementById('popup').style.borderWidth = '4px';                        
                                         } else {
                                             // Decrease the weight of the clicked layer
                                             newWeight = polityBorderWeight;
+                                            // Remove the popup from the popup div
+                                            document.getElementById('popup').innerHTML = '';
                                         };
                                         // Update weights in this layer and others of the same polity
                                         map.eachLayer(function (layer) {
@@ -876,7 +882,14 @@
                                             i++;
                                         });
                                         updateLegend();
-                                    };
+                                    } else {
+                                        // Add the popup to the popup div
+                                        document.getElementById('popup').innerHTML = popupContent;
+                                        // Set the border colour of the popup div
+                                        document.getElementById('popup').style.borderColor = layer.feature.properties.colour;
+                                        // Increase the border width of the popup div
+                                        document.getElementById('popup').style.borderWidth = '4px';
+                                    }
                                     L.DomEvent.stopPropagation(e);
                                 });
                             }
@@ -979,6 +992,10 @@
             };
 
             adjustScroll();
+
+            if (!atLeastOnePolityHighlighted){
+                document.getElementById('popup').innerHTML = '';
+            }
         }
 
         // Initial plot on page load
