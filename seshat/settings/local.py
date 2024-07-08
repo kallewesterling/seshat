@@ -39,11 +39,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': env('NAME'),
-            'USER': 'postgres',
-            'HOST': env('HOST'),
-            'PORT': env('PORT'),
-            'PASSWORD': env('PASSWORD')
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER') or 'postgres',
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
+            'PASSWORD': env('DB_PASSWORD')
         }
     }
     """
