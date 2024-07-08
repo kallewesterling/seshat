@@ -219,11 +219,11 @@ The file should look like this:
 
 .. code-block::
 
-    NAME=<seshat_db_name>
-    USER=postgres
-    HOST=localhost
-    PORT=5432
-    PASSWORD=<db_password>
+    DB_NAME=<seshat_db_name>
+    DB_USER=postgres
+    DB_HOST=localhost
+    DB_PORT=5432
+    DB_PASSWORD=<db_password>
 
 
 Step 10: Migrate the database
