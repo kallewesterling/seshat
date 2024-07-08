@@ -32,4 +32,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: docker.pkg.github.com/Seshat-Global-History-Databank/seshat/tests-image:latest
+        tags: docker.pkg.github.com/seshat-global-history-databank/seshat/tests-image:latest
