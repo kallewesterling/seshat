@@ -301,7 +301,7 @@ STATIC_ROOT = BASE_DIR.parent.parent / "static"
 # but let's keep things as it is for the moment
 # I believe this says: anything under the base directory that is inside a directory called 'static' will be collected as statidfile,
 # regardless of how deep down in the directory hierarchy it might be. It just needs to be a in a older called media in any of the apps, etc.
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "staticfiles"]
 #print(STATICFILES_DIRS)
 
 
