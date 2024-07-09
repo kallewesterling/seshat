@@ -132,7 +132,7 @@ if not os.path.exists(local_env_path) and not os.getenv('GITHUB_ACTIONS') == 'tr
             'APP': {
                 'client_id': config('GOOGLE_APP_CLIENT_ID'),
                 'secret': config('GOOGLE_APP_SECRET_KEY'),
-                'redirect_uris': ['https://seshat-db.com/accounts/google/login/callback/'],
+                'redirect_uris': ['http://seshatdata.com/accounts/google/login/callback/', 'http://localhost'],
             # 'key': ''
             },
 
@@ -442,7 +442,7 @@ if sys.platform.startswith('darwin'): # macOS
     GDAL_LIBRARY_PATH = '/opt/homebrew/opt/gdal/lib/libgdal.dylib'
     GEOS_LIBRARY_PATH = '/opt/homebrew/opt/geos/lib/libgeos_c.dylib'
 else: # linux
-    GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so'
+    GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so.30'
     if os.getenv('GITHUB_ACTIONS') == 'true':
         GEOS_LIBRARY_PATH = '/usr/lib/x86_64-linux-gnu/libgeos_c.so'
     else:
