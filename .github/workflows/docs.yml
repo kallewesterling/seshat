@@ -5,6 +5,9 @@ permissions:
 jobs:
     docs:
         runs-on: ubuntu-latest
+        concurrency:
+            group: docs
+            cancel-in-progress: true
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-python@v2
