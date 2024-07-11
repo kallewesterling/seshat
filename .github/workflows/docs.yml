@@ -13,11 +13,8 @@ jobs:
             - uses: actions/setup-python@v2
               with:
                 python-version: 3.8.13
-            # - uses: nikeee/setup-pandoc@v1
             - name: "Upgrade pip"
               run: pip install --upgrade pip
-            # - name: "Install dependencies"
-            #  run: pip install -r requirements/requirements.txt
             - name: "Install docs requirements"
               run: pip install -r docs/requirements.txt
             - name: "Run sphinx"
