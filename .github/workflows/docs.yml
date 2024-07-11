@@ -19,11 +19,13 @@ jobs:
               run: pip install -r docs/requirements.txt
             - name: "Run sphinx"
               run: sphinx-build -b html docs/source docs/_build/
-            # - name: "Deploy"
-            #   uses: peaceiris/actions-gh-pages@v3
-            #   if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docs') }}
-            #   with:
-            #         publish_branch: gh-pages
-            #         github_token: ${{ secrets.GITHUB_TOKEN }}
-            #         publish_dir: docs/_build/html/
-            #         force_orphan: true
+            # Note that we're adding deployment for dev branch here.
+            # In the future, we may want to add a separate workflow for dev branch.
+            - name: "Deploy"
+              uses: peaceiris/actions-gh-pages@v3
+              if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docs' || github.ref == 'refs/heads/dev') }}
+              with:
+                    publish_branch: gh-pages
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    publish_dir: docs/_build/html/
+                    force_orphan: true
