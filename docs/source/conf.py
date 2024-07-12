@@ -16,7 +16,6 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'seshat.settings.base'
 
-import sphinx_rtd_theme
 
 import seshat
 
@@ -36,7 +35,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
-    # "sphinx_rtd_theme",
     "myst_parser",
     "autoapi.extension",
     "sphinx_copybutton",
@@ -106,10 +104,7 @@ todo_include_todos = False
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinx_book_theme"
-
-# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_static_path = ["_static"]
-
 html_theme_options = {
     "use_download_button": True,
 }
