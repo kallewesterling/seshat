@@ -20,8 +20,8 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Pull and run Docker image
       run: |
-        docker pull docker.pkg.github.com/${{ github.actor }}/seshat/tests-image:latest
-        docker run -d -p 5432:5432 -v ${{ github.workspace }}:/seshat -e DJANGO_SETTINGS_MODULE=seshat.settings.local -e POSTGRES_PASSWORD=postgres -e PGDATA=/var/lib/postgresql/data/db-files/ -e GITHUB_ACTIONS='true' --name seshat_testing docker.pkg.github.com/${{ github.actor }}/seshat/tests-image:latest
+        docker pull docker.pkg.github.com/${{ github.repository }}/seshat/tests-image:latest
+        docker run -d -p 5432:5432 -v ${{ github.workspace }}:/seshat -e DJANGO_SETTINGS_MODULE=seshat.settings.local -e POSTGRES_PASSWORD=postgres -e PGDATA=/var/lib/postgresql/data/db-files/ -e GITHUB_ACTIONS='true' --name seshat_testing docker.pkg.github.com/${{ github.repository }}/seshat/tests-image:latest
     - name: Sleep, then check PostgreSQL connectivity
       run: |
         sleep 10

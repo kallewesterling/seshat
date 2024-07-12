@@ -32,4 +32,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: docker.pkg.github.com/${{ github.actor }}/seshat/tests-image:latest
+        tags: docker.pkg.github.com/${{ github.repository }}/seshat/tests-image:latest
