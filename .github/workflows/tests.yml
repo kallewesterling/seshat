@@ -17,7 +17,7 @@ jobs:
       with:
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
-        password: ${{ secrets.GH_TOKEN }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Pull and run Docker image
       run: |
         docker pull docker.pkg.github.com/seshat-global-history-databank/seshat/tests-image:latest
