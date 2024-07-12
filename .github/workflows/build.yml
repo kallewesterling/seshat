@@ -27,12 +27,14 @@ jobs:
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: downcase REPO
+    - name: set lower case owner name
       run: |
-        echo "REPO=${GITHUB_REPOSITORY@L}" >> ${GITHUB_ENV}
+        echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+      env:
+        OWNER: '${{ github.repository_owner }}'
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
       with:
         context: .
         push: true
-        tags: docker.pkg.github.com/${ env.REPO }/seshat/tests-image:latest
+        tags: docker.pkg.github.com/${{ env.OWNER_LC }}/seshat/tests-image:latest
